@@ -34,7 +34,8 @@ float lastTicks = 0.0f;
 
 glm::mat4 viewMatrix, modelMatrix, projectionMatrix;
 
-ShaderProgram program;
+ShaderProgram programTextured;
+ShaderProgram programUntextured;
 
 GLuint playerTextureID;
 
@@ -79,7 +80,8 @@ void Initialize() {
 
   glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
-  program.Load("shaders/vertex_textured.glsl", "shaders/fragment_textured.glsl");
+  programTextured.Load("shaders/vertex_textured.glsl", "shaders/fragment_textured.glsl");
+  programUntextured.Load("shaders/vertex.glsl", "shaders/fragment.glsl");
 
   enterprise.textureID = LoadTexture("./textures/enterprise.png");
   klingon.textureID = LoadTexture("./textures/birdofprey.png");
@@ -87,11 +89,16 @@ void Initialize() {
   viewMatrix = glm::mat4(1.0f);
   projectionMatrix = glm::ortho(-5.0f, 5.0f, -3.75f, 3.75f, -1.0f, 1.0f);
 
-  program.SetProjectionMatrix(projectionMatrix);
-  program.SetViewMatrix(viewMatrix);
-  program.SetColor(1.0f, 1.0f, 1.0f, 1.0f);
+  programTextured.SetProjectionMatrix(projectionMatrix);
+  programTextured.SetViewMatrix(viewMatrix);
+  programTextured.SetColor(1.0f, 1.0f, 1.0f, 1.0f);
 
-  glUseProgram(program.programID);
+  programUntextured.SetProjectionMatrix(projectionMatrix);
+  programUntextured.SetViewMatrix(viewMatrix);
+  programUntextured.SetColor(1.0f, 1.0f, 1.0f, 1.0f);
+
+  glUseProgram(programTextured.programID);
+  glUseProgram(programUntextured.programID);
   glEnable(GL_BLEND);
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
@@ -103,7 +110,7 @@ void Initialize() {
   enterprise.Create(0.0f, 0.0f, 0.8f, 0.8f, -90.0f);
   klingon.Create(2.0f, 0.0f, 0.7f, 0.7f, 0.0f);
   // Background coloring
-  glClearColor(0.8f, 0.8f, 0.8f, 1.0f);
+  glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 }
 
 // Not needed for this project :-(
@@ -136,11 +143,11 @@ void Render() {
   glClear(GL_COLOR_BUFFER_BIT);
   
   for (int i = 0; i < NUM_STARS; ++i) {
-    stars[i].Display(&program);
+    stars[i].Display(&programUntextured);
   }  
   
-  enterprise.Display(&program);
-  klingon.Display(&program);
+  enterprise.Display(&programTextured);
+  klingon.Display(&programTextured);
   
   SDL_GL_SwapWindow(displayWindow);
 }
