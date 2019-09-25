@@ -1,0 +1,12 @@
+#ifndef BALL_DEF
+#define BALL_DEF
+
+#include "standard.h"
+#include "Paddle.h"
+
+class Ball : public Paddle {
+ public:
+  Ball();
+}
+
+#endif

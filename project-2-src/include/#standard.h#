@@ -1,0 +1,14 @@
+#ifndef HEADERS_DEF
+#define HEADERS_DEF
+
+#include <SDL.h>
+#include <SDL_opengl.h>
+
+#include <glm/mat4x4.h>
+#include <glm/gtc/matrix_transform.hpp>
+#include <ShaderProgram.h>
+
+#define STB_IMAGE_IMPLEMENTATION
+#include <stb_image.h>
+
+#endif
