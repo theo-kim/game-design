@@ -14,11 +14,11 @@ class Paddle {
   void Hold (char edge, glm::vec2 boundary);
   glm::mat4x3 GetBounds ();
 
+  float speed;
   glm::vec3 mov;
   glm::vec3 pos;
  private:
   ShaderProgram *program;
-  float speed;
   float height;
   float width;
 };

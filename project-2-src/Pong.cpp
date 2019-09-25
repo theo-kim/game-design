@@ -51,18 +51,22 @@ void Pong::Update (float delta) {
 
   if (CheckBallCollision(&topWall) || CheckBallCollision(&bottomWall)) {
     ball.mov[1] *= -1;
+    ball.pos[1] *= 0.99;
   }
 
   if (CheckBallCollision(&player1) || CheckBallCollision(&player2)) {
     ball.mov[0] *= -1;
+    ball.speed += 0.25;
   }
 
   if (CheckBallCollision(&player1Lose)) {
     ball.pos = glm::vec3(0.0f);
+    ball.speed = 2;
     std::cout << "Player 1 Lost...\n";
   }
   else if (CheckBallCollision(&player2Lose)) {
     ball.pos = glm::vec3(0.0f);
+    ball.speed = 2;
     std::cout << "Player 2 Lost...\n";
   }
 }
