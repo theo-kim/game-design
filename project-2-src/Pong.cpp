@@ -1,4 +1,5 @@
 #include "include/Pong.h"
+#include <string>
 
 Pong::Pong (float screenHeight, float screenWidth) : top((screenHeight / screenWidth) * 5.0f),
 						    bottom(-1 * top),
@@ -7,7 +8,7 @@ Pong::Pong (float screenHeight, float screenWidth) : top((screenHeight / screenW
 
   player1 = Paddle(&programUntextured, left + 0.25, 0, 1, 0.2, 5);
   player2 = Paddle(&programUntextured, right - 0.25, 0, 1, 0.2, 5);
-  topWall = Paddle(&programUntextured, 0, top - 0.15, 0.3, right - left, 0);
+  topWall = Paddle(&programUntextured, 0, top - 0.65, 0.3, right - left, 0);
   bottomWall = Paddle(&programUntextured, 0, bottom + 0.15, 0.3, right - left, 0);
   player1Lose = Paddle(&programUntextured, left - 0.1, 0, top - bottom, 0.2, 0);
   player2Lose = Paddle(&programUntextured, right + 0.1, 0, top - bottom, 0.2, 0);
@@ -20,6 +21,9 @@ Pong::Pong (float screenHeight, float screenWidth) : top((screenHeight / screenW
 
   player1Moving = 0;
   player2Moving = 0;
+
+  player1Score = 0;
+  player2Score = 0;
 }
 
 void Pong::Render () {
@@ -28,6 +32,15 @@ void Pong::Render () {
   topWall.Render();
   bottomWall.Render();
   ball.Render();
+  player1ScoreText.Render();
+  player2ScoreText.Render();
+  titleText.Render();
+}
+
+void Pong::InitText (GLuint texture) {
+  player1ScoreText = Text(std::to_string(player1Score), &programTextured, left + 1, top - 0.23, 0.2, 0.4, texture);
+  player2ScoreText = Text(std::to_string(player2Score), &programTextured, right - 1, top - 0.23, 0.2, 0.4, texture);
+  titleText = Text("Pong", &programTextured, 0, top - 0.23, 0.2, 0.4, texture);
 }
 
 void Pong::Update (float delta) {
@@ -62,12 +75,22 @@ void Pong::Update (float delta) {
   if (CheckBallCollision(&player1Lose)) {
     ball.pos = glm::vec3(0.0f);
     ball.speed = 2;
-    std::cout << "Player 1 Lost...\n";
+    ++player2Score;
+    player2ScoreText.SetText(std::to_string(player2Score));
+    if (player2Score > WINNING) {
+      titleText.SetText("Player 2 Wins!");
+      ball.speed = 0;
+    }
   }
   else if (CheckBallCollision(&player2Lose)) {
     ball.pos = glm::vec3(0.0f);
     ball.speed = 2;
-    std::cout << "Player 2 Lost...\n";
+    ++player1Score;
+    player1ScoreText.SetText(std::to_string(player1Score));
+    if (player1Score > WINNING) {
+      titleText.SetText("Player 1 Wins!");
+      ball.speed = 0;
+    }
   }
 }
 

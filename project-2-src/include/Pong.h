@@ -1,12 +1,16 @@
 #ifndef PONG_DEF
 #define PONG_DEF
 
+#define WINNING 4 // The winning score
+
 #include "standard.h"
 #include "Paddle.h"
+#include "Text.h"
 
 class Pong {
  public:
   Pong(float screenHeight, float screenWidth);
+  void InitText(GLuint texture);
   void Render();
   void Update(float delta);
   void Input(SDL_Event e);
@@ -38,6 +42,10 @@ class Pong {
   float left;
   float right;
   float bottom;
+
+  Text player1ScoreText;
+  Text player2ScoreText;
+  Text titleText;
 };
 
 #endif

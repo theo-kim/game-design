@@ -66,6 +66,8 @@ void Initialize(Pong *game) {
   game->programUntextured.SetProjectionMatrix(game->projectionMatrix);
   game->programUntextured.SetViewMatrix(game->viewMatrix);
   game->programUntextured.SetColor(1.0f, 1.0f, 1.0f, 1.0f);
+
+  game->InitText(LoadTexture("textures/font.png"));
   
   // Assign Render Program
   glUseProgram(game->programTextured.programID);
