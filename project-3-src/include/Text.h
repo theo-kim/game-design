@@ -4,7 +4,7 @@
 #include "standard.h"
 #include <string>
 
-#define CHARSET " 0123456789?ABCDEFGHIJKLMNOPQRSTUVWXYZ[]abcdefghijklmnopqrstuvwxyz<>"
+#define CHARSET " 0123456789?ABCDEFGHIJKLMNOPQRSTUVWXYZ[]abcdefghijklmnopqrstuvwxyz<>-"
 #define NUM_ROW 5
 #define NUM_COL 14
 

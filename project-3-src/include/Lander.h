@@ -7,6 +7,7 @@ class Lander {
  public:
   Lander();
   Lander(ShaderProgram *_program, glm::vec3 initPos, float initSize, const char *tex, int _f, float _m, float _t, float _r);
+  void Restart (glm::vec3 initPos, int _f);
   void Render ();
   void Update (float delta);
   void ApplyForce (glm::vec3 f);
@@ -22,7 +23,8 @@ class Lander {
   void Crash();
   bool Alive();
   glm::vec3 GetPos();
-  void ZoomTo(float scale);
+  glm::vec3 GetSpeed();
+  void ZoomTo(float scale, glm::vec3 zoomShift);
   int GetFuel();
  private:
   void getTexVertices(float *coords);

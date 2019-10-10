@@ -1,4 +1,4 @@
-#define SEGMENT_PADDING 30
+#define SEGMENT_PADDING 300
 #include "include/Terrain.h"
 
 Terrain::Terrain() { }
@@ -40,15 +40,21 @@ void Terrain::Generate(int _segments, int minGradient, int maxGradient, int diff
   float lastX = left - segmentWidth * (SEGMENT_PADDING / 2);
   vertices.clear();
   for (int i = 0; i < segments; ++i) {
+    float newX = lastX + segmentWidth;
+    float newY;
     float gradient = 0;
     if (rand() % 100 > difficulty) {
       gradient = (float)(rand() % (gradientRange * 100) + (minGradient * 100)) / 100.0f;
     }
     if (gradient < 0.1f && gradient > -0.1f) gradient = 0;
-    float newX = lastX + segmentWidth;
-    float newY = gradient * (newX - lastX) + lastY;
-    if (newY < bottom * 0.95) {
-      newY = bottom * 0.95;
+    newY = gradient * (newX - lastX) + lastY;
+
+    while (newY < bottom * 0.95) {
+      newY += ((float)(rand() % 100) / 100);
+    }
+
+    while (newY > top / 2.1) {
+      newY -= ((float)(rand() % 100) / 100);
     }
     
     // First triangle

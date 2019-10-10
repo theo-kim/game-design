@@ -49,6 +49,10 @@ void Text::SetText (std::string newtext) {
   contents = newtext;
 }
 
+std::string Text::GetText() {
+  return contents;
+}
+
 void Text::GetCharMap (float *coords, char c) {
   // LB, RB, RT, LB, RT, LT
   int spriteIndex = 0;

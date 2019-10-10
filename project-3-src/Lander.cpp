@@ -19,20 +19,35 @@ Lander::Lander (ShaderProgram *_program, glm::vec3 initPos, float initSize, cons
   animState = 0;
   isAlive = true;
   zoom = glm::vec3(1.0f);
+  zoomShift = glm::vec3(0.0f);
+  isExploded = false;
 }
 
-void Lander::ZoomTo(float scale) {
+void Lander::Restart (glm::vec3 initPos, int _f) {
+  pos = initPos;
+  fuel = _f;
+  isExploded = false;
+  isAlive = true;
+  animState = 0;
+  zoom = glm::vec3(1.0f);
+  rotation = glm::radians(0.0f);
+  rotationDirection = 0.0f;
+  isThrusting = false;
+  isLanded = false;
+  zoomShift = glm::vec3(0.0f);
+}
+
+void Lander::ZoomTo(float scale, glm::vec3 zoomOffset) {
   zoom = glm::vec3(scale, scale, 1.0f);
+  zoomShift = zoomOffset;
 }
 
 void Lander::Render () {
   if (!isAlive) return;
-  
   glm::mat4 modelMatrix = glm::mat4(1.0f);
   // Position and size the model matrix
-  if (zoom == glm::vec3(1.0f)) {
-    modelMatrix = glm::translate(modelMatrix, pos);
-  }
+  modelMatrix = glm::translate(modelMatrix, pos + zoomShift);
+  // modelMatrix = glm::translate(modelMatrix, zoomShift);
   modelMatrix = glm::rotate(modelMatrix, rotation, glm::vec3(0.0f, 0.0f, 1.0f));
   modelMatrix = glm::scale(modelMatrix, size);
   modelMatrix = glm::scale(modelMatrix, zoom);
@@ -122,7 +137,7 @@ void Lander::RotateClockwise() {
 }
 
 void Lander::Thrust() {
-  if (isLanded) return;
+  if (isLanded || fuel <= 0) return; // No thrusting if already landed or no more fuel
   float x = glm::sin(rotation) * thrust;
   float y = glm::cos(rotation) * thrust;
   ApplyForce(glm::vec3(-1 * x, y, 0.0f));
@@ -152,9 +167,13 @@ void Lander::Collision(bool good) {
 void Lander::Crash() {
   isExploded = true;
   animState = true;
-  size *= 2;
+  zoom *= 2;
 }
 
 glm::vec3 Lander::GetPos() {
   return pos;
+}
+
+glm::vec3 Lander::GetSpeed() {
+  return mov;
 }

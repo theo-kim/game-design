@@ -4,7 +4,7 @@
 // Game Configuration Settings
 #define GAME_NAME "Mars Lander"
 #define FIXED_TIMESTEP 0.01666f
-#define GRAVITY 0.2f;
+#define GRAVITY 0.1f;
 
 #include "standard.h"
 #include "Lander.h"
@@ -19,6 +19,7 @@ class Game {
   void Update();
   void Input();
   void Run();
+  void Restart();
   void Shutdown();
  
   glm::mat4 viewMatrix;
@@ -55,7 +56,25 @@ class Game {
 
   Text fuelCount;
   Text fuelLabel;
+  Text altitudeDisplay;
+  Text altitudeLabel;
+  Text horizontalSpeedDisplay;
+  Text verticalSpeedDisplay;
+  Text hLabel;
+  Text vLabel;
   Text endingText;
+  Text title;
+  Text instructions;
+  Text description;
+  Text menu[3];
+  Text mainMenu[3];
+
+  int menuLength;
+  int selectedMenuIndex;
+  bool optionChanged;
+  bool menuOptionSelected;
+
+  bool isMoon;
 };
 
 #endif
