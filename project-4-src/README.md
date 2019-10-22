@@ -1,5 +1,5 @@
-# Project 3: Lunar Landar
+# Project 3: Rise of the AIs
 
-Going to the moon is old news. Try landing on MARS! Pick on of two game modes and safely land the rover. WARNING: it is harder than it looks.
+Humanity thought it could play God... boy were they wrong. The artificial intelligences evolved faster than they had expected and brought destruction and death to their mortal creators. Now they have escaped to space and look for a new planet to rain chaos onto. As the last surving human, and captain of the last spaceship sent out from the dying Earth, it is your mission to destroy all the AI ships before they can escape to warp speed.
 
-Use SPACE bar to activate thrust and the LEFT and RIGHT arrow keys to rotate the rover. Also, watch for your fuel!
+Use WASD to control your ship and your mouse to aim your laser cannons. Watch your energy levels and don't die! Can you destory all of the AIs?
