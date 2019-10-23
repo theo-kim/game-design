@@ -1,9 +1,11 @@
-#ifndef PROXIMITY_DEF
-#define PROXIMITY_DEF
+#ifndef VERTEXSENSOR_DEF
+#define VERTEXSENSOR_DEF
 
 #include "standard.h"
 #include "Sensor.h"
 #include "EdgeSensor.h"
+
+class EdgeSensor;
 
 class VertexSensor : public Sensor {
 public:
@@ -13,6 +15,6 @@ public:
   bool CheckCollision(EdgeSensor sensor);
   int GetState();
   glm::vec3 loc;
-}
+};
 
 #endif

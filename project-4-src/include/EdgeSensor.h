@@ -5,10 +5,12 @@
 #include "Sensor.h"
 #include "VertexSensor.h"
 
+class VertexSensor;
+
 class EdgeSensor : public Sensor {
 public:
-  ProximitySensor();
-  ProximitySensor(glm::vec3 _boundsLeft, glm::vec3 _boundsRight, Entity *belongsTo);
+  EdgeSensor();
+  EdgeSensor(glm::vec3 _boundsLeft, glm::vec3 _boundsRight, Entity *belongsTo);
   bool CheckCollision(EdgeSensor sensor);
   bool CheckCollision(VertexSensor sensor);
   int GetState();
@@ -18,6 +20,6 @@ public:
   float A;
   float B;
   float C;
-}
+};
 
 #endif

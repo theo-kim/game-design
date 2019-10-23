@@ -12,6 +12,6 @@ public:
   int GetState();
   glm::vec3 loc;
   float threshold;
-}
+};
 
 #endif

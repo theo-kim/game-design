@@ -2,7 +2,8 @@
 #include <string>
 
 Game::Game (float screenHeight, float screenWidth)
-  : top((screenHeight / screenWidth) * 5.0f), bottom(-1 * top), left(-5.0f), right(5.0f)
+  : top((screenHeight / screenWidth) * 5.0f), bottom(-1 * top), left(-5.0f), right(5.0f), 
+    collisionTree(glm::vec3(0.0f, 0.0f, 1.0f), 100, 100)
 {
   // Background perspective bounds
   pTop = top;
@@ -62,7 +63,7 @@ void Game::Initialize () {
 
   // Background coloring
   glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
-
+  
   // Entity Initialization
   ship = Ship(&rendererUntextured);
   foreground.push_back(&ship);

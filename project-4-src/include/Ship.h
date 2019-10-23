@@ -15,11 +15,11 @@ public:
   void Render();
   void Update(float delta);
 
-  // I'm laxy and putting the sensors in the public
-  Sensor sensors[9]; // For now...
-  ProximitySensor *prox;
-  EdgeSensor *edges;
-  VertexSensor *verts;
+  // I'm lazy and putting the sensors in the public space
+  Sensor *sensors[9]; // For now...
+  ProximitySensor prox;
+  EdgeSensor edges[4];
+  VertexSensor verts[4];
   
 private:
   int health;

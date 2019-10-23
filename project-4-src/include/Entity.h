@@ -11,6 +11,8 @@ class Entity {
   virtual void Update(float delta) = 0;
   bool CheckBounds(float left, float right, float top, float bottom);
   void SetRenderFlag(bool val);
+  glm::vec3 GetPos () const;
+  glm::mat4 GetCorners () const;
 protected:
   glm::vec3 pos;
   glm::vec3 size;

@@ -37,3 +37,20 @@ bool Entity::CheckBounds(float left, float right, float top, float bottom) {
     && pos[1] + size[1] / 2 > bottom
     && pos[1] - size[1] / 2 < top;
 }
+
+glm::vec3 Entity::GetPos () const {
+  return pos;
+}
+
+glm::mat4 Entity::GetCorners () const {
+  float left = pos[0] - size[0] / 2;
+  float right = pos[0] + size[0] / 2;
+  float top =  pos[1] + size[1] / 2;
+  float bottom = pos[1] - size[1] / 2;
+  glm::vec4 topLeft = glm::vec4(left, top, 1.0f, 1.0f);
+  glm::vec4 topRight = glm::vec4(right, top, 1.0f, 1.0f);
+  glm::vec4 bottomLeft = glm::vec4(left, bottom, 1.0f, 1.0f);
+  glm::vec4 bottomRight = glm::vec4(right, bottom, 1.0f, 1.0f);
+
+  return glm::mat4(topLeft, topRight, bottomLeft, bottomRight);
+}

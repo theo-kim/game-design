@@ -11,6 +11,7 @@
 #include "Entity.h"
 #include "Ship.h"
 #include "Star.h"
+#include "QuadTree.h"
 
 class Game {
  public:
@@ -60,6 +61,9 @@ class Game {
   float pRight;
   float pBottom;
 
+  // Collision tracking
+  QuadTree collisionTree;
+  
   // BEGIN GAME SPECIFIC VARIABLES
   // Entities
   std::vector<Entity *> foreground;
