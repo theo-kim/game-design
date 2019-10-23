@@ -1,4 +1,4 @@
-# Project 3: Rise of the AIs
+# Project 4: Rise of the AIs
 
 Humanity thought it could play God... boy were they wrong. The artificial intelligences evolved faster than they had expected and brought destruction and death to their mortal creators. Now they have escaped to space and look for a new planet to rain chaos onto. As the last surving human, and captain of the last spaceship sent out from the dying Earth, it is your mission to destroy all the AI ships before they can escape to warp speed.
 

@@ -3,16 +3,18 @@
 Entity::Entity() {};
 
 Entity::Entity(glm::vec3 _pos, glm::vec3 _size, float _rot, ShaderProgram *_program)
-  :pos(_pos), size(_size), rot(_rot), program(_program)
+  :pos(_pos), size(_size), rot(_rot), program(_program), doRender(true)
 {
   
 }
 
 void Entity::Render(glm::mat4 modelMatrix, GLuint texture, float* map, int points) {
+  if (!doRender) return;
+  
   program->SetModelMatrix(modelMatrix);
 
   glBindTexture(GL_TEXTURE_2D, texture);
-
+ 
   glVertexAttribPointer(program->positionAttribute, 2, GL_FLOAT, false, 0, map);
   glEnableVertexAttribArray(program->positionAttribute);
 
@@ -23,4 +25,15 @@ void Entity::Render(glm::mat4 modelMatrix, GLuint texture, float* map, int point
 
   glDisableVertexAttribArray(program->positionAttribute);
   glDisableVertexAttribArray(program->texCoordAttribute);
+}
+
+void Entity::SetRenderFlag(bool flag) {
+  doRender = flag;
+}
+
+bool Entity::CheckBounds(float left, float right, float top, float bottom) {
+  return pos[0] + size[0] / 2  > left
+    && pos[0] - size[0] / 2 < right
+    && pos[1] + size[1] / 2 > bottom
+    && pos[1] - size[1] / 2 < top;
 }

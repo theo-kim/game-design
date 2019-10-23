@@ -4,12 +4,13 @@
 // Game Configuration Settings
 #define GAME_NAME "Space War"
 #define FIXED_TIMESTEP 0.01666f
-#define GRAVITY 0.1f;
+#define NUM_STARS 300
 
 #include "standard.h"
 #include "Text.h"
 #include "Entity.h"
 #include "Ship.h"
+#include "Star.h"
 
 class Game {
  public:
@@ -33,10 +34,12 @@ class Game {
   // Camera Variables
   glm::mat4 viewMatrix;
   glm::mat4 projectionMatrix;
+  glm::mat4 backgroundProjectionMatrix;
   
   // Implementation Variables
-  ShaderProgram rendererTextured;
-  ShaderProgram rendererUntextured;
+  ShaderProgram rendererTextured; // foreground layer
+  ShaderProgram rendererUntextured; // foreground layer
+  ShaderProgram rendererUntexturedBackground; // background layer
   SDL_Window* displayWindow;
 
   // Game state tracker
@@ -52,9 +55,18 @@ class Game {
   float right;
   float bottom;
 
+  float pTop;
+  float pLeft;
+  float pRight;
+  float pBottom;
+
   // BEGIN GAME SPECIFIC VARIABLES
   // Entities
+  std::vector<Entity *> foreground;
+  std::vector<Entity *> background;
+
   Ship ship;
+  Star stars[NUM_STARS];
   
   // Text
 };

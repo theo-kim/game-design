@@ -9,6 +9,7 @@
 
 #include <iostream>
 #include <math.h>
+#include <vector>
 
 #include <SDL.h>
 #include <SDL_opengl.h>
