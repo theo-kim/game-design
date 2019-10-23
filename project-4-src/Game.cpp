@@ -99,7 +99,7 @@ void Game::Render () {
     }
 
     for (int i = 0; i < background.size(); ++i) {
-      // background[i]->SetRenderFlag(background[i]->CheckBounds(pLeft, pRight, pTop, pBottom));
+      background[i]->SetRenderFlag(background[i]->CheckBounds(pLeft, pRight, pTop, pBottom));
     }
     // Render the main game
     ship.Render();
@@ -124,7 +124,6 @@ void Game::Update () {
   // END OF TICK CALCULATION
   
   while (delta >= FIXED_TIMESTEP) {
-    CameraPan(glm::vec3(0.5f, 0.5f, 0.0f) * FIXED_TIMESTEP);
     if (gameState == 1) {
       // Update the main menu based on user inputs
     }
@@ -132,6 +131,8 @@ void Game::Update () {
       // Get current world state
 
       // Make necessary updates
+      ship.Update(FIXED_TIMESTEP);
+      CameraPan(ship.GetMov() * FIXED_TIMESTEP);
     }
     else if (gameState == 3) { // If the game has ended...
       // Render the GAMEOVER view
@@ -157,10 +158,8 @@ void Game::Input () {
         // Get keydown events
       }
 
-      // Check if keys are still up
-      if (!keys[SDL_SCANCODE_LEFT] && !keys[SDL_SCANCODE_RIGHT]) {
-	
-      }
+      ship.Move(keys[SDL_SCANCODE_W], keys[SDL_SCANCODE_S], keys[SDL_SCANCODE_A], keys[SDL_SCANCODE_D]);
+      
     }
   }
 }

@@ -12,9 +12,13 @@ class Ship : public Entity {
 public:
   Ship();
   Ship(ShaderProgram* program);
+  Ship(ShaderProgram* program, glm::vec3 p, glm::vec3 s);
   void Render();
   void Update(float delta);
+  void Move(bool up, bool down, bool left, bool right);
 
+  glm::vec3 GetMov() const;
+  
   // I'm lazy and putting the sensors in the public space
   Sensor *sensors[9]; // For now...
   ProximitySensor prox;
@@ -23,6 +27,8 @@ public:
   
 private:
   int health;
+  glm::vec3 mov;
+  float speed;
 };
 
 #endif

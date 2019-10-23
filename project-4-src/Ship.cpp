@@ -3,9 +3,19 @@
 Ship::Ship() {}
 
 Ship::Ship(ShaderProgram *_program)
-  : Entity(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), 0.0f, _program) {}
+  : Entity(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), 0.0f, _program) {
+  mov = glm::vec3(0.0f);
+  speed = 1;
+}
+
+Ship::Ship(ShaderProgram *_program, glm::vec3 p, glm::vec3 s)
+  : Entity(p, s, 0.0f, _program) {
+  mov = glm::vec3(0.0f);
+  speed = 1;
+}
 
 void Ship::Update(float delta) {
+  pos += mov * delta * speed;
   return;
 }
 
@@ -20,4 +30,12 @@ void Ship::Render() {
   program->SetColor(1.0f, 1.0f, 1.0f, 1.0f);
   
   Entity::Render(modelMatrix, (GLuint)NULL, map, 12);
+}
+
+void Ship::Move(bool up, bool down, bool left, bool right) {
+  mov = glm::vec3((float)right - (float)left, (float)up - (float)down, 0.0f);
+}
+
+glm::vec3 Ship::GetMov() const {
+  return mov * speed;
 }
