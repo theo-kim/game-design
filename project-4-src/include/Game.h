@@ -12,6 +12,7 @@
 #include "Ship.h"
 #include "Star.h"
 #include "QuadTree.h"
+#include "HeroShip.h"
 
 class Game {
  public:
@@ -45,12 +46,16 @@ class Game {
 
   // Game state tracker
   int gameState;
+  int fireState;
 
   // Frame rate variables
   float lastTicks;
   float accumulator;
 
   // Window Variables
+  float width;
+  float height;
+
   float top;
   float left;
   float right;
@@ -69,8 +74,8 @@ class Game {
   std::vector<Entity *> foreground;
   std::vector<Entity *> background;
 
-  Ship ship;
-  Star stars[NUM_STARS];
+  HeroShip *ship;
+  Star *stars[NUM_STARS];
   
   // Text
 };

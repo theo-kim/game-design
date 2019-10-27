@@ -8,6 +8,13 @@ Entity::Entity(glm::vec3 _pos, glm::vec3 _size, float _rot, ShaderProgram *_prog
   
 }
 
+Entity::Entity(glm::vec3 _pos, glm::vec3 _size, float _rot, TextureSheet *_texture, ShaderProgram *_program)
+  :pos(_pos), size(_size), rot(_rot), program(_program), doRender(true),
+   texture(_texture)
+{
+  
+}
+
 void Entity::Render(glm::mat4 modelMatrix, GLuint texture, float* map, int points) {
   if (!doRender) return;
   
@@ -53,4 +60,20 @@ glm::mat4 Entity::GetCorners () const {
   glm::vec4 bottomRight = glm::vec4(right, bottom, 1.0f, 1.0f);
 
   return glm::mat4(topLeft, topRight, bottomLeft, bottomRight);
+}
+
+void Entity::TransformLocalCoord (glm::vec3 &point) const {
+  glm::mat4 transformation = glm::mat4(1.0f);
+  transformation = glm::translate(transformation, pos);
+  transformation = glm::rotate(transformation, -rot, glm::vec3(0.0f, 0.0f, 1.0f));
+  glm::vec4 extraPoint = glm::vec4(point[0], point[1], point[2], 1.0f);
+  glm::vec4 transformedPoint = extraPoint * transformation;
+  point[0] = transformedPoint[0];
+  point[1] = transformedPoint[1];
+  point[2] = transformedPoint[2];
+}
+
+void Entity::TransformLocalCoord (glm::mat4 &body) const {
+  body = glm::translate(body, pos);
+  body = glm::rotate(body, -rot, glm::vec3(0.0f, 0.0f, 1.0f));
 }

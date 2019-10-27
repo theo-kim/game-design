@@ -5,6 +5,10 @@
 
 Sensor::Sensor() {}
 
+Sensor::Sensor(Entity *_owner)
+  : owner(_owner)
+{}
+
 ProximitySensor::ProximitySensor() {}
 
 int ProximitySensor::GetState() {
@@ -18,6 +22,17 @@ int EdgeSensor::GetState() {
 }
 
 VertexSensor::VertexSensor() {}
+
+VertexSensor::VertexSensor(glm::vec3 _loc, Entity *belongsTo)
+  : Sensor(belongsTo),
+    loc(_loc)
+{
+  
+}
+
+glm::vec3 VertexSensor::GetLoc() {
+  return loc;
+}
 
 int VertexSensor::GetState() {
   return 0;

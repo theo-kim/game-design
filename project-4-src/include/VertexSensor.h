@@ -14,6 +14,8 @@ public:
   bool CheckCollision(VertexSensor sensor);
   bool CheckCollision(EdgeSensor sensor);
   int GetState();
+  glm::vec3 GetLoc();
+private:
   glm::vec3 loc;
 };
 

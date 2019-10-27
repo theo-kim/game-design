@@ -7,6 +7,7 @@
 class Sensor {
  public:
   Sensor();
+  Sensor(Entity *owner);
   virtual int GetState() = 0;
  protected:
   Entity *owner;
