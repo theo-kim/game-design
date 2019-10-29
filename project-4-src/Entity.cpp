@@ -72,14 +72,11 @@ glm::mat4 Entity::GetCorners () const {
 }
 
 void Entity::TransformLocalCoord (glm::vec3 &point) const {
-  glm::mat4 transformation = glm::mat4(1.0f);
+  glm::mat4 transformation(1.0f);
   transformation = glm::translate(transformation, pos);
-  transformation = glm::rotate(transformation, -rot, glm::vec3(0.0f, 0.0f, 1.0f));
-  glm::vec4 extraPoint = glm::vec4(point[0], point[1], point[2], 1.0f);
-  glm::vec4 transformedPoint = extraPoint * transformation;
-  point[0] = transformedPoint[0];
-  point[1] = transformedPoint[1];
-  point[2] = transformedPoint[2];
+  glm::vec4 extraPoint(point, 1.0f);
+  extraPoint = transformation * extraPoint;
+  point = glm::vec3(extraPoint);
 }
 
 void Entity::TransformLocalCoord (glm::mat4 &body) const {

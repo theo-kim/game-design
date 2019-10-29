@@ -25,15 +25,16 @@ void ProximitySensor::Update(glm::mat4 &transformation) {
 }
 
 bool ProximitySensor::CheckCollision(ProximitySensor *with) {;
-  std::cout << "POS" << owner->GetPos()[1] << std::endl;
+  std::cout << "POS" << owner->GetPos()[0] << "," << owner->GetPos()[1] << std::endl;
   glm::vec3 newLoc(loc);
   owner->TransformLocalCoord(newLoc);
+  std::cout << "POS" << newLoc[0] << "," << newLoc[1] << std::endl;
   glm::vec3 newLocOther(with->loc);
   with->owner->TransformLocalCoord(newLocOther);
   float distance = glm::compAdd(glm::pow(newLoc - newLocOther, glm::vec3(2.0f)));
   //std::cout << distance << std::endl;
   if (distance < threshold && distance < with->threshold) {
-    std::cout << "COLLISION!" << std::endl;
+    std::cout << "COLLISION! " << distance << std::endl;
     return true;
   }
   return false;
