@@ -27,10 +27,6 @@ EvilShip::EvilShip(ShaderProgram *program, TextureSheet *texture, glm::vec3 _pos
 
 void EvilShip::Render() {
   Ship::Render();
-
-  for (int i = 0; i < guns.size(); ++i) {
-    guns[i].Render();
-  }
 }
 
 void EvilShip::Update (float delta) {

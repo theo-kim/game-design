@@ -7,7 +7,8 @@ Ship::Ship(ShaderProgram *_program, QuadTree *collisionEngine, TextureSheet *tex
     mov(glm::vec3(0.0f)),
     speed(1),
     health(10),
-    prox(glm::vec3(0.0f), 1.0f, this)
+    prox(glm::vec3(0.0f), 1.0f, this),
+    isMoving(0)
 {}
 
 Ship::Ship(ShaderProgram *_program, QuadTree *collisionEngine, glm::vec3 p, glm::vec3 s, TextureSheet *texture)
@@ -15,7 +16,8 @@ Ship::Ship(ShaderProgram *_program, QuadTree *collisionEngine, glm::vec3 p, glm:
     mov(glm::vec3(0.0f)),
     speed(1),
     health(10),
-    prox(glm::vec3(0.0f), 1.0f, this)
+    prox(glm::vec3(0.0f), 1.0f, this),
+    isMoving(0)
 {}
 
 Ship::~Ship() {}
@@ -48,10 +50,15 @@ void Ship::Render() {
   program->SetColor(1.0f, 1.0f, 1.0f, 1.0f);
   
   Entity::Render(modelMatrix, texture->GetId(), map, 12);
+
+  for (int i = 0; i < guns.size(); ++i) {
+    guns[i].Render();
+  }
 }
 
 void Ship::Move(bool up, bool down, bool left, bool right) {
-  isMoving = 0 & (up << 3) & (down << 2) & (left << 1) & right;
+  isMoving = 0;
+  isMoving = 0 | ((int)up << 3) | ((int)down << 2) | ((int)left << 1) | right;
   mov = glm::vec3((float)right - (float)left, (float)up - (float)down, 0.0f);
 }
 
@@ -82,6 +89,9 @@ int Ship::CheckCollision(Collidable *with) {
     Bullet * b = dynamic_cast<Bullet *>(with);
     if (b == NULL) return QUADTREE_ILLEGAL_COLLISION;
     // Now we have a bullet and this object
+    if (b->shotBy->owner == this) {
+      return QUADTREE_ILLEGAL_COLLISION;
+    }
     // Step 1: Determine distance
     if (!prox.CheckCollision(b->GetProximitySensor())) {
       return QUADTREE_NO_COLLISION;

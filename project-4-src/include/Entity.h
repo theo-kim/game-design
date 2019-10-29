@@ -12,6 +12,7 @@ class Entity {
   ~Entity();
   virtual void Render(glm::mat4 modelMatrix, GLuint texture, float* map, int points);
   virtual void Update(float delta) = 0;
+  bool CheckRenderBounds(float left, float right, float top, float bottom);
   bool CheckBounds(float left, float right, float top, float bottom);
   void SetRenderFlag(bool val);
   glm::vec3 GetPos () const;

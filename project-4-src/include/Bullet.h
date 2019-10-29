@@ -5,8 +5,10 @@
 #include "Entity.h"
 #include "Ship.h"
 #include "QuadTree.h"
+#include "Gun.h"
 
 class Ship;
+class Gun;
 
 class Bullet : public Collidable {
 public:
@@ -29,6 +31,8 @@ public:
   virtual Collidable::ColliderType GetColliderType();
 
   ProximitySensor *GetProximitySensor();
+
+  Gun *shotBy;
 private:
   float r, g, b;
   glm::vec3 mov;

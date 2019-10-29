@@ -20,8 +20,8 @@ public:
   void Render();
   void Rotate(float deg);
   void Fire();
-protected:
   Entity *owner;
+protected:
   std::vector<VertexSensor> firePoints;
   int numShots;
   int numShooting;

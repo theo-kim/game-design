@@ -73,6 +73,7 @@ void Gun::Fire() {
     origin = glm::vec3(torigin[0], torigin[1], torigin[2]);
     origin = origin + owner->GetPos();
     b->SetOrigin(origin, rot);
+    b->shotBy = this;
     activeBullets.push_back(b);
   }
 }

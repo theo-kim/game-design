@@ -40,11 +40,18 @@ void Entity::SetRenderFlag(bool flag) {
   doRender = flag;
 }
 
-bool Entity::CheckBounds(float left, float right, float top, float bottom) {
+bool Entity::CheckRenderBounds(float left, float right, float top, float bottom) {
   return pos[0] + size[0] / 2  > left
     && pos[0] - size[0] / 2 < right
     && pos[1] + size[1] / 2 > bottom
     && pos[1] - size[1] / 2 < top;
+}
+
+bool Entity::CheckBounds(float left, float right, float top, float bottom) {
+  return pos[0] - size[0] / 2  > left
+    && pos[0] + size[0] / 2 < right
+    && pos[1] - size[1] / 2 > bottom
+    && pos[1] + size[1] / 2 < top;
 }
 
 glm::vec3 Entity::GetPos () const {

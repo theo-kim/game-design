@@ -13,7 +13,8 @@ Bullet::Bullet(ShaderProgram *program, QuadTree *collisionEngine, glm::vec3 orig
     b(c[2]),
     alive(true),
     killme(false),
-    prox(origin, 0.5, this)
+    prox(origin, 0.5, this),
+    shotBy(NULL)
 {}
 
 Bullet::Bullet(const Bullet &copied)
@@ -27,7 +28,8 @@ Bullet::Bullet(const Bullet &copied)
     b(copied.b),
     alive(true),
     killme(false),
-    prox(copied.pos, 0.5, this)
+    prox(copied.pos, 0.5, this),
+    shotBy(copied.shotBy)
 {}
 
 Bullet::~Bullet() {}

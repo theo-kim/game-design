@@ -47,7 +47,7 @@ void QuadTree::CheckCollision() {
 }
 
 int QuadTree::GetSize() {
-  return totalSize;
+  return rootNode->Size();
 }
 
 QuadTree::QuadTreeNode::QuadTreeNode() {
@@ -121,6 +121,19 @@ Collidable * QuadTree::QuadTreeNode::GetEntity (int index) const {
   return NULL;
 }
 
+int QuadTree::QuadTreeNode::GetIndex (Collidable *target) const {
+  EntityLinkedList *csr = bucket;
+  int i = 0;
+  while (csr != NULL) {
+    if (csr->Get() == target) {
+      return i;
+    }
+    csr = csr->Next();
+    ++i;
+  }
+  return -1;
+}
+
 QuadTree::QuadTreeNode * QuadTree::QuadTreeNode::GetChild (bool top, bool left) const {
   if (isLeaf) return NULL;
   if (top) {
@@ -141,24 +154,65 @@ QuadTree::QuadTreeNode * QuadTree::QuadTreeNode::GetChild (bool top, bool left) 
   }
 }
 
+bool QuadTree::QuadTreeNode::InScope(Collidable *target) const {
+  return target->CheckBounds(left, right, top, bottom);
+}
+
 bool QuadTree::QuadTreeNode::Contains(Collidable *object) {
   bool there = contains.find(object) != contains.end() && contains[object] != NULL;
   return there;
 }
 
 void QuadTree::QuadTreeNode::AddEntity(Collidable *newEntity) {
+  // If it already contains the element, we need to figure out who owns it
+  // And update its position / ownership
   if (Contains(newEntity)) {
     // Get the Node that contains that element
     QuadTree::QuadTreeNode *container = contains[newEntity];
 
+    // Only perform checks if it did update
+    if (!(newEntity->DidUpdate())) return;
+    
     if (!isLeaf && container != this) {
       // Check containing node to make sure its right
       container->AddEntity(newEntity);
       return;
     }
     else {
-      // Make sure it's still in bounds (if it even moved)
-      if (!newEntity->DidUpdate() || newEntity->CheckBounds(left, right, top, bottom)) {
+      if (newEntity->CheckBounds(left, right, top, bottom)) {
+	// Is it still in the current quadrant's bounds?
+	if (!isLeaf) {
+	  // Did it move into a child leaf?
+	  // TODO: Optimize
+	  QuadTreeNode *moveTo = NULL;
+	  if (topLeftChild->InScope(newEntity)) moveTo = topLeftChild;
+	  else if (topRightChild->InScope(newEntity)) moveTo = topRightChild;
+	  else if (bottomLeftChild->InScope(newEntity)) moveTo = bottomLeftChild;
+	  else if (bottomRightChild->InScope(newEntity)) moveTo = bottomRightChild;
+
+	  if (moveTo != NULL) {
+	    contains[newEntity] = moveTo;
+	    EntityLinkedList *csr = bucket;
+	    while (csr != NULL) {
+	      if (csr->Get() == newEntity) {
+		csr->Get();
+		if (csr->Prev() != NULL) {
+		  csr->Prev()->RelinkNext(csr->Next());
+		}
+		else {
+		  bucket = csr->Next();
+		}
+		if (csr->Next() != NULL) {
+		  csr->Next()->RelinkPrev(csr->Prev());
+		}
+		delete csr;
+		--size;
+	      }
+	      csr = csr->Next();
+	    }
+	    moveTo->AddEntity(newEntity);
+	  }
+	}
 	return;
       }
       else {
@@ -169,23 +223,25 @@ void QuadTree::QuadTreeNode::AddEntity(Collidable *newEntity) {
       }
     }
   }
-  ++totalSize; // this will happen no matter what;
+  // It is a new Entity, let's add it!
+  ++totalSize; // this will happen no matter what
   int flagBuilder = 0;
   // What to do if it IS a leaf
   if (isLeaf) {
-    if (size + 1 > QUADTREE_THRESHOLD) {
+    // Add to this quadrant
+    bucket = new EntityLinkedList(newEntity, flagBuilder, bucket);
+    ++size;
+    contains[newEntity] = this;
+
+    // If the quadrant is too full, break it down into four children
+    if (size > QUADTREE_THRESHOLD) {
       Decompose();
     }
-    else {
-      // Add to this node
-      bucket = new EntityLinkedList(newEntity, flagBuilder, bucket);
-      ++size;
-      contains[newEntity] = this;
-    }
+    return;
   }
   // What to do if it is NOT a leaf
-  if (!isLeaf) {
-    // Check if its top half of the quadrant
+  else {
+    // Check if it's in the top half of the quadrant
     if (newEntity->CheckBounds(left, right, top, center[1])) {
       flagBuilder |= 0b1100;
       if (newEntity->CheckBounds(left, center[0], top, center[1])) {
@@ -288,8 +344,15 @@ Collidable * QuadTree::QuadTreeNode::PopEntity (int index) {
   while (csr != NULL && i < index) {
     if (i == index) {
       output = csr->Get();
-      csr->Prev()->RelinkNext(csr->Next());
-      csr->Next()->RelinkPrev(csr->Prev());
+      if (csr->Prev() != NULL) {
+	csr->Prev()->RelinkNext(csr->Next());
+      }
+      else {
+	bucket = csr->Next();
+      }
+      if (csr->Next() != NULL) {
+	csr->Next()->RelinkPrev(csr->Prev());
+      }
       delete csr;
       --size;
       --totalSize;
@@ -309,9 +372,9 @@ void QuadTree::QuadTreeNode::Decompose () {
   isLeaf = false;
 
   // First create subquadrants
-  float halfHeight = std::fabs((top - bottom) / 2);
-  float halfWidth = std::fabs((right - left) / 2);
-  glm::vec3 adjustment = glm::vec3(halfWidth / 2, halfHeight / 2, 0.0f);
+  float halfHeight = std::fabs((top - bottom) / 2.0f);
+  float halfWidth = std::fabs((right - left) / 2.0f);
+  glm::vec3 adjustment = glm::vec3(halfWidth / 2.0f, halfHeight / 2.0f, 0.0f);
 
   glm::vec3 tl = center + adjustment * glm::vec3(-1.0f, 1.0f, 1.0f);
   glm::vec3 tr = center + adjustment * glm::vec3(1.0f, 1.0f, 1.0f);
@@ -327,17 +390,24 @@ void QuadTree::QuadTreeNode::Decompose () {
   size = 0;
   EntityLinkedList *l = bucket;
   EntityLinkedList *g = bucket;
+  contains.clear();
   bucket = NULL;
-  while (bucket != NULL) {
+  while (l != NULL) {
     AddEntity(l->Get());
+    l = l->Next();
     // Clean up the old list
     delete g;
-    bucket = bucket->Next();
-    g = bucket;
+    g = l;
   }
 }
 
 int QuadTree::QuadTreeNode::Size () const {
+  std::cout << "Mine: " << SizeGetUnique() << std::endl;
+  if (isLeaf) return totalSize;
+  std::cout << "TL: " << topLeftChild->Size() << std::endl;
+  std::cout << "TR: " << topRightChild->Size() << std::endl;
+  std::cout << "BL: " << bottomLeftChild->Size() << std::endl;
+  std::cout << "BR: " << bottomRightChild->Size() << std::endl;
   return totalSize;
 }
 

@@ -64,7 +64,9 @@ public:
     ~QuadTreeNode(); // Deconstructor
 
     Collidable * GetEntity (int index) const;
+    int GetIndex (Collidable *target) const;
     QuadTreeNode * GetChild (bool top, bool left) const;
+    bool InScope(Collidable *target) const;
 
     void AddEntity(Collidable *newEntity);
     Collidable *PopEntity(int index); // Remove entity and return

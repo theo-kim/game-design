@@ -114,11 +114,11 @@ void Game::Render () {
   else {
     // Check for entities that are within the camera fram
     for (int i = 0; i < foreground.size(); ++i) {
-      foreground[i]->SetRenderFlag(foreground[i]->CheckBounds(left, right, top, bottom));
+      foreground[i]->SetRenderFlag(foreground[i]->CheckRenderBounds(left, right, top, bottom));
     }
 
     for (int i = 0; i < background.size(); ++i) {
-      background[i]->SetRenderFlag(background[i]->CheckBounds(pLeft, pRight, pTop, pBottom));
+      background[i]->SetRenderFlag(background[i]->CheckRenderBounds(pLeft, pRight, pTop, pBottom));
     }
 
     // Render the main game
@@ -163,6 +163,8 @@ void Game::Update () {
       for (int i = 0; i < enemies.size(); ++i) {
 	enemies[i]->Update(FIXED_TIMESTEP);
       }
+
+      //collisionTree.GetSize();
       
       // Check collisions
       collisionTree.CheckCollision();
