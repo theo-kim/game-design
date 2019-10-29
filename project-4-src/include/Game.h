@@ -13,6 +13,7 @@
 #include "Star.h"
 #include "QuadTree.h"
 #include "HeroShip.h"
+#include "EvilShip.h"
 
 class Game {
  public:
@@ -46,7 +47,6 @@ class Game {
 
   // Game state tracker
   int gameState;
-  int fireState;
 
   // Frame rate variables
   float lastTicks;
@@ -69,15 +69,28 @@ class Game {
   // Collision tracking
   QuadTree collisionTree;
   
-  // BEGIN GAME SPECIFIC VARIABLES
+  // BEGIN GAME SPECIFIC SPACE
+  // Methods
+  void Spawn(int n, int difficulty);
+  
+  // States
+  int fireState;
+  
   // Entities
   std::vector<Entity *> foreground;
   std::vector<Entity *> background;
 
   HeroShip *ship;
+  std::vector<EvilShip *> enemies;
   Star *stars[NUM_STARS];
   
   // Text
+
+  // Textures
+  TextureSheet *heroTexture;
+  TextureSheet *dualGunTexture;
+  TextureSheet *enemyTexture;
+  TextureSheet *singleGunTexture;
 };
 
 #endif

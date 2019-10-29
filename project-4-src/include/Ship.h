@@ -8,19 +8,28 @@
 #include "EdgeSensor.h"
 #include "VertexSensor.h"
 #include "Gun.h"
+#include "QuadTree.h"
 
 class Gun;
+class Bullet;
 
-class Ship : public Entity {
+class Ship : public Collidable {
 public:
   Ship();
-  Ship(ShaderProgram* programs, TextureSheet *texture);
-  Ship(ShaderProgram* programs, glm::vec3 p, glm::vec3 s, TextureSheet *texture);
+  Ship(ShaderProgram* programs, QuadTree *collisionEngine, TextureSheet *texture);
+  Ship(ShaderProgram* programs, QuadTree *collisionEngine, glm::vec3 p, glm::vec3 s, TextureSheet *texture);
   ~Ship();
   void Render();
   void Update(float delta);
   void Move(bool up, bool down, bool left, bool right);
   void Fire(int gunIndex);
+
+  // Collision interfaces
+  virtual bool DidUpdate();
+  virtual void DidCollide(Collidable *with);
+  virtual int CheckCollision(Collidable *with);
+  int CheckCollision(Bullet *with);
+  virtual Collidable::ColliderType GetColliderType();
 
   glm::vec3 GetMov() const;
  

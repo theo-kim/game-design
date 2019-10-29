@@ -2,8 +2,8 @@
 
 Bullet::Bullet() {}
 
-Bullet::Bullet(ShaderProgram *program, glm::vec3 origin, glm::vec3 c, float s, float p, int pow)
-  : Entity(origin, glm::vec3(1.0f, 1.0f, 1.0f), 0.0f, program),
+Bullet::Bullet(ShaderProgram *program, QuadTree *collisionEngine, glm::vec3 origin, glm::vec3 c, float s, float p, int pow)
+  : Collidable(origin, glm::vec3(1.0f, 1.0f, 1.0f), 0.0f, program, collisionEngine),
     power(pow),
     speed(s),
     penetration(p),
@@ -11,10 +11,13 @@ Bullet::Bullet(ShaderProgram *program, glm::vec3 origin, glm::vec3 c, float s, f
     r(c[0]),
     g(c[1]),
     b(c[2]),
-    alive(true)
+    alive(true),
+    killme(false)
 {
   
 }
+
+Bullet::~Bullet() {}
 
 void Bullet::Update(float delta) {
   pos += mov * speed * delta;
@@ -22,6 +25,7 @@ void Bullet::Update(float delta) {
   if (penetration < 0) {
     alive = false;
   }
+  Collidable::Update(delta);
 }
 
 void Bullet::Render() {
@@ -46,4 +50,32 @@ void Bullet::SetOrigin(glm::vec3 _pos, float _rot) {
 
 bool Bullet::IsAlive() {
   return alive;
+}
+
+bool Bullet::ReadyToDie() {
+  return killme;
+}
+
+bool Bullet::DidUpdate() {
+  return alive;
+}
+
+void Bullet::DidCollide(Collidable *with) {
+  alive = false; // kill the bullet when it collides
+}
+
+int Bullet::CheckCollision(Collidable *with) {
+  if (!alive) {
+    killme = true;
+    return QUADTREE_DEAD_ENTITY;
+  }
+  Collidable::ColliderType type = with->GetColliderType();
+  if (type == Collidable::BALLISTIC) {
+    return QUADTREE_ILLEGAL_COLLISION;
+  }
+  return with->CheckCollision((Bullet *)this); // Bullets do not handle their own collisions;
+}
+
+Collidable::ColliderType Bullet::GetColliderType() {
+  return Collidable::BALLISTIC;
 }

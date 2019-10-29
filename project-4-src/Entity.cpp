@@ -15,6 +15,8 @@ Entity::Entity(glm::vec3 _pos, glm::vec3 _size, float _rot, TextureSheet *_textu
   
 }
 
+Entity::~Entity() {}
+
 void Entity::Render(glm::mat4 modelMatrix, GLuint texture, float* map, int points) {
   if (!doRender) return;
   

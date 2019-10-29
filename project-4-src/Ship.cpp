@@ -2,30 +2,30 @@
 
 Ship::Ship() {}
 
-Ship::Ship(ShaderProgram *_program, TextureSheet *texture)
-  : Entity(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), 0.0f, texture, _program) {
+Ship::Ship(ShaderProgram *_program, QuadTree *collisionEngine, TextureSheet *texture)
+  : Collidable(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), 0.0f, texture, _program, collisionEngine) {
   mov = glm::vec3(0.0f);
   speed = 1;
+  health = 10;
 }
 
-Ship::Ship(ShaderProgram *_program, glm::vec3 p, glm::vec3 s, TextureSheet *texture)
-  : Entity(p, s, 0.0f, texture, _program) {
+Ship::Ship(ShaderProgram *_program, QuadTree *collisionEngine, glm::vec3 p, glm::vec3 s, TextureSheet *texture)
+  : Collidable(p, s, 0.0f, texture, _program, collisionEngine) {
   mov = glm::vec3(0.0f);
   speed = 1;
+  health = 10;
 }
 
-Ship::~Ship() {
-  for (int i = 0; i < guns.size(); ++i) {
-    //delete guns[i];
-  }
-}
+Ship::~Ship() {}
 
 void Ship::Update(float delta) {
   pos += mov * delta * speed;
+  // Update in the collision tree
+  Collidable::Update(delta);
+
   for (int i = 0; i < guns.size(); ++i) {
     guns[i].Update(delta);
   }
-  return;
 }
 
 void Ship::Render() {
@@ -56,4 +56,36 @@ glm::vec3 Ship::GetMov() const {
 
 void Ship::Fire(int gunIndex) {
   guns[gunIndex].Fire();
+}
+
+bool Ship::DidUpdate() {
+  return isMoving != 0;
+}
+
+void Ship::DidCollide(Collidable *with) {
+  if (with->GetColliderType() == Collidable::BALLISTIC) {
+    health = 0;
+  }
+}
+
+int Ship::CheckCollision(Collidable *with) {
+  if (health <= 0) {
+    return QUADTREE_DEAD_ENTITY;
+  }
+  Collidable::ColliderType type = with->GetColliderType();
+  if (type == Collidable::BALLISTIC) {
+    Bullet * b = dynamic_cast<Bullet *>(with);
+    if (b == NULL) return QUADTREE_ILLEGAL_COLLISION;
+    // Now we have a bullet and this object
+    // Step 1: Determine distance
+
+    // Step 2: If near enough check actual collision
+
+    return QUADTREE_NO_COLLISION;
+  }
+  return QUADTREE_ILLEGAL_COLLISION;
+}
+
+Collidable::ColliderType Ship::GetColliderType() {
+  return Collidable::OBJECT;
 }

@@ -69,12 +69,16 @@ void Game::Initialize () {
   ShaderProgram *renderers[] = { &rendererTextured, &rendererUntextured }; 
   
   // Load textures
-  TextureSheet *heroTexture = new TextureSheet("textures/hero.png", 1, 1);
-  TextureSheet *gunTexture = new TextureSheet("textures/dual-gun.png", 1, 1);
+  heroTexture = new TextureSheet("textures/hero.png", 1, 1);
+  dualGunTexture = new TextureSheet("textures/dual-gun.png", 1, 1);
+  enemyTexture = new TextureSheet("textures/enemy.png", 1, 1);
+  singleGunTexture = new TextureSheet("textures/single-gun.png", 1, 1);
   
   // Entity Initialization
-  ship = new HeroShip(renderers, heroTexture, gunTexture);
+  ship = new HeroShip(renderers, heroTexture, dualGunTexture, &collisionTree);
   foreground.push_back(ship);
+
+  Spawn(10, 1);
 
   for (int i = 0; i < NUM_STARS; ++i) {
     stars[i] = new Star(&rendererUntexturedBackground, rand(), left * 2, right * 2, top * 2, bottom * 2);
@@ -94,6 +98,9 @@ void Game::Shutdown() {
   delete ship;
   for (int i = 0; i < NUM_STARS; ++i) {
     delete stars[i];
+  }
+  for (int i = 0; i < enemies.size(); ++i) {
+    delete enemies[i];
   }
   SDL_Quit();
 }
@@ -121,6 +128,10 @@ void Game::Render () {
     }
 
     ship->Render();
+
+    for (int i = 0; i < enemies.size(); ++i) {
+      enemies[i]->Render();
+    }
   }
   
   SDL_GL_SwapWindow(displayWindow);
@@ -148,6 +159,13 @@ void Game::Update () {
       // Make necessary updates
       ship->Update(FIXED_TIMESTEP);
       CameraPan(ship->GetMov() * FIXED_TIMESTEP);
+
+      for (int i = 0; i < enemies.size(); ++i) {
+	enemies[i]->Update(FIXED_TIMESTEP);
+      }
+      
+      // Check collisions
+      collisionTree.CheckCollision();
     }
     else if (gameState == 3) { // If the game has ended...
       // Render the GAMEOVER view
@@ -225,4 +243,21 @@ void Game::CameraPan(glm::vec3 pan) {
 
 void Game::CameraRotate(float rotationFactor) {
   // TODO: Implement
+}
+
+// Game methods
+void Game::Spawn(int n, int difficulty) {
+  enemies.reserve(n * 2);
+  for (int i = 0; i < n; ++i) {
+    int randomX = random() % 10 - 5;
+    int randomY = random() % 10 - 5;
+    
+    enemies.push_back(new EvilShip(&rendererTextured, enemyTexture, glm::vec3(randomX, randomY, 1.0f), &collisionTree));
+    foreground.push_back(enemies[i]);
+
+    Bullet b;
+    enemies[i]->AddGun(Gun(&rendererTextured, enemies[i], b, singleGunTexture, glm::vec3(-0.48f, -0.58f, 0.0f), glm::vec3(0.25f, 0.25f, 1.0f)));
+    enemies[i]->AddGun(Gun(&rendererTextured, enemies[i], b, singleGunTexture, glm::vec3(0.48f, -0.58f, 0.0f), glm::vec3(0.25f, 0.25f, 1.0f)));
+    enemies[i]->AddGun(Gun(&rendererTextured, enemies[i], b, singleGunTexture, glm::vec3(0.0f, 0.75f, 0.0f), glm::vec3(0.25f, 0.25f, 1.0f)));
+  }
 }
