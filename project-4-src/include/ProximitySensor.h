@@ -8,8 +8,10 @@ class ProximitySensor : public Sensor {
 public:
   ProximitySensor();
   ProximitySensor(glm::vec3 _loc, float _threshold, Entity *belongsTo);
-  bool CheckCollision(ProximitySensor sensor);
-  int GetState();
+  bool CheckCollision(ProximitySensor *sensor);
+  virtual int GetState();
+  virtual void Update(glm::mat4 &transformation);
+  
   glm::vec3 loc;
   float threshold;
 };

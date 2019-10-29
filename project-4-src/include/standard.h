@@ -17,6 +17,7 @@
 
 #include <glm/mat4x4.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtx/component_wise.hpp>
 #include <ShaderProgram.h>
 #include <LoadTexture.h>
 

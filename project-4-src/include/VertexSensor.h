@@ -13,7 +13,8 @@ public:
   VertexSensor(glm::vec3 _loc, Entity *belongsTo);
   bool CheckCollision(VertexSensor sensor);
   bool CheckCollision(EdgeSensor sensor);
-  int GetState();
+  virtual int GetState();
+  virtual void Update(glm::mat4 &transformation);
   glm::vec3 GetLoc();
 private:
   glm::vec3 loc;

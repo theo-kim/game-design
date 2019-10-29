@@ -11,14 +11,41 @@ Sensor::Sensor(Entity *_owner)
 
 ProximitySensor::ProximitySensor() {}
 
+ProximitySensor::ProximitySensor(glm::vec3 _loc, float _thresh, Entity *_owner)
+  : loc(_loc),
+    threshold(_thresh),
+    Sensor(_owner) {}
+
 int ProximitySensor::GetState() {
   return 0;
+}
+
+void ProximitySensor::Update(glm::mat4 &transformation) {
+  
+}
+
+bool ProximitySensor::CheckCollision(ProximitySensor *with) {;
+  glm::vec3 newLoc(loc);
+  owner->TransformLocalCoord(newLoc);
+  glm::vec3 newLocOther(with->loc);
+  with->owner->TransformLocalCoord(newLocOther);
+  float distance = glm::compAdd(glm::pow(newLoc - newLocOther, glm::vec3(2.0f)));
+  std::cout << distance << std::endl;
+  if (distance < threshold) {
+    std::cout << "COLLISION!" << std::endl;
+    return true;
+  }
+  return false;
 }
 
 EdgeSensor::EdgeSensor() {}
 
 int EdgeSensor::GetState() {
   return 0;
+}
+
+void EdgeSensor::Update(glm::mat4 &transformation) {
+
 }
 
 VertexSensor::VertexSensor() {}
@@ -36,4 +63,8 @@ glm::vec3 VertexSensor::GetLoc() {
 
 int VertexSensor::GetState() {
   return 0;
+}
+
+void VertexSensor::Update(glm::mat4 &transformation) {
+
 }

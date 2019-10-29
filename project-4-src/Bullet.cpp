@@ -12,10 +12,23 @@ Bullet::Bullet(ShaderProgram *program, QuadTree *collisionEngine, glm::vec3 orig
     g(c[1]),
     b(c[2]),
     alive(true),
-    killme(false)
-{
-  
-}
+    killme(false),
+    prox(origin, 0.5, this)
+{}
+
+Bullet::Bullet(const Bullet &copied)
+  : Collidable(copied),
+    power(copied.power),
+    speed(copied.speed),
+    penetration(copied.penetration),
+    mov(glm::vec3(0.0f)),
+    r(copied.r),
+    g(copied.g),
+    b(copied.b),
+    alive(true),
+    killme(false),
+    prox(copied.pos, 0.5, this)
+{}
 
 Bullet::~Bullet() {}
 
@@ -26,6 +39,8 @@ void Bullet::Update(float delta) {
     alive = false;
   }
   Collidable::Update(delta);
+  glm::mat4 transform = glm::mat4(1.0f);
+  prox.Update(transform);
 }
 
 void Bullet::Render() {
@@ -78,4 +93,8 @@ int Bullet::CheckCollision(Collidable *with) {
 
 Collidable::ColliderType Bullet::GetColliderType() {
   return Collidable::BALLISTIC;
+}
+
+ProximitySensor *Bullet::GetProximitySensor() {
+  return &prox;
 }

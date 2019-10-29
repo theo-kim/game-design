@@ -3,18 +3,20 @@
 Ship::Ship() {}
 
 Ship::Ship(ShaderProgram *_program, QuadTree *collisionEngine, TextureSheet *texture)
-  : Collidable(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), 0.0f, texture, _program, collisionEngine) {
-  mov = glm::vec3(0.0f);
-  speed = 1;
-  health = 10;
-}
+  : Collidable(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), 0.0f, texture, _program, collisionEngine),
+    mov(glm::vec3(0.0f)),
+    speed(1),
+    health(10),
+    prox(glm::vec3(0.0f), 1.0f, this)
+{}
 
 Ship::Ship(ShaderProgram *_program, QuadTree *collisionEngine, glm::vec3 p, glm::vec3 s, TextureSheet *texture)
-  : Collidable(p, s, 0.0f, texture, _program, collisionEngine) {
-  mov = glm::vec3(0.0f);
-  speed = 1;
-  health = 10;
-}
+  : Collidable(p, s, 0.0f, texture, _program, collisionEngine),
+    mov(glm::vec3(0.0f)),
+    speed(1),
+    health(10),
+    prox(glm::vec3(0.0f), 1.0f, this)
+{}
 
 Ship::~Ship() {}
 
@@ -22,13 +24,16 @@ void Ship::Update(float delta) {
   pos += mov * delta * speed;
   // Update in the collision tree
   Collidable::Update(delta);
-
+  glm::mat4 transform = glm::translate(glm::mat4(1.0f), mov * delta * speed);
+  //prox.Update(transform);
+  
   for (int i = 0; i < guns.size(); ++i) {
     guns[i].Update(delta);
   }
 }
 
 void Ship::Render() {
+  if (health <= 0) return;
   glm::mat4 modelMatrix = glm::mat4(1.0f);
   modelMatrix = glm::translate(modelMatrix, pos);
   modelMatrix = glm::scale(modelMatrix, size);
@@ -78,10 +83,12 @@ int Ship::CheckCollision(Collidable *with) {
     if (b == NULL) return QUADTREE_ILLEGAL_COLLISION;
     // Now we have a bullet and this object
     // Step 1: Determine distance
-
+    if (!prox.CheckCollision(b->GetProximitySensor())) {
+      return QUADTREE_NO_COLLISION;
+    }
     // Step 2: If near enough check actual collision
 
-    return QUADTREE_NO_COLLISION;
+    return QUADTREE_YES_COLLISION;
   }
   return QUADTREE_ILLEGAL_COLLISION;
 }

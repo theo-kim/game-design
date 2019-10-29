@@ -12,6 +12,7 @@ class Bullet : public Collidable {
 public:
   Bullet();
   Bullet(ShaderProgram *program, QuadTree *collisionEngine, glm::vec3 origin, glm::vec3 c, float s, float p, int pow);
+  Bullet(const Bullet &copied);
   ~Bullet();
   void Update(float delta);
   void Render();
@@ -26,6 +27,8 @@ public:
   virtual void DidCollide(Collidable *with);
   virtual int CheckCollision(Collidable *with);
   virtual Collidable::ColliderType GetColliderType();
+
+  ProximitySensor *GetProximitySensor();
 private:
   float r, g, b;
   glm::vec3 mov;
@@ -34,6 +37,8 @@ private:
   int power;
   bool alive;
   bool killme;
+
+  ProximitySensor prox;
 };
 
 #endif

@@ -13,7 +13,9 @@ public:
   EdgeSensor(glm::vec3 _boundsLeft, glm::vec3 _boundsRight, Entity *belongsTo);
   bool CheckCollision(EdgeSensor sensor);
   bool CheckCollision(VertexSensor sensor);
-  int GetState();
+  
+  virtual int GetState();
+  virtual void Update(glm::mat4 &transformation);
   glm::vec3 boundsLeft;
   glm::vec3 boundsRight;
   float m;
