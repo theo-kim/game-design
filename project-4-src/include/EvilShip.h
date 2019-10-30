@@ -11,6 +11,7 @@ public:
   void Render();
   void AddGun(Gun gun);
   virtual void Update(float delta);
+  virtual void DidCollide (Collidable *with);
 private:
   void Retarget(float up, float down, float left, float right);
   TextureSheet *texture;

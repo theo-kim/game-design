@@ -11,6 +11,7 @@ public:
   HeroShip(ShaderProgram **programs, TextureSheet *texture, TextureSheet *gunTex, QuadTree *engine);
   void Render();
   void MoveGun(float radians);
+  virtual void DidCollide(Collidable *with);
 private:
   TextureSheet *texture;
 };

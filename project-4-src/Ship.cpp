@@ -7,7 +7,7 @@ Ship::Ship(ShaderProgram *_program, QuadTree *collisionEngine, TextureSheet *tex
     mov(glm::vec3(0.0f)),
     speed(1),
     health(10),
-    prox(glm::vec3(0.0f), 1.0f, this),
+    prox(glm::vec3(0.0f), 4.0f, this),
     isMoving(0)
 {}
 
@@ -16,7 +16,7 @@ Ship::Ship(ShaderProgram *_program, QuadTree *collisionEngine, glm::vec3 p, glm:
     mov(glm::vec3(0.0f)),
     speed(1),
     health(10),
-    prox(glm::vec3(0.0f), 1.0f, this),
+    prox(glm::vec3(0.0f), 4.0f, this),
     isMoving(0)
 {}
 
@@ -57,7 +57,6 @@ void Ship::Render() {
 }
 
 void Ship::Move(bool up, bool down, bool left, bool right) {
-  isMoving = 0;
   isMoving = ((int)up << 3) | ((int)down << 2) | ((int)left << 1) | right;
   mov = glm::vec3((float)right - (float)left,
 		  (float)up - (float)down,
@@ -65,7 +64,6 @@ void Ship::Move(bool up, bool down, bool left, bool right) {
 }
 
 void Ship::MoveForward(bool go) {
-  isMoving = 0;
   isMoving = ((int)go << 3);
   mov = glm::vec3(glm::cos(radians(90) + rot) * go,
 		  glm::sin(radians(90) + rot) * go,
@@ -107,7 +105,15 @@ int Ship::CheckCollision(Collidable *with) {
       return QUADTREE_NO_COLLISION;
     }
     // Step 2: If near enough check actual collision
-
+    // TODO: Do this
+    return QUADTREE_YES_COLLISION;
+  }
+  else if (type == Collidable::OBJECT) {
+    Ship *ship = dynamic_cast<Ship *>(with);
+    if (ship == NULL) return QUADTREE_ILLEGAL_COLLISION;
+    if (!prox.CheckCollision(&(ship->prox))) {
+      return QUADTREE_NO_COLLISION;
+    }
     return QUADTREE_YES_COLLISION;
   }
   return QUADTREE_ILLEGAL_COLLISION;
