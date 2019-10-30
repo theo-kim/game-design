@@ -3,10 +3,10 @@
 
 HeroShip::HeroShip () {}
 
-HeroShip::HeroShip (ShaderProgram **programs, TextureSheet *texture, TextureSheet *gunTex, QuadTree *engine)
+HeroShip::HeroShip (ShaderProgram **programs, TextureSheet *texture, QuadTree *engine)
   : Ship(programs[0], engine, texture)
 {
-  guns.push_back(DoubleGun(programs, this, gunTex, engine));
+  guns.push_back(DoubleGun(programs, this, engine));
 }
 
 void HeroShip::MoveGun(float radians) {
@@ -39,11 +39,15 @@ void EvilShip::Update (float delta) {
   if (pos[0] < target[0] + 0.1 && pos[0] > target[0] - 0.1 && pos[1] < target[1] + 0.1 && pos[1] > target[1] - 0.1) {
     Retarget(10, 10, 10, 10);
   }
+  else if (rand() % 100 < 1) {
+    Fire(rand() % guns.size());
+    Retarget(10, 10, 10, 10);
+  }
   else {
     MoveForward(1);
     float targetPolar = glm::atan(target[1] - pos[1], target[0] - pos[0]);
     rot -= (rot + radians(90) - targetPolar) * delta;
-  } 
+  }
   Ship::Update(delta);
 }
 

@@ -71,17 +71,37 @@ void Gun::Fire() {
 
     torigin = transformation * torigin;
     origin = glm::vec3(torigin);
-     b->SetOrigin(origin, rot);
+    
+    b->SetOrigin(origin, owner->TransformLocalRot(rot));
     b->shotBy = this;
     activeBullets.push_back(b);
   }
 }
 
+TextureSheet *DoubleGun::doubleGunTexture = new TextureSheet("textures/dual-gun.png", 1, 1);
+
 DoubleGun::DoubleGun() {}
 
-DoubleGun::DoubleGun(ShaderProgram **program, Ship *_owner, TextureSheet *texture, QuadTree *engine)
-  : Gun(program[0], _owner, Bullet(program[1], engine, glm::vec3(0.0f), glm::vec3(1.0f, 0.0f, 0.0f), 10.0f, 10.0f, 10), texture)
+DoubleGun::DoubleGun(ShaderProgram **program, Ship *_owner, QuadTree *engine)
+  : Gun(program[0], _owner, Bullet(program[1], engine, glm::vec3(0.0f), glm::vec3(1.0f, 0.0f, 0.0f), 10.0f, 10.0f, 10), doubleGunTexture)
 {
   firePoints.push_back(VertexSensor(glm::vec3(0.25f, -0.15f, 1.0f), this));
   firePoints.push_back(VertexSensor(glm::vec3(0.25f, 0.15f, 1.0f), this));
+}
+
+TextureSheet *SingleGun::singleGunTexture = new TextureSheet("textures/single-gun.png", 1, 1);
+
+SingleGun::SingleGun() {}
+
+SingleGun::SingleGun(ShaderProgram **program, Ship *_owner, QuadTree *engine)
+  : Gun(program[0], _owner, Bullet(program[1], engine, glm::vec3(0.0f), glm::vec3(1.0f, 0.0f, 0.0f), 10.0f, 10.0f, 10), singleGunTexture)
+{
+  firePoints.push_back(VertexSensor(glm::vec3(0.25f, 0.0f, 1.0f), this));
+}
+
+SingleGun::SingleGun(ShaderProgram **program, Ship *_owner, QuadTree *engine, glm::vec3 _pos, glm::vec3 _size, float rot)
+  : Gun(program[0], _owner, Bullet(program[1], engine, glm::vec3(0.0f), glm::vec3(1.0f, 0.0f, 0.0f), 10.0f, 10.0f, 10), singleGunTexture, _pos, _size)
+{
+  firePoints.push_back(VertexSensor(glm::vec3(0.25f, 0.0f, 1.0f), this));
+  Rotate(rot);
 }

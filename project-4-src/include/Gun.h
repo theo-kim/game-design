@@ -32,7 +32,18 @@ protected:
 class DoubleGun : public Gun {
 public:
   DoubleGun();
-  DoubleGun(ShaderProgram **program, Ship *_owner, TextureSheet *texture, QuadTree *engine);
+  DoubleGun(ShaderProgram **program, Ship *_owner, QuadTree *engine);
+
+  static TextureSheet *doubleGunTexture;
+};
+
+class SingleGun : public Gun {
+public:
+  SingleGun();
+  SingleGun(ShaderProgram **program, Ship *_owner, QuadTree *engine);
+  SingleGun(ShaderProgram **program, Ship *_owner, QuadTree *engine, glm::vec3 pos, glm::vec3 size, float rot);
+
+  static TextureSheet *singleGunTexture;
 };
 
 #endif

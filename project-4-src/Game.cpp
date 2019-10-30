@@ -70,15 +70,14 @@ void Game::Initialize () {
   
   // Load textures
   heroTexture = new TextureSheet("textures/hero.png", 1, 1);
-  dualGunTexture = new TextureSheet("textures/dual-gun.png", 1, 1);
   enemyTexture = new TextureSheet("textures/enemy.png", 1, 1);
   singleGunTexture = new TextureSheet("textures/single-gun.png", 1, 1);
   
   // Entity Initialization
-  ship = new HeroShip(renderers, heroTexture, dualGunTexture, &collisionTree);
+  ship = new HeroShip(renderers, heroTexture, &collisionTree);
   foreground.push_back(ship);
 
-  Spawn(5, 1);
+  Spawn(1, 1);
 
   for (int i = 0; i < NUM_STARS; ++i) {
     stars[i] = new Star(&rendererUntexturedBackground, rand(), left * 2, right * 2, top * 2, bottom * 2);
@@ -252,12 +251,16 @@ void Game::Spawn(int n, int difficulty) {
     int randomX = random() % 30 - 15;
     int randomY = random() % 30 - 15;
     
-    enemies.push_back(new EvilShip(&rendererTextured, enemyTexture, glm::vec3(randomX, randomY, 1.0f), &collisionTree));
+    enemies.push_back(new EvilShip(&rendererTextured, enemyTexture, glm::vec3(randomX, randomY, 0.0f), &collisionTree));
     foreground.push_back(enemies[i]);
 
-    Bullet b;
-    enemies[i]->AddGun(Gun(&rendererTextured, enemies[i], b, singleGunTexture, glm::vec3(-0.48f, -0.58f, 0.0f), glm::vec3(0.4f, 0.4f, 1.0f)));
-    enemies[i]->AddGun(Gun(&rendererTextured, enemies[i], b, singleGunTexture, glm::vec3(0.48f, -0.58f, 0.0f), glm::vec3(0.4f, 0.4f, 1.0f)));
-    enemies[i]->AddGun(Gun(&rendererTextured, enemies[i], b, singleGunTexture, glm::vec3(0.0f, 0.75f, 0.0f), glm::vec3(0.4f, 0.4f, 1.0f)));
+    ShaderProgram *renderers[2] = { &rendererTextured, &rendererUntextured };
+    
+    enemies[i]->AddGun(SingleGun(renderers, enemies[i], &collisionTree,
+				 glm::vec3(0.48f, -0.58f, 0.0f), glm::vec3(0.4f, 0.4f, 1.0f), 0));
+    enemies[i]->AddGun(SingleGun(renderers, enemies[i], &collisionTree,
+				 glm::vec3(-0.48f, -0.58f, 0.0f), glm::vec3(0.4f, 0.4f, 1.0f), radians(180)));
+    enemies[i]->AddGun(SingleGun(renderers, enemies[i], &collisionTree,
+				 glm::vec3(0.0f, 0.75f, 0.0f), glm::vec3(0.4f, 0.4f, 1.0f), radians(90)));
   }
 }

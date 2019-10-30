@@ -8,7 +8,7 @@
 class HeroShip : public Ship {
 public:
   HeroShip();
-  HeroShip(ShaderProgram **programs, TextureSheet *texture, TextureSheet *gunTex, QuadTree *engine);
+  HeroShip(ShaderProgram **programs, TextureSheet *texture, QuadTree *engine);
   void Render();
   void MoveGun(float radians);
   virtual void DidCollide(Collidable *with);

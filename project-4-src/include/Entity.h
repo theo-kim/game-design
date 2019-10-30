@@ -21,6 +21,7 @@ class Entity {
   // Utility functions to transform member bodies / points
   void TransformLocalCoord (glm::vec3 &point) const;
   void TransformLocalCoord (glm::mat4 &body) const;
+  float TransformLocalRot (float rot) const;
 protected:
   glm::vec3 pos;
   glm::vec3 size;

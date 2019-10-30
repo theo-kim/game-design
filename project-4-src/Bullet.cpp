@@ -7,7 +7,7 @@ Bullet::Bullet(ShaderProgram *program, QuadTree *collisionEngine, glm::vec3 orig
     power(pow),
     speed(s),
     penetration(p),
-    mov(glm::vec3(1.0f, 0.0f, 0.0f)),
+    mov(glm::vec3(0.0f)),
     r(c[0]),
     g(c[1]),
     b(c[2]),

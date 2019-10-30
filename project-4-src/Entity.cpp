@@ -86,3 +86,7 @@ void Entity::TransformLocalCoord (glm::mat4 &body) const {
   body = glm::translate(body, pos);
   body = glm::rotate(body, rot, glm::vec3(0.0f, 0.0f, 1.0f));
 }
+
+float Entity::TransformLocalRot (float r) const {
+  return r + rot;
+}
