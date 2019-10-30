@@ -31,6 +31,7 @@ public:
   virtual int CheckCollision(Collidable *with);
   int CheckCollision(Bullet *with);
   virtual Collidable::ColliderType GetColliderType();
+  bool IsAlive();
 
   glm::vec3 GetMov() const;
  

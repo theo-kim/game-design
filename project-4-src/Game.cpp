@@ -30,6 +30,7 @@ Game::Game (float screenHeight, float screenWidth)
   viewMatrix = glm::mat4(1.0f);
   projectionMatrix = glm::ortho(left, right, bottom, top, -1.0f, 1.0f);
   backgroundProjectionMatrix = glm::ortho(left, right, bottom, top, -1.0f, 1.0f);
+  overlayProjectionMatrix = glm::ortho(left, right, bottom, top, -1.0f, 1.0f);
 }
 
 void Game::Initialize () {
@@ -44,6 +45,8 @@ void Game::Initialize () {
   rendererTextured.Load("shaders/vertex_textured.glsl", "shaders/fragment_textured.glsl");
   rendererUntextured.Load("shaders/vertex.glsl", "shaders/fragment.glsl");
   rendererUntexturedBackground.Load("shaders/vertex.glsl", "shaders/fragment.glsl");
+  rendererUntexturedOverlay.Load("shaders/vertex.glsl", "shaders/fragment.glsl");
+  rendererTexturedOverlay.Load("shaders/vertex_textured.glsl", "shaders/fragment_textured.glsl");
 
   rendererTextured.SetProjectionMatrix(projectionMatrix);
   rendererTextured.SetViewMatrix(viewMatrix);
@@ -55,10 +58,18 @@ void Game::Initialize () {
   rendererUntexturedBackground.SetProjectionMatrix(backgroundProjectionMatrix);
   rendererUntexturedBackground.SetViewMatrix(viewMatrix);
 
+  rendererUntexturedOverlay.SetProjectionMatrix(overlayProjectionMatrix);
+  rendererUntexturedOverlay.SetViewMatrix(viewMatrix);
+
+  rendererTexturedOverlay.SetProjectionMatrix(overlayProjectionMatrix);
+  rendererTexturedOverlay.SetViewMatrix(viewMatrix);
+
   // Assign Render Program
   glUseProgram(rendererTextured.programID);
   glUseProgram(rendererUntextured.programID);
   glUseProgram(rendererUntexturedBackground.programID);
+  glUseProgram(rendererUntexturedOverlay.programID);
+  glUseProgram(rendererTexturedOverlay.programID);
   glEnable(GL_BLEND);
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
@@ -77,12 +88,15 @@ void Game::Initialize () {
   ship = new HeroShip(renderers, heroTexture, &collisionTree);
   foreground.push_back(ship);
 
-  Spawn(1, 1);
+  Spawn(NUM_ENEMIES, 1);
 
   for (int i = 0; i < NUM_STARS; ++i) {
     stars[i] = new Star(&rendererUntexturedBackground, rand(), left * 2, right * 2, top * 2, bottom * 2);
     background.push_back(stars[i]);
   }
+
+  endGameText = new Text("Game Over", &rendererTexturedOverlay, 0, 1.0f, 0.24, 0.4);
+  
 }
 
 void Game::Run() {
@@ -108,7 +122,7 @@ void Game::Render () {
   glClear(GL_COLOR_BUFFER_BIT);
 
   if (gameState == 1) {
-    // Render the main men\u
+    // Render the main menu
   }
   else {
     // Check for entities that are within the camera fram
@@ -126,10 +140,18 @@ void Game::Render () {
       stars[i]->Render();
     }
 
-    ship->Render();
+    if (ship->IsAlive()) ship->Render();
 
     for (int i = 0; i < enemies.size(); ++i) {
-      enemies[i]->Render();
+      if (enemies[i] != NULL) enemies[i]->Render();
+    }
+
+    for (int i = 0; i < overlay.size(); ++i) {
+      overlay[i]->Render();
+    }
+    
+    if (gameState > 2) {
+      endGameText->Render();
     }
   }
   
@@ -153,14 +175,25 @@ void Game::Update () {
       // Update the main menu based on user inputs
     }
     if (gameState == 2) {
-      // Get current world state
+      if (!isPaused) {
+	// Get current world state
+	gameState += (!ship->IsAlive()) + (enemiesLeft == 0);
+	if (enemiesLeft == 0) {
+	  endGameText->SetText("Mission Successful!");
+	}
+	// Make necessary updates
+	ship->Update(FIXED_TIMESTEP);
+	CameraPan(ship->GetMov() * FIXED_TIMESTEP);
 
-      // Make necessary updates
-      ship->Update(FIXED_TIMESTEP);
-      CameraPan(ship->GetMov() * FIXED_TIMESTEP);
-
-      for (int i = 0; i < enemies.size(); ++i) {
-	enemies[i]->Update(FIXED_TIMESTEP);
+	for (int i = 0; i < enemies.size(); ++i) {
+	  if (enemies[i] == NULL) continue;
+	  else if (enemies[i]->IsAlive()) enemies[i]->Update(FIXED_TIMESTEP);
+	  else {
+	    delete enemies[i];
+	    enemies[i] = NULL;
+	    --enemiesLeft;
+	  }
+	}
       }
       
       // Check collisions
@@ -185,29 +218,28 @@ void Game::Input () {
     }
     else {
       const Uint8 *keys = SDL_GetKeyboardState(NULL);
-  
-      if (e.type == SDL_KEYDOWN) {
-        // Get keydown events
-      }
-      else if (e.type == SDL_MOUSEBUTTONDOWN && e.button.button == SDL_BUTTON_LEFT && fireState == 0) {
-	ship->Fire(0);
-	fireState = 1;
-      }
-      else if (e.type == SDL_MOUSEBUTTONUP && e.button.button == SDL_BUTTON_LEFT) {
-	fireState = 0;
-      }
 
-      // Ship movement
-      ship->Move(keys[SDL_SCANCODE_W], keys[SDL_SCANCODE_S], keys[SDL_SCANCODE_A], keys[SDL_SCANCODE_D]);
+      if (gameState == 2) {
+	if (e.type == SDL_MOUSEBUTTONDOWN && e.button.button == SDL_BUTTON_LEFT && fireState == 0) {
+	  ship->Fire(0);
+	  fireState = 1;
+	}
+	else if (e.type == SDL_MOUSEBUTTONUP && e.button.button == SDL_BUTTON_LEFT) {
+	  fireState = 0;
+	}
 
-      // Ship gun rotation
-      float mouseAngle = 0.0f;
-      int x, y;
-      Uint32 mouseButtonState = SDL_GetMouseState(&x, &y);
+	// Ship movement
+	ship->Move(keys[SDL_SCANCODE_W], keys[SDL_SCANCODE_S], keys[SDL_SCANCODE_A], keys[SDL_SCANCODE_D]);
 
-      mouseAngle = -1.0f * glm::atan((float)y - height / 2, (float)x - width / 2);
+	// Ship gun rotation
+	float mouseAngle = 0.0f;
+	int x, y;
+	Uint32 mouseButtonState = SDL_GetMouseState(&x, &y);
+
+	mouseAngle = -1.0f * glm::atan((float)y - height / 2, (float)x - width / 2);
       
-      ship->MoveGun(mouseAngle);
+	ship->MoveGun(mouseAngle);
+      }
     }
   }
 }
@@ -246,6 +278,8 @@ void Game::CameraRotate(float rotationFactor) {
 
 // Game methods
 void Game::Spawn(int n, int difficulty) {
+  enemiesLeft = n;
+  enemies.clear();
   enemies.reserve(n * 2);
   for (int i = 0; i < n; ++i) {
     int randomX = random() % 30 - 15;

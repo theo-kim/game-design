@@ -10,6 +10,7 @@ class Entity {
   Entity(glm::vec3 _pos, glm::vec3 _size, float _rot, ShaderProgram* _program);
   Entity(glm::vec3 _pos, glm::vec3 _size, float _rot, TextureSheet *texture, ShaderProgram* _program);
   ~Entity();
+  virtual void Render() = 0;
   virtual void Render(glm::mat4 modelMatrix, GLuint texture, float* map, int points);
   virtual void Update(float delta) = 0;
   bool CheckRenderBounds(float left, float right, float top, float bottom);

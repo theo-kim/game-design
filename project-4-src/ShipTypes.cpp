@@ -28,7 +28,7 @@ EvilShip::EvilShip(ShaderProgram *program, TextureSheet *texture, glm::vec3 _pos
   : Ship(program, engine, _pos, glm::vec3(0.7f, 0.7f, 1.0f), texture),
     target(pos)
 {
-  speed = 0.5;
+  speed = 0.3;
 }
 
 void EvilShip::Render() {
@@ -64,7 +64,7 @@ void EvilShip::DidCollide(Collidable *with) {
       if (retreat[1] < 0) down = std::fabs(retreat[1]);
       else up = retreat[1];
       Retarget(up, down, left, right);
-      speed = 2.0f;
+      speed = 1.5f;
       return; 
     }
   }

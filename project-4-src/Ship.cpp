@@ -82,6 +82,10 @@ bool Ship::DidUpdate() {
   return isMoving != 0;
 }
 
+bool Ship::IsAlive() {
+  return health > 0;
+}
+
 void Ship::DidCollide(Collidable *with) {
   if (with->GetColliderType() == Collidable::BALLISTIC) {
     health = 0;
