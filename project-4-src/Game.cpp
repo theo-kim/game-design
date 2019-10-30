@@ -4,7 +4,7 @@
 Game::Game (float screenHeight, float screenWidth)
   : top((screenHeight / screenWidth) * 5.0f), bottom(-1 * top), left(-5.0f), right(5.0f),
     width(screenWidth), height(screenHeight),
-    collisionTree(glm::vec3(0.0f, 0.0f, 1.0f), 100, 100)
+    collisionTree(glm::vec3(0.0f, 0.0f, 1.0f), 200, 200)
 {
   // Background perspective bounds
   pTop = top;
@@ -78,7 +78,7 @@ void Game::Initialize () {
   ship = new HeroShip(renderers, heroTexture, dualGunTexture, &collisionTree);
   foreground.push_back(ship);
 
-  Spawn(10, 1);
+  Spawn(5, 1);
 
   for (int i = 0; i < NUM_STARS; ++i) {
     stars[i] = new Star(&rendererUntexturedBackground, rand(), left * 2, right * 2, top * 2, bottom * 2);
@@ -163,8 +163,6 @@ void Game::Update () {
       for (int i = 0; i < enemies.size(); ++i) {
 	enemies[i]->Update(FIXED_TIMESTEP);
       }
-
-      //collisionTree.GetSize();
       
       // Check collisions
       collisionTree.CheckCollision();
@@ -251,15 +249,15 @@ void Game::CameraRotate(float rotationFactor) {
 void Game::Spawn(int n, int difficulty) {
   enemies.reserve(n * 2);
   for (int i = 0; i < n; ++i) {
-    int randomX = random() % 10 - 5;
-    int randomY = random() % 10 - 5;
+    int randomX = random() % 30 - 15;
+    int randomY = random() % 30 - 15;
     
     enemies.push_back(new EvilShip(&rendererTextured, enemyTexture, glm::vec3(randomX, randomY, 1.0f), &collisionTree));
     foreground.push_back(enemies[i]);
 
     Bullet b;
-    enemies[i]->AddGun(Gun(&rendererTextured, enemies[i], b, singleGunTexture, glm::vec3(-0.48f, -0.58f, 0.0f), glm::vec3(0.25f, 0.25f, 1.0f)));
-    enemies[i]->AddGun(Gun(&rendererTextured, enemies[i], b, singleGunTexture, glm::vec3(0.48f, -0.58f, 0.0f), glm::vec3(0.25f, 0.25f, 1.0f)));
-    enemies[i]->AddGun(Gun(&rendererTextured, enemies[i], b, singleGunTexture, glm::vec3(0.0f, 0.75f, 0.0f), glm::vec3(0.25f, 0.25f, 1.0f)));
+    enemies[i]->AddGun(Gun(&rendererTextured, enemies[i], b, singleGunTexture, glm::vec3(-0.48f, -0.58f, 0.0f), glm::vec3(0.4f, 0.4f, 1.0f)));
+    enemies[i]->AddGun(Gun(&rendererTextured, enemies[i], b, singleGunTexture, glm::vec3(0.48f, -0.58f, 0.0f), glm::vec3(0.4f, 0.4f, 1.0f)));
+    enemies[i]->AddGun(Gun(&rendererTextured, enemies[i], b, singleGunTexture, glm::vec3(0.0f, 0.75f, 0.0f), glm::vec3(0.4f, 0.4f, 1.0f)));
   }
 }

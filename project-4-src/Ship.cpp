@@ -26,8 +26,6 @@ void Ship::Update(float delta) {
   pos += mov * delta * speed;
   // Update in the collision tree
   Collidable::Update(delta);
-  glm::mat4 transform = glm::translate(glm::mat4(1.0f), mov * delta * speed);
-  //prox.Update(transform);
   
   for (int i = 0; i < guns.size(); ++i) {
     guns[i].Update(delta);
@@ -37,8 +35,10 @@ void Ship::Update(float delta) {
 void Ship::Render() {
   if (health <= 0) return;
   glm::mat4 modelMatrix = glm::mat4(1.0f);
+  modelMatrix = glm::scale(modelMatrix, size); 
   modelMatrix = glm::translate(modelMatrix, pos);
-  modelMatrix = glm::scale(modelMatrix, size);
+  modelMatrix = glm::rotate(modelMatrix, rot, glm::vec3(0.0f, 0.0f, 1.0f));
+  
   
   float map[] = { -0.5, -0.5, 0.5, -0.5, 0.5, 0.5, -0.5, -0.5, 0.5, 0.5, -0.5, 0.5,
 		  -1, -1, 1, -1, 1, 1, -1, -1, 1, 1, -1, 1 };
@@ -58,8 +58,18 @@ void Ship::Render() {
 
 void Ship::Move(bool up, bool down, bool left, bool right) {
   isMoving = 0;
-  isMoving = 0 | ((int)up << 3) | ((int)down << 2) | ((int)left << 1) | right;
-  mov = glm::vec3((float)right - (float)left, (float)up - (float)down, 0.0f);
+  isMoving = ((int)up << 3) | ((int)down << 2) | ((int)left << 1) | right;
+  mov = glm::vec3((float)right - (float)left,
+		  (float)up - (float)down,
+		  0.0f);
+}
+
+void Ship::MoveForward(bool go) {
+  isMoving = 0;
+  isMoving = ((int)go << 3);
+  mov = glm::vec3(glm::cos(radians(90) + rot) * go,
+		  glm::sin(radians(90) + rot) * go,
+		  0.0f);
 }
 
 glm::vec3 Ship::GetMov() const {

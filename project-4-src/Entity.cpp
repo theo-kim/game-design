@@ -41,10 +41,10 @@ void Entity::SetRenderFlag(bool flag) {
 }
 
 bool Entity::CheckRenderBounds(float left, float right, float top, float bottom) {
-  return pos[0] + size[0] / 2  > left
-    && pos[0] - size[0] / 2 < right
-    && pos[1] + size[1] / 2 > bottom
-    && pos[1] - size[1] / 2 < top;
+  return (pos[0] + size[0] / 2  > left
+	  || pos[0] - size[0] / 2 < right)
+			      && (pos[1] + size[1] / 2 > bottom
+				  || pos[1] - size[1] / 2 < top);
 }
 
 bool Entity::CheckBounds(float left, float right, float top, float bottom) {
@@ -73,13 +73,16 @@ glm::mat4 Entity::GetCorners () const {
 
 void Entity::TransformLocalCoord (glm::vec3 &point) const {
   glm::mat4 transformation(1.0f);
+  transformation = glm::scale(transformation, size);
   transformation = glm::translate(transformation, pos);
+  transformation = glm::rotate(transformation, rot, glm::vec3(0.0f, 0.0f, 1.0f));
   glm::vec4 extraPoint(point, 1.0f);
   extraPoint = transformation * extraPoint;
   point = glm::vec3(extraPoint);
 }
 
 void Entity::TransformLocalCoord (glm::mat4 &body) const {
+  body = glm::scale(body, size);
   body = glm::translate(body, pos);
-  body = glm::rotate(body, -rot, glm::vec3(0.0f, 0.0f, 1.0f));
+  body = glm::rotate(body, rot, glm::vec3(0.0f, 0.0f, 1.0f));
 }

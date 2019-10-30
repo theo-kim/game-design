@@ -21,4 +21,6 @@
 #include <ShaderProgram.h>
 #include <LoadTexture.h>
 
+#define radians(x) x*(3.141592f/180.0f)
+
 #endif

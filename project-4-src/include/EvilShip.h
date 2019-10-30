@@ -12,7 +12,9 @@ public:
   void AddGun(Gun gun);
   virtual void Update(float delta);
 private:
+  void Retarget(float up, float down, float left, float right);
   TextureSheet *texture;
+  glm::vec3 target;
 };
 
 #endif

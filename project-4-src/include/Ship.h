@@ -22,6 +22,7 @@ public:
   void Render();
   void Update(float delta);
   void Move(bool up, bool down, bool left, bool right);
+  void MoveForward(bool go);
   void Fire(int gunIndex);
 
   // Collision interfaces
@@ -40,10 +41,10 @@ public:
   VertexSensor verts[4];
 protected:
   std::vector<Gun> guns;
+  float speed;
 private:
   int health;
   glm::vec3 mov;
-  float speed;
   int isMoving;
 };
 

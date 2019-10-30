@@ -36,7 +36,7 @@ void Gun::Update(float delta) {
 
 void Gun::Render() {  
   glm::mat4 modelMatrix = glm::mat4(1.0f);
-  modelMatrix = glm::translate(modelMatrix, owner->GetPos());
+  owner->TransformLocalCoord(modelMatrix);;
 
   modelMatrix = glm::scale(modelMatrix, size);
   modelMatrix = glm::translate(modelMatrix, pos);
@@ -62,16 +62,16 @@ void Gun::Rotate(float _rot) {
 void Gun::Fire() {
   for (int i = 0; i < firePoints.size(); ++i) {
     glm::vec3 origin = firePoints[i].GetLoc();
-    glm::vec4 torigin = glm::vec4(origin[0], origin[1], origin[2], 1.0f);
+    glm::vec4 torigin = glm::vec4(origin, 1.0f);
     Bullet *b = new Bullet(bulletTemplate[0]);
+
     glm::mat4 transformation(1.0f);
-    
     owner->TransformLocalCoord(transformation);
     TransformLocalCoord(transformation);
 
-    torigin = torigin * transformation;
-    origin = glm::vec3(torigin[0], torigin[1], torigin[2]);
-    origin = origin + owner->GetPos();
+    torigin = transformation * torigin;
+    origin = glm::vec3(torigin);
+    //rigin = origin + owner->GetPos();
     b->SetOrigin(origin, rot);
     b->shotBy = this;
     activeBullets.push_back(b);
@@ -83,6 +83,6 @@ DoubleGun::DoubleGun() {}
 DoubleGun::DoubleGun(ShaderProgram **program, Ship *_owner, TextureSheet *texture, QuadTree *engine)
   : Gun(program[0], _owner, Bullet(program[1], engine, glm::vec3(0.0f), glm::vec3(1.0f, 0.0f, 0.0f), 10.0f, 10.0f, 10), texture)
 {
-  firePoints.push_back(VertexSensor(glm::vec3(0.3f, -0.09f, 1.0f), this));
-  firePoints.push_back(VertexSensor(glm::vec3(0.3f, 0.09f, 1.0f), this));
+  firePoints.push_back(VertexSensor(glm::vec3(0.25f, -0.15f, 1.0f), this));
+  firePoints.push_back(VertexSensor(glm::vec3(0.25f, 0.15f, 1.0f), this));
 }
