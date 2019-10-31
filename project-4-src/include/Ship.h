@@ -29,7 +29,6 @@ public:
   virtual bool DidUpdate();
   virtual void DidCollide(Collidable *with);
   virtual int CheckCollision(Collidable *with);
-  int CheckCollision(Bullet *with);
   virtual Collidable::ColliderType GetColliderType();
   bool IsAlive();
 

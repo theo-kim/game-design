@@ -113,7 +113,7 @@ void Game::Shutdown() {
     delete stars[i];
   }
   for (int i = 0; i < enemies.size(); ++i) {
-    delete enemies[i];
+    if (enemies[i] != NULL) delete enemies[i];
   }
   SDL_Quit();
 }
@@ -188,7 +188,7 @@ void Game::Update () {
 	for (int i = 0; i < enemies.size(); ++i) {
 	  if (enemies[i] == NULL) continue;
 	  else if (enemies[i]->IsAlive()) enemies[i]->Update(FIXED_TIMESTEP);
-	  else {
+	  else { 
 	    delete enemies[i];
 	    enemies[i] = NULL;
 	    --enemiesLeft;
@@ -198,6 +198,7 @@ void Game::Update () {
       
       // Check collisions
       collisionTree.CheckCollision();
+      
     }
     else if (gameState == 3) { // If the game has ended...
       // Render the GAMEOVER view
@@ -252,7 +253,7 @@ void Game::CameraZoom(float zoomFactor) {
 }
 
 void Game::CameraPan(glm::vec3 pan) {
-  float parallaxFactor = 0.05;
+  float parallaxFactor = 0.10;
   
   left += pan[0];
   right += pan[0];
@@ -282,8 +283,8 @@ void Game::Spawn(int n, int difficulty) {
   enemies.clear();
   enemies.reserve(n * 2);
   for (int i = 0; i < n; ++i) {
-    int randomX = random() % 30 - 15;
-    int randomY = random() % 30 - 15;
+    int randomX = random() % 12 - 6;
+    int randomY = random() % 12 - 6;
     
     enemies.push_back(new EvilShip(&rendererTextured, enemyTexture, glm::vec3(randomX, randomY, 0.0f), &collisionTree));
     foreground.push_back(enemies[i]);
@@ -291,10 +292,10 @@ void Game::Spawn(int n, int difficulty) {
     ShaderProgram *renderers[2] = { &rendererTextured, &rendererUntextured };
     
     enemies[i]->AddGun(SingleGun(renderers, enemies[i], &collisionTree,
-				 glm::vec3(0.48f, -0.58f, 0.0f), glm::vec3(0.4f, 0.4f, 1.0f), 0));
+				 glm::vec3(0.17f, -0.21f, 0.0f), glm::vec3(0.33f, 0.33f, 1.0f), 0));
     enemies[i]->AddGun(SingleGun(renderers, enemies[i], &collisionTree,
-				 glm::vec3(-0.48f, -0.58f, 0.0f), glm::vec3(0.4f, 0.4f, 1.0f), radians(180)));
+				 glm::vec3(-0.17f, -0.21f, 0.0f), glm::vec3(0.33f, 0.33f, 1.0f), radians(180)));
     enemies[i]->AddGun(SingleGun(renderers, enemies[i], &collisionTree,
-				 glm::vec3(0.0f, 0.75f, 0.0f), glm::vec3(0.4f, 0.4f, 1.0f), radians(90)));
+				 glm::vec3(0.0f, 0.30f, 0.0f), glm::vec3(0.33f, 0.33f, 1.0f), radians(90)));
   }
 }

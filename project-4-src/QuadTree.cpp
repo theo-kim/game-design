@@ -192,6 +192,7 @@ void QuadTree::QuadTreeNode::AddEntity(Collidable *newEntity) {
 
 	  if (moveTo != NULL) {
 	    contains[newEntity] = moveTo;
+	    // Remove from this node's unique items and move downwards
 	    EntityLinkedList *csr = bucket;
 	    while (csr != NULL) {
 	      if (csr->Get() == newEntity) {
@@ -330,8 +331,8 @@ Collidable * QuadTree::QuadTreeNode::PopEntity (Collidable * target) {
     QuadTreeNode *child = contains[target];
     // Belongs to another node
     contains.erase(contains.find(target));
+    --totalSize; // Reduce total size
     output = child->PopEntity(target);
-    --totalSize;
   }
   return output;
 }
@@ -387,10 +388,11 @@ void QuadTree::QuadTreeNode::Decompose () {
   bottomRightChild = new QuadTreeNode(br, halfHeight, halfWidth, this);
 
   // Reassign all entities
+  totalSize = 0;
   size = 0;
+  contains.clear();
   EntityLinkedList *l = bucket;
   EntityLinkedList *g = bucket;
-  contains.clear();
   bucket = NULL;
   while (l != NULL) {
     AddEntity(l->Get());
@@ -402,12 +404,17 @@ void QuadTree::QuadTreeNode::Decompose () {
 }
 
 int QuadTree::QuadTreeNode::Size () const {
+  if (!isLeaf) std::cout << "TOTAL: " << totalSize << std::endl;
   std::cout << "Mine: " << SizeGetUnique() << std::endl;
   if (isLeaf) return totalSize;
-  std::cout << "TL: " << topLeftChild->Size() << std::endl;
-  std::cout << "TR: " << topRightChild->Size() << std::endl;
-  std::cout << "BL: " << bottomLeftChild->Size() << std::endl;
-  std::cout << "BR: " << bottomRightChild->Size() << std::endl;
+  std::cout << "TL: ";
+  topLeftChild->Size();
+  std::cout << "TR: ";
+  topRightChild->Size();
+  std::cout << "BL: ";
+  bottomLeftChild->Size();
+  std::cout << "BR: ";
+  bottomRightChild->Size();
   return totalSize;
 }
 
@@ -505,26 +512,25 @@ void QuadTree::QuadTreeNode::GetCollisions(Collidable *e, int pos, int borderFla
     return;
   }
   // If it is a leaf, this is an easy process
-  if (isLeaf) {
-    // Check every Entity
-    EntityLinkedList *csr = bucket;
-    while (csr != NULL) {
-      int collisionStatus = e->CheckCollision(csr->Get());
-      if (collisionStatus == QUADTREE_YES_COLLISION) {
-	e->DidCollide(csr->Get());
-	csr->Get()->DidCollide(e);
-      }
-      else if (collisionStatus == QUADTREE_DEAD_ENTITY) {
-	parent->PopEntity(e);
-	break;
-      }
-      csr = csr->Next();
+  
+  // Check every Entity
+  EntityLinkedList *csr = bucket;
+  while (csr != NULL) {
+    int collisionStatus = e->CheckCollision(csr->Get());
+    if (collisionStatus == QUADTREE_YES_COLLISION) {
+      e->DidCollide(csr->Get());
+      csr->Get()->DidCollide(e);
     }
+    else if (collisionStatus == QUADTREE_DEAD_ENTITY) {
+      parent->PopEntity(e);
+      break;
+    }
+    csr = csr->Next();
   }
   // Else if not a leaf,
   // Check for overlapping entities on appropriate side
   // Then bubble downwards to bordering quadrants
-  else {
+  if (!isLeaf) {
     // TODO: Optimize this function
     topLeftChild->GetCollisions(e, 0, 0);
     topRightChild->GetCollisions(e, 0, 0);
@@ -561,6 +567,7 @@ QuadTree::QuadTreeNode::EntityLinkedList::EntityLinkedList(Collidable *e, int fl
   after = next;
   before = NULL;
   borderFlags = flags;
+  if (next != NULL) next->RelinkPrev(this);
 }
 
 Collidable * QuadTree::QuadTreeNode::EntityLinkedList::Get() const {

@@ -64,7 +64,7 @@ void EvilShip::DidCollide(Collidable *with) {
       if (retreat[1] < 0) down = std::fabs(retreat[1]);
       else up = retreat[1];
       Retarget(up, down, left, right);
-      speed = 1.5f;
+      speed = 1.25f;
       return; 
     }
   }

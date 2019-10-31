@@ -13,7 +13,7 @@ Bullet::Bullet(ShaderProgram *program, QuadTree *collisionEngine, glm::vec3 orig
     b(c[2]),
     alive(true),
     killme(false),
-    prox(origin, 0.1, this),
+    prox(origin, 1.1, this),
     shotBy(NULL)
 {}
 
@@ -28,7 +28,7 @@ Bullet::Bullet(const Bullet &copied)
     b(copied.b),
     alive(true),
     killme(false),
-    prox(copied.pos, 0.1, this),
+    prox(copied.pos, 1.2, this),
     shotBy(copied.shotBy)
 {}
 
@@ -50,7 +50,7 @@ void Bullet::Render() {
   modelMatrix = glm::translate(modelMatrix, pos);
   modelMatrix = glm::rotate(modelMatrix, rot, glm::vec3(0.0f, 0.0f, 1.0f));
   modelMatrix = glm::scale(modelMatrix, glm::vec3(0.1f, 0.05f, 1.0f));
-
+  
   program->SetColor(r, g, b, 1.0f);
 
   float map[] = { -0.5, -0.5, 0.5, -0.5, 0.5, 0.5, -0.5, -0.5, 0.5, 0.5, -0.5, 0.5,

@@ -13,7 +13,7 @@ ProximitySensor::ProximitySensor() {}
 
 ProximitySensor::ProximitySensor(glm::vec3 _loc, float _thresh, Entity *_owner)
   : loc(_loc),
-    threshold(_thresh),
+    threshold(std::pow(_thresh, 2)),
     Sensor(_owner) {}
 
 int ProximitySensor::GetState() {

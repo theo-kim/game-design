@@ -73,18 +73,18 @@ glm::mat4 Entity::GetCorners () const {
 
 void Entity::TransformLocalCoord (glm::vec3 &point) const {
   glm::mat4 transformation(1.0f);
-  transformation = glm::scale(transformation, size);
   transformation = glm::translate(transformation, pos);
   transformation = glm::rotate(transformation, rot, glm::vec3(0.0f, 0.0f, 1.0f));
+  transformation = glm::scale(transformation, size);
   glm::vec4 extraPoint(point, 1.0f);
   extraPoint = transformation * extraPoint;
   point = glm::vec3(extraPoint);
 }
 
 void Entity::TransformLocalCoord (glm::mat4 &body) const {
-  body = glm::scale(body, size);
   body = glm::translate(body, pos);
   body = glm::rotate(body, rot, glm::vec3(0.0f, 0.0f, 1.0f));
+  body = glm::scale(body, size);
 }
 
 float Entity::TransformLocalRot (float r) const {
