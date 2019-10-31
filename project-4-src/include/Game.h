@@ -21,12 +21,14 @@ class Game {
  public:
   Game(float screenHeight, float screenWidth);
   void Initialize();
-  void Render();
-  void Update();
-  void Input();
   void Run();
   void Shutdown();
  private:
+  // These really don't need to be shown 
+  void Render();
+  void Update();
+  void Input();
+
   // Physics Methods
 
   // Physics Variables

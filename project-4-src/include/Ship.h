@@ -39,6 +39,7 @@ public:
   ProximitySensor prox;
   EdgeSensor edges[4];
   VertexSensor verts[4];
+  int killme;
 protected:
   std::vector<Gun> guns;
   float speed;

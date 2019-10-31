@@ -18,7 +18,7 @@ Gun::Gun(ShaderProgram *program, Ship *_owner, Bullet temp, TextureSheet *textur
 
 Gun::~Gun() {
   for (int i = 0; i < activeBullets.size(); ++i) {
-    delete activeBullets[i];
+    //delete activeBullets[i];
   }
 }
 

@@ -11,8 +11,11 @@
 
 class Text: public Entity {
 public:
+  enum Alignment { CENTER, LEFT, RIGHT };
+  
   Text();
   Text(std::string _contents, ShaderProgram *_program, float x, float y, float width, float height);
+  Text(std::string _contents, ShaderProgram *_program, float x, float y, float width, float height, Alignment alignment);
   virtual void Render();
   virtual void Update(float delta); 
   void SetText(std::string newContents);
@@ -28,6 +31,8 @@ private:
   glm::vec3 charSize;
 
   std::string legalCharacters;
+
+  Alignment align;
 };
 
 #endif

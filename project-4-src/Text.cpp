@@ -5,7 +5,17 @@ TextureSheet *Text::fontSheet = new TextureSheet("textures/font-sheet-bold.png",
 Text::Text() {}
 
 Text::Text(std::string _contents, ShaderProgram *_program, float x, float y, float width, float height)
-  : Entity(glm::vec3(x, y, 0.0f), glm::vec3(width * _contents.size(), height, 1.0f), 0.0f, fontSheet, _program)
+  : Entity(glm::vec3(x, y, 0.0f), glm::vec3(width * _contents.size(), height, 1.0f), 0.0f, fontSheet, _program),
+    align(CENTER)
+{
+  contents = _contents;
+  legalCharacters = CHARSET;
+  charSize = glm::vec3(width, height, 1.0f);
+}
+
+Text::Text(std::string _contents, ShaderProgram *_program, float x, float y, float width, float height, Text::Alignment align)
+  : Entity(glm::vec3(x, y, 0.0f), glm::vec3(width * _contents.size(), height, 1.0f), 0.0f, fontSheet, _program),
+    align(align)
 {
   contents = _contents;
   legalCharacters = CHARSET;
@@ -17,9 +27,18 @@ void Text::Render() {
   
   // Render each character individually
   for (int i = 0; i < contents.size(); ++i) {
-    float index = i - ((float)(totalChars - 1) / 2);
-    glm::vec3 charOffset = glm::vec3(charSize[0] * index, 0.0f, 0.0f);
-    
+    glm::vec3 charOffset;
+    if (align == CENTER) {
+      float index = i - ((float)(totalChars - 1) / 2);
+      charOffset = glm::vec3(charSize[0] * index, 0.0f, 0.0f);
+    }
+    else if (align == LEFT) {
+      charOffset = glm::vec3(charSize[0] * i, 0.0f, 0.0f);
+    }
+    else {
+      charOffset = glm::vec3(charSize[0] * (contents.size() - i - 1), 0.0f, 0.0f);
+    }
+
     glm::mat4 modelMatrix = glm::mat4(1.0f);
     modelMatrix = glm::translate(modelMatrix, pos + charOffset);
     modelMatrix = glm::scale(modelMatrix, charSize);

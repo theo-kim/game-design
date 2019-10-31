@@ -95,7 +95,7 @@ void Game::Initialize () {
     background.push_back(stars[i]);
   }
 
-  endGameText = new Text("Game Over", &rendererTexturedOverlay, 0, 1.0f, 0.24, 0.4);
+  endGameText = new Text("Game Over", &rendererTexturedOverlay, 0, 1.0f, 0.24, 0.4, Text::CENTER);
   
 }
 
@@ -188,7 +188,7 @@ void Game::Update () {
 	for (int i = 0; i < enemies.size(); ++i) {
 	  if (enemies[i] == NULL) continue;
 	  else if (enemies[i]->IsAlive()) enemies[i]->Update(FIXED_TIMESTEP);
-	  else { 
+	  else if (enemies[i]->killme) { 
 	    delete enemies[i];
 	    enemies[i] = NULL;
 	    --enemiesLeft;

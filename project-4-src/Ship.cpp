@@ -93,6 +93,7 @@ void Ship::DidCollide(Collidable *with) {
 
 int Ship::CheckCollision(Collidable *with) {
   if (health <= 0) {
+    killme = true;
     return QUADTREE_DEAD_ENTITY;
   }
   Collidable::ColliderType type = with->GetColliderType();
