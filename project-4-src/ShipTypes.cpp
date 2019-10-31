@@ -52,6 +52,12 @@ void EvilShip::Update (float delta) {
 }
 
 void EvilShip::DidCollide(Collidable *with) {
+  if (with->GetColliderType() == Collidable::BALLISTIC) {
+    Bullet *b = dynamic_cast<Bullet *>(with);
+    if (dynamic_cast<EvilShip *>(b->shotBy->owner) != NULL) {
+      return;
+    }
+  }
   if (with->GetColliderType() == Collidable::OBJECT) {
     HeroShip *ship = dynamic_cast<HeroShip *>(with);
     if (ship != NULL) {
