@@ -1,4 +1,4 @@
-#include "../include/Camera.h"
+#include "../include/framework/Camera.h"
 
 Camera::Camera(glm::vec3 center, float _height, float _width, float initialZoom)
     : focus(center),
@@ -6,7 +6,10 @@ Camera::Camera(glm::vec3 center, float _height, float _width, float initialZoom)
       width(_width),
       height(_height),
       following(false),
-      target(NULL) {}
+      target(NULL) {
+          PanTo(center);
+          Zoom(initialZoom);
+      }
 
 Camera::CameraState Camera::Update() {
     if (following) {
@@ -24,7 +27,7 @@ void Camera::PanTo(glm::vec3 to) {
     projection = glm::ortho(to[0] - (width / 2), to[0] + (width / 2), 
                             to[1] - (height / 2), to[1] + (height / 2), 
                             -1.0f, 1.0f);
-    focus -= to;
+    focus = to;
 }
 
 void Camera::Zoom(float by) {
@@ -50,6 +53,6 @@ bool Camera::IsVisible(Entity *e) {
 }
 
 // Getters
-glm::mat4 Camera::GetProjection() {
+glm::mat4 Camera::GetProjection() const {
     return projection;
 }

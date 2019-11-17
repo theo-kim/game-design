@@ -1,4 +1,4 @@
-#include "../include/Entity.h"
+#include "../include/framework/Entity.h"
 
 //
 // BEGIN ENTITY DECLARATION:
@@ -16,7 +16,6 @@ Entity::~Entity() {}
 
 void Entity::Render(glm::mat4 modelMatrix, GLuint texture, float* map, int points) const {
   if (!doRender) return;
-  
   program->SetModelMatrix(modelMatrix);
 
   glBindTexture(GL_TEXTURE_2D, texture);
@@ -74,6 +73,8 @@ glm::vec3 Entity::GetSize () const { return size; }
 
 float Entity::GetRot () const { return rot; }
 
+ShaderProgram* Entity::GetProgram() const { return program; }
+
 // Setters:
 
 void Entity::AddPos(glm::vec3 _addition) { pos += _addition; }
@@ -114,10 +115,10 @@ void Entity::SetTransformation(glm::vec3 _pos, glm::vec3 _size, float _rot) {
 // BEGIN TEXTURED ENTITY DEFINITION:
 
 TexturedEntity::TexturedEntity() {}
-TexturedEntity::TexturedEntity(ShaderProgram* r, TextureSheet *_texture) 
+TexturedEntity::TexturedEntity(TexturedShader* r, TextureSheet *_texture) 
   : Entity(r),
     texture(_texture) {}
-TexturedEntity::TexturedEntity(ShaderProgram* r, TextureSheet *_texture, glm::vec3 _pos, glm::vec3 _size, float _rot)
+TexturedEntity::TexturedEntity(TexturedShader* r, TextureSheet *_texture, glm::vec3 _pos, glm::vec3 _size, float _rot)
   : Entity(r, _pos, _size, _rot),
     texture(_texture) {}
 
@@ -142,17 +143,18 @@ void TexturedEntity::SetTexture(TextureSheet *newTexture) {
 // BEGIN UNTEXTURED ENTITY DECLARATION
 
 UntexturedEntity::UntexturedEntity() {}
-UntexturedEntity::UntexturedEntity(ShaderProgram* r, glm::vec3 _color)
+UntexturedEntity::UntexturedEntity(UntexturedShader* r, glm::vec3 _color)
   : Entity(r),
     color(_color) {}
 
-UntexturedEntity::UntexturedEntity(ShaderProgram* r, glm::vec3 _color, glm::vec3 _pos, glm::vec3 _size, float _rot)
+UntexturedEntity::UntexturedEntity(UntexturedShader* r, glm::vec3 _color, glm::vec3 _pos, glm::vec3 _size, float _rot)
   : Entity(r, _pos, _size, _rot),
     color(_color) {}
 
 UntexturedEntity::~UntexturedEntity() {}
 
 void UntexturedEntity::Render(glm::mat4 modelMatrix, float* map, int points) const {
+  GetProgram()->SetColor(color[0], color[1], color[2], 1.0);
   Entity::Render(modelMatrix, (GLuint)NULL, map, points);
 }
 
@@ -164,4 +166,27 @@ void UntexturedEntity::SetColor(glm::vec3 newColor) {
   color = newColor;
 }
 // :END UNTEXTURED ENTITY DECLARATION
+//
+// 
+//
+EntityGroup::EntityGroup() {}
+
+EntityGroup::EntityGroup(int n, Entity * _children[]) {
+  for (int i = 0; i < n; ++i) {
+    children.push_back(_children[i]);
+  }
+}
+
+EntityGroup::~EntityGroup() {};
+
+// Getters
+Entity *EntityGroup::GetEntity(int index) {
+  return children[index];
+}
+
+// Adder
+Entity *EntityGroup::AddEntity(Entity *new) {
+  children.push_back(new);
+}
+//
 //

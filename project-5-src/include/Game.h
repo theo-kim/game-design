@@ -10,12 +10,13 @@
 #include <map>
 
 #include "standard.h"
-#include "Text.h"
-#include "Entity.h"
-#include "CollisionEngine.h"
-#include "PhysicsEngine.h"
+#include "framework/Text.h"
+#include "framework/Entity.h"
+#include "framework/CollisionEngine.h"
+#include "framework/PhysicsEngine.h"
+#include "framework/Scene.h"
 #include "Character.h"
-#include "Scene.h"
+
 
 class Game {
  public:
@@ -35,11 +36,6 @@ class Game {
   // Physics Methods
 
   // Physics Variables
-
-  // Camera Methods
-  void CameraPan(glm::vec3 pan);
-  void CameraZoom(float zoomFactor);
-  void CameraRotate(float rotationFactor);
 
   // Camera Variables
   glm::mat4 viewMatrix;
@@ -69,6 +65,9 @@ class Game {
 
   // Scenes
   Scene *opening;
+
+  TexturedShader *rendererTextured;
+  UntexturedShader *rendererUntextured;
 };
 
 #endif

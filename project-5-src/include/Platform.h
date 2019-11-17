@@ -2,13 +2,13 @@
 #define PLATFORM_DEF
 
 #include "standard.h"
-#include "Entity.h"
-#include "CollisionEngine.h"
+#include "framework/Entity.h"
+#include "framework/CollisionEngine.h"
 
-class Platform : virtual public Entity, public Collidable {
+class Platform : virtual public UntexturedEntity, public Collidable {
 public:
-    Platform();
-    Platform(float width);
+    Platform(UntexturedShader *shader, CollisionEngine *e, glm::vec3 c);
+    Platform(UntexturedShader *shader, CollisionEngine *e, glm::vec3 c, glm::vec3 pos, float width);
 
     // Entity Implementation
     virtual void Render();

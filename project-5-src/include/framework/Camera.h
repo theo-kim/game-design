@@ -20,7 +20,7 @@ public:
     bool IsVisible(Entity *e);
 
     // Getters
-    glm::mat4 GetProjection();
+    glm::mat4 GetProjection() const;
 private:
     glm::mat4 projection;
     glm::vec3 focus;

@@ -15,7 +15,7 @@ class Entity {
   virtual void Render() = 0;
   virtual void Update(float delta) = 0;
 
-  virtual void Render(glm::mat4 modelMatrix, GLuint texture, float* map, int points) const;
+  void Render(glm::mat4 modelMatrix, GLuint texture, float* map, int points) const;
   bool CheckRenderBounds(float left, float right, float top, float bottom);
   bool CheckBounds(float left, float right, float top, float bottom);
   void SetRenderFlag(bool val);
@@ -26,6 +26,7 @@ class Entity {
   glm::vec3 GetSize () const;
   float GetRot () const;
   glm::mat4 GetCorners () const;
+  ShaderProgram* GetProgram() const;
 
   // Setters
   void AddPos(glm::vec3 _addition);
@@ -55,8 +56,8 @@ private:
 class TexturedEntity : virtual public Entity {
 public:
   TexturedEntity();
-  TexturedEntity(ShaderProgram* r, TextureSheet *texture);
-  TexturedEntity(ShaderProgram* r, TextureSheet *texture, glm::vec3 _pos, glm::vec3 _size, float _rot);
+  TexturedEntity(TexturedShader* r, TextureSheet *texture);
+  TexturedEntity(TexturedShader* r, TextureSheet *texture, glm::vec3 _pos, glm::vec3 _size, float _rot);
   ~TexturedEntity();
 
   void Render(glm::mat4 modelMatrix, float* map, int points) const;
@@ -74,8 +75,8 @@ private:
 class UntexturedEntity : virtual public Entity {
 public:
   UntexturedEntity();
-  UntexturedEntity(ShaderProgram* r, glm::vec3 color);
-  UntexturedEntity(ShaderProgram* r, glm::vec3 color, glm::vec3 _pos, glm::vec3 _size, float _rot);
+  UntexturedEntity(UntexturedShader* r, glm::vec3 color);
+  UntexturedEntity(UntexturedShader* r, glm::vec3 color, glm::vec3 _pos, glm::vec3 _size, float _rot);
   ~UntexturedEntity();
 
   void Render(glm::mat4 modelMatrix, float* map, int points) const;
@@ -89,5 +90,21 @@ public:
 private:
   glm::vec3 color;
 };
+
+class EntityGroup : virtual public Entity {
+public:
+  EntityGroup();
+  EntityGroup(int n, Entity * children[]);
+
+  ~EntityGroup();
+
+  // Getters
+  Entity *GetEntity(int index);
+
+  // Adder
+  Entity *AddEntity(Entity *new);
+private:
+  std::vector<Entity *> children;
+}
 
 #endif

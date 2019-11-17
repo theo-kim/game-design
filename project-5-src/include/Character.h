@@ -2,13 +2,13 @@
 #define CHARACTER_DEF
 
 #include "standard.h"
-#include "Entity.h"
-#include "CollisionEngine.h"
-#include "PhysicsEngine.h"
+#include "framework/Entity.h"
+#include "framework/CollisionEngine.h"
+#include "framework/PhysicsEngine.h"
 
 class Character : public TexturedEntity, public Collidable, public Physical {
 public:
-    Character(ShaderProgram *_r, TextureSheet *_t, PhysicsEngine *_p, CollisionEngine *_c, float _sp, int _mH, float _m);
+    Character(TexturedShader *_r, TextureSheet *_t, PhysicsEngine *_p, CollisionEngine *_c, float _sp, int _mH, float _m);
 
     float GetSpeed() const;
     int GetHealth() const; 

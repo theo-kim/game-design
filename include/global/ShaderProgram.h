@@ -39,3 +39,7 @@ class ShaderProgram {
         GLuint vertexShader;
         GLuint fragmentShader;
 };
+
+class TexturedShader : public ShaderProgram {};
+
+class UntexturedShader : public ShaderProgram {};

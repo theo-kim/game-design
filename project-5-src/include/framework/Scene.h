@@ -32,12 +32,16 @@ public:
     virtual Scene *Update(float delta) = 0;
 
     // Getters
-    ShaderProgram *GetTexturedRenderer();
-    ShaderProgram *GetUntexturedRenderer();
+    TexturedShader *GetTexturedRenderer() const;
+    UntexturedShader *GetUntexturedRenderer() const;
     Scene *GetTransition(int index);
 
     // Adders
     void AddTransition(Scene *next);
+
+    // Operators
+    operator TexturedShader *() const;
+    operator UntexturedShader *() const;
 private:
     // Viewport
     float height, width, depth;
@@ -45,11 +49,12 @@ private:
     glm::vec3 backgroundColor;
 
     glm::mat4 view;
+    glm::mat4 projection;
 
     Camera camera;
 
-    ShaderProgram *rendererTextured;
-    ShaderProgram *rendererUntextured;
+    TexturedShader *rendererTextured;
+    UntexturedShader *rendererUntextured;
 
     std::vector<Scene *> transitions;
 };
@@ -69,7 +74,10 @@ private:
 
 class MenuScene : virtual public Scene {
 public:
-    MenuScene(std::vector<std::string> options);
+    enum MenuSceneHorizontalAlignment { LEFT, CENTER, RIGHT };
+    enum MenuSceneVerticalAlignment { TOP, MIDDLE, BOTTOM };
+    
+    MenuScene(std::vector<std::string> options, MenuSceneHorizontalAlignment h, MenuSceneVerticalAlignment v);
 private:
     std::vector<Text *> labels;
 };

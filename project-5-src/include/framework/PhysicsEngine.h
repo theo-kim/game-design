@@ -1,7 +1,7 @@
 #ifndef PHYSICS_DEF
 #define PHYSICS_DEF
 
-#include "./standard.h"
+#include "standard.h"
 #include "Entity.h"
 
 class Physical;

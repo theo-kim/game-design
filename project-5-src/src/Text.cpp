@@ -1,11 +1,12 @@
-#include "../include/Text.h"
+#include "../include/framework/Text.h"
 
-TextureSheet *Text::fontSheet = new TextureSheet("textures/font-sheet.png", NUM_ROW, NUM_COL);
+TextureSheet *Text::fontSheet = NULL;
 
 Text::Text() {}
 
-Text::Text(std::string _contents, ShaderProgram *_program, float x, float y, float width, float height)
+Text::Text(std::string _contents, TexturedShader *_program, float x, float y, float width, float height)
   : TexturedEntity(_program, fontSheet, glm::vec3(x, y, 0.0f), glm::vec3(width * _contents.size(), height, 1.0f), 0.0f),
+    Entity(_program),
     align(CENTER)
 {
   contents = _contents;
@@ -13,7 +14,7 @@ Text::Text(std::string _contents, ShaderProgram *_program, float x, float y, flo
   charSize = glm::vec3(width, height, 1.0f);
 }
 
-Text::Text(std::string _contents, ShaderProgram *_program, float x, float y, float width, float height, Text::Alignment align)
+Text::Text(std::string _contents, TexturedShader *_program, float x, float y, float width, float height, Text::Alignment align)
   : TexturedEntity(_program, fontSheet, glm::vec3(x, y, 0.0f), glm::vec3(width * _contents.size(), height, 1.0f), 0.0f),
     align(align)
 {
@@ -78,5 +79,5 @@ void Text::GetCharMap (float *coords, char c) {
   int col = spriteIndex % (int)NUM_COL;
   int row = spriteIndex / (int)NUM_COL;
 
-  fontSheet->GetSprite(coords, col, row);
+  GetTexture()->GetSprite(coords, col, row);
 }

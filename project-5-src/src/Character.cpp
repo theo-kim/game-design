@@ -1,6 +1,6 @@
 #include "../include/Character.h"
 
-Character::Character(ShaderProgram *_r, TextureSheet *_t, PhysicsEngine *_p, CollisionEngine *_c, float _sp, int _mH, float _m)
+Character::Character(TexturedShader *_r, TextureSheet *_t, PhysicsEngine *_p, CollisionEngine *_c, float _sp, int _mH, float _m)
     : TexturedEntity(_r, _t),
       Collidable(_c),
       Physical(_p, _m),
