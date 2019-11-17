@@ -6,7 +6,7 @@
 #include "CollisionEngine.h"
 #include "PhysicsEngine.h"
 
-class Character : virtual public Entity, public Collidable, public Physical {
+class Character : public TexturedEntity, public Collidable, public Physical {
 public:
     Character(ShaderProgram *_r, TextureSheet *_t, PhysicsEngine *_p, CollisionEngine *_c, float _sp, int _mH, float _m);
 

@@ -11,7 +11,9 @@ Camera::Camera(glm::vec3 center, float _height, float _width, float initialZoom)
 Camera::CameraState Camera::Update() {
     if (following) {
         PanTo(target->GetPos());
+        return CHANGED;
     }
+    return UNCHANGED;    
 }
 
 void Camera::PanBy(glm::vec3 by) {
@@ -25,7 +27,7 @@ void Camera::PanTo(glm::vec3 to) {
     focus -= to;
 }
 
-void Camera::Zoom(glm::vec3 by) {
+void Camera::Zoom(float by) {
     projection = glm::scale(projection, glm::vec3(by, by, 1.0f));
 }
 

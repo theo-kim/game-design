@@ -13,7 +13,7 @@ public:
     CameraState Update();
     void PanBy(glm::vec3 by);
     void PanTo(glm::vec3 to);
-    void Zoom(glm::vec3 by);
+    void Zoom(float by);
     void Shake();
     void Follow(Entity *e);
 

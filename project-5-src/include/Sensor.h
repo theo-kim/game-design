@@ -5,12 +5,12 @@
 #include "Entity.h"
 
 class Sensor {
- public:
+public: 
   Sensor();
   Sensor(Entity *owner);
   virtual int GetState() = 0;
   virtual void Update(glm::mat4 &transformation) = 0;
- protected:
+protected:
   Entity *owner;
   int state;
 };

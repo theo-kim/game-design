@@ -16,6 +16,7 @@
 #include "HeroShip.h"
 #include "EvilShip.h"
 #include "MiniMap.h"
+#include "Menu.h"
 
 class Game {
  public:
@@ -95,6 +96,9 @@ class Game {
 
   // Map
   //MiniMap map;
+
+  // Menus
+  //Menu StartMenu;
   
   // Text
   Text *endGameText;

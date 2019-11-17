@@ -9,17 +9,31 @@ MAC_LDIR = ../lib/darwin
 MAC_FRAMEWORKS = -framework Cocoa -framework OpenGL
 MAC_IDIR = ../include/darwin
 
-MAC_CC_FLAGS = -g -I$(IDIR) -I$(MAC_IDIR) -L$(MAC_LDIR) $(LIBS) $(MAC_FRAMEWORKS) -o $(NAME)
+SRC = $(wildcard src/*.cpp) \
+	  main.cpp \
+	  $(wildcard ../include/global/*.cpp)
+_OBJ = $(SRC:.cpp=.o)
+OBJ = $(patsubst src/%,$(ODIR)/%,$(_OBJ))
+DEP = $(OBJ:.o=.d)  # one dependency file for each source
 
-SRC = $(wildcard *.c)
-OBJ = $(src:.c=.o)
+LDFLAGS = $(libgl) $(LIBS)
+CXXFLAGS = -g -I$(IDIR) $(incl)
 
-default: main.cpp
-	g++ -o game main.cpp -I ../include/SDL2 -L ../lib -l SDL2-2.0.0 && ./game
+ifeq ($(shell uname -s), Darwin)
+	libgl = $(MAC_FRAMEWORKS)
+	incl = -I$(MAC_IDIR)
+endif
 
-mac: main.cpp, 
-	$(CC) main.cpp Game.cpp Text.cpp Entity.cpp CollisionEngine.cpp PhysicsEngine.cpp Character.cpp Sensor.cpp ../include/global/ShaderProgram.cpp ../include/global/LoadTexture.cpp $(MAC_CC_FLAGS) && ./$(NAME)
+$(ODIR)/%.o: src/%.cpp
+	$(CC) -c -o $@ $< $(CXXFLAGS)
+
+game: $(OBJ)
+	$(CC) -o $@ $(LDFLAGS) $^ && ./$@
+
+-include $(DEP)
+%.d: %.cpp
+	@$(CPP) $(CFLAGS) $< -MM -MT $(@:.d=.o) >$@
 
 .PHONY: clean
-clean: all
-	rm -f $(NAME)
+clean:
+	rm -f src/obj/*.o game

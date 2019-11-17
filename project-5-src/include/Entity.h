@@ -52,7 +52,7 @@ private:
   bool doRender;
 };
 
-class TexturedEntity : public Entity {
+class TexturedEntity : virtual public Entity {
 public:
   TexturedEntity();
   TexturedEntity(ShaderProgram* r, TextureSheet *texture);
@@ -71,7 +71,7 @@ private:
   TextureSheet *texture;
 };
 
-class UntexturedEntity : public Entity {
+class UntexturedEntity : virtual public Entity {
 public:
   UntexturedEntity();
   UntexturedEntity(ShaderProgram* r, glm::vec3 color);
