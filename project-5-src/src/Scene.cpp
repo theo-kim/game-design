@@ -112,7 +112,7 @@ void SimpleScene::Render() {
     }
 }
 
-void SimpleScene::Input(const SDL_Event &event, const Uint8 *keys, const Uint32 &mouse, const int mouseX, int mouseY) {}
+void SimpleScene::Input(const SDL_Event &event, const Uint8 *keys, const Uint32 &mouse, float mouseX, float mouseY) {}
 
 Scene *SimpleScene::Update(float delta) {
     for (int i = 0; i < entities.size(); ++i) {
@@ -148,9 +148,10 @@ ActionScene::ActionScene(float maxHeight, float maxWidth, float width, float hei
 //
 // BEGIN MENU SCENE DECLARATION :
 MenuScene::MenuScene(glm::vec3 dimensions, glm::vec3 background)
-    : Scene(dimensions, background) {}
+    : Scene(dimensions, background),
+      optionChosen(-1) {}
 
-void MenuScene::Input(const SDL_Event &event, const Uint8 *keys, const Uint32 &mouse, const int mouseX, int mouseY) {
+void MenuScene::Input(const SDL_Event &event, const Uint8 *keys, const Uint32 &mouse, float mouseX, float mouseY) {
     optionChosen = menu->Input(event, mouse, mouseX, mouseY);
 }
 
@@ -183,7 +184,7 @@ void MenuScene::SetMenu(Menu *entity) {
 CompoundScene::CompoundScene(glm::vec3 size, glm::vec3 col)
     : Scene(size, col) {}
 
-void CompoundScene::Input(const SDL_Event &event, const Uint8 *keys, const Uint32 &mouse, const int mouseX, int mouseY) {
+void CompoundScene::Input(const SDL_Event &event, const Uint8 *keys, const Uint32 &mouse, float mouseX, float mouseY) {
     for (Scene *layer : layers) {
         layer->Input(event, keys, mouse, mouseX, mouseY);
     }
@@ -207,12 +208,17 @@ void CompoundScene::Load() {
     for (Scene *layer : layers) {
         layer->Load();
     }
+    glClearColor(GetColor()[0], GetColor()[1], GetColor()[2], GetColor()[3]);
 }
 
 void CompoundScene::Unload() {
     for (Scene *layer : layers) {
         layer->Unload();
     }
+}
+
+Scene *CompoundScene::GetLayer(int index) const {
+    return layers[index];
 }
 
 void CompoundScene::AddLayer(glm::vec3 offset, Scene *newLayer) {

@@ -22,14 +22,14 @@ class Entity {
   void SetTransformation(glm::vec3 _pos, glm::vec3 _size, float _rot);
 
   // Getters
-  glm::vec3 GetPos () const;
+  virtual glm::vec3 GetPos () const;
   glm::vec3 GetSize () const;
   float GetRot () const;
   glm::mat4 GetCorners () const;
   ShaderProgram* GetProgram() const;
 
   // Setters
-  void AddPos(glm::vec3 _addition);
+  virtual void AddPos(glm::vec3 _addition);
   void SetPos(glm::vec3 _pos);
   void ScaleSize(glm::vec3 _scale);
   void SetSize(glm::vec3 _size);
@@ -104,10 +104,25 @@ public:
   T *GetEntity(int index) const { return children[index]; };
   int GetNumChildren() const { return children.size(); };
 
+  // Setter
+  void Empty() { children.clear(); }
+
   // Adder
   void AddEntity(T *newEntity) { children.push_back(newEntity); };
 private:
   std::vector<T *> children;
+};
+
+class Container : public EntityGroup<Entity> {
+public: 
+  Container(std::initializer_list<Entity *> entities);
+  
+  virtual void Render();
+
+  virtual void Update(float delta);
+
+  // Adder
+  virtual void AddPos(glm::vec3 add);
 };
 
 #endif

@@ -51,6 +51,8 @@ void Rect::Update(float delta) { return; }
 //
 // 
 // BEGIN BUTTON DECLARATION :
+Button::Button() {}
+
 Button::Button(Entity *child)
     : EntityGroup<Entity>({child})
 {
@@ -59,7 +61,7 @@ Button::Button(Entity *child)
     SetPos(GetEntity(0)->GetPos());
 }
 
-Button::ButtonState Button::Input(const SDL_Event &event, const Uint32 &mouse, const int mouseX, int mouseY) {
+Button::ButtonState Button::Input(const SDL_Event &event, const Uint32 &mouse, float mouseX, float mouseY) {
     if (event.type == SDL_MOUSEBUTTONDOWN && (GetState() == HOVER || GetState() == FOCUSSED)) {
         std::cout << "FOCUSSED" << std::endl;      
         currentState = FOCUSSED;
@@ -69,7 +71,6 @@ Button::ButtonState Button::Input(const SDL_Event &event, const Uint32 &mouse, c
         currentState = CLICKED;
     }
     else if (InBounds(mouseX, mouseY)) {
-        std::cout << "HOVER" << std::endl;
         currentState = HOVER;
     }
     else {
@@ -79,7 +80,7 @@ Button::ButtonState Button::Input(const SDL_Event &event, const Uint32 &mouse, c
 }
 
 void Button::Update(float delta) {
-    return;
+    GetEntity(0)->Update(delta);
 }
 
 void Button::Render() {
@@ -93,19 +94,76 @@ Button::ButtonState Button::GetState() const {
 
 // Private
 bool Button::InBounds(float x, float y) {
-    float wOffset = GetSize()[0] / 2;
-    float hOffset = GetSize()[1] / 2;
+    float wOffset = (GetSize()[0] / 2);
+    float vOffset = (GetSize()[1] / 2);
     float left = GetPos()[0] - wOffset;
     float right = GetPos()[0] + wOffset;
-    float top = GetPos()[1] + hOffset;
-    float bottom = GetPos()[1] - hOffset;
+    float top = GetPos()[1] + vOffset;
+    float bottom = GetPos()[1] - vOffset;
 
-    if (x > right || x < left || y > top || y < bottom ) {
+    if (x > right || x < left) {
+        return false;
+    }
+    if (y > top || y < bottom) {
         return false;
     }
     return true;
 }
 // : END BUTTON DECLARATION
+//
+//
+// START ANIMATED BUTTON DECLARATION :
+AnimatedButton::AnimatedButton(Animation *_hover, Animation *_focus, Entity *entity)
+    : Button(),
+      hover(_hover),
+      focus(_focus),
+      animState(0),
+      animState2(0)
+{
+    if (focus == NULL) {
+        hover->SetEntity(entity);    
+    }
+    else {
+        focus->SetEntity(entity);
+        hover->SetEntity(entity);
+    }
+    Empty();
+    AddEntity(entity);
+
+    SetSize(entity->GetSize());
+    SetRot(entity->GetRot());
+    SetPos(entity->GetPos());
+}
+
+void AnimatedButton::Render() {
+    GetEntity(0)->Render();
+}
+
+void AnimatedButton::Update(float delta) {
+    Button::Update(delta);
+    hover->Update(delta);
+    if (focus != NULL) focus->Update(delta);
+    // std::cout << HOVER << "==" << GetState() << std::endl;
+    if (GetState() == Button::HOVER && animState == 0) {
+        // First hover
+        hover->Forward();
+        animState = 1;
+    }
+    else if (GetState() == Button::QUIET && animState == 1) {
+        hover->StopAndReverse();
+        animState = 0;
+    }
+    if (focus != NULL && GetState() == Button::FOCUSSED && animState2 == 0) {
+        // First hover
+        focus->Forward();
+        animState2 = 1;
+    }
+    else if (focus != NULL && GetState() != Button::FOCUSSED && animState2 == 1) {
+        focus->StopAndReverse();
+        animState2 = 0;
+    }
+}
+// : END ANIMATED BUTTON DECLARATION
 //
 //
 // START MENU DECLARATION :
@@ -146,7 +204,7 @@ Menu::Menu(std::initializer_list<Button *> buttons)
 Menu::~Menu() {}
 
 // Abstract Implementations
-int Menu::Input(const SDL_Event &event, const Uint32 &mouse, const int mouseX, int mouseY) {
+int Menu::Input(const SDL_Event &event, const Uint32 &mouse, float mouseX, float mouseY) {
     for (int i = 0; i < GetNumChildren(); ++i) {
         if (GetEntity(i)->Input(event, mouse, mouseX, mouseY) == Button::CLICKED) {
             return i;

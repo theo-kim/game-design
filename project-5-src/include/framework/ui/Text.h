@@ -21,6 +21,8 @@ public:
   void SetText(std::string newContents);
   std::string GetText();
 
+  virtual glm::vec3 GetPos() const;
+
   static TextureSheet *fontSheet;
 private:
   bool CheckLegalChar(char c);

@@ -2,6 +2,7 @@
 
 Character::Character(TexturedShader *_r, TextureSheet *_t, PhysicsEngine *_p, CollisionEngine *_c, float _sp, int _mH, float _m)
     : TexturedEntity(_r, _t),
+      Entity(_r),
       Collidable(_c),
       Physical(_p, _m),
       speed(_sp),
@@ -27,7 +28,12 @@ void Character::Render() {
     TexturedEntity::Render(modelMatrix, map, 12);
 }
 
-void Character::Update(float delta) {}
+void Character::Update(float delta) {
+    if (GetCollisionEngine() == NULL) return;
+    if (GetPhysicsEngine() == NULL) return;
+
+    Collidable::Update(delta);
+}
 
 void Character::DidCollide(Collidable *with) {
 
@@ -44,3 +50,9 @@ bool Character::DidUpdate() {
 Collidable::ColliderType Character::GetColliderType() {
     return Collidable::CHARACTER;
 }
+
+glm::vec3 Character::Push() const {
+    return glm::vec3(0.0f);
+}
+void Character::PushBy(glm::vec3 force) {}
+void Character::GravitateTo(glm::vec3 direction, float g) {}

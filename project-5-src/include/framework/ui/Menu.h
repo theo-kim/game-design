@@ -14,7 +14,7 @@ public :
     ~Menu();
     
     // Abstract Implementations
-    virtual int Input(const SDL_Event &event, const Uint32 &mouse, const int mouseX, int mouseY);
+    virtual int Input(const SDL_Event &event, const Uint32 &mouse, float mouseX, float mouseY);
     virtual void Update(float delta);
     virtual void Render();
 };

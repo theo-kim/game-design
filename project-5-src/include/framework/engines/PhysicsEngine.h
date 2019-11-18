@@ -21,7 +21,7 @@ public:
     void SetAcceleration();
 
     // Getters
-    PhysicsEngine *GetEngine() const;
+    PhysicsEngine *GetPhysicsEngine() const;
     float GetMass() const;
     glm::vec3 GetForce() const;
     glm::vec3 GetAcceleration() const;

@@ -1,4 +1,5 @@
 #include "../include/framework/Entity.h"
+#include <math.h>
 
 //
 // BEGIN ENTITY DECLARATION:
@@ -172,3 +173,53 @@ void UntexturedEntity::SetColor(glm::vec3 newColor) {
 // ---DEFINED INLINE - SEE ENTITY.H---
 // END ENTITY GROUP DECLARATION
 //
+Container::Container(std::initializer_list<Entity *> entities)
+  : EntityGroup<Entity>(entities),
+    Entity(NULL) 
+{
+  float maxLeft = INFINITY, maxRight = -INFINITY, maxUp = -INFINITY, maxDown = INFINITY;
+  glm::vec3 middle = glm::vec3(0.0f, 0.0f, 2.0f);
+  for (Entity *e : entities) {
+    glm::mat4 c = e->GetCorners();
+    if (c[0][0] < maxLeft) {
+      maxLeft = c[0][0];
+    }
+    if (c[1][0] > maxRight) {
+      maxRight = c[1][0];
+    }
+    if (c[0][1] > maxUp) {
+      maxUp = c[0][1];
+    }
+    if (c[3][1] < maxDown) {
+      maxDown = c[3][1];
+    }
+    if (middle[2] == 2.0f) {
+      middle = e->GetPos();
+    }
+    else {
+      middle = (middle + e->GetPos()) * 0.5f;
+    }
+  }
+  SetSize(glm::vec3(maxRight - maxLeft, maxUp - maxDown, 1.0f));
+  SetPos(middle);
+}
+
+void Container::Render() {
+  for (int i = 0; i < GetNumChildren(); ++i) {
+    GetEntity(i)->Render();
+  }
+}
+
+void Container::Update(float delta) {
+  for (int i = 0; i < GetNumChildren(); ++i) {
+    GetEntity(i)->Update(delta);
+  }
+}
+
+// Adders
+void Container::AddPos(glm::vec3 add) {
+  Entity::AddPos(add);
+  for (int i = 0; i < GetNumChildren(); ++i) {
+    GetEntity(i)->AddPos(add);
+  }
+}

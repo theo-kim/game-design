@@ -26,7 +26,7 @@ public:
     
     // ABSTRACT FUNCTIONS
     virtual void Render() = 0;
-    virtual void Input(const SDL_Event &event, const Uint8 *keys, const Uint32 &mouse, const int mouseX, int mouseY) = 0;
+    virtual void Input(const SDL_Event &event, const Uint8 *keys, const Uint32 &mouse, float mouseX, float mouseY) = 0;
     // Update the current scene, return address of next scene when advancing
     // Otherwise return NULL
     virtual Scene *Update(float delta) = 0;
@@ -39,6 +39,7 @@ public:
     int GetNumTransitions() const;
     glm::vec3 GetDimensions() const;
     Camera *GetCamera();
+    glm::vec4 GetColor() const { return backgroundColor; };
 
     // Adders
     void AddTransition(Scene *next);
@@ -68,9 +69,12 @@ class SimpleScene : public Scene {
 public: 
     SimpleScene(glm::vec3 dimensions, glm::vec3 background);
     virtual void Render();
-    virtual void Input(const SDL_Event &event, const Uint8 *keys, const Uint32 &mouse, const int mouseX, int mouseY);
+    virtual void Input(const SDL_Event &event, const Uint8 *keys, const Uint32 &mouse, float mouseX, float mouseY);
     virtual Scene *Update(float delta);
     virtual void Unload();
+
+    // Getter
+    Entity *GetEntity(int index) const { return entities[index]; };
 
     // Adders
     void AddEntity(Entity *entity);
@@ -82,7 +86,7 @@ private:
 class MenuScene : virtual public Scene {
 public:
     MenuScene(glm::vec3 dimensions, glm::vec3 background);
-    virtual void Input(const SDL_Event &event, const Uint8 *keys, const Uint32 &mouse, const int mouseX, int mouseY);
+    virtual void Input(const SDL_Event &event, const Uint8 *keys, const Uint32 &mouse, float mouseX, float mouseY);
     virtual Scene *Update(float delta);
     virtual void Render();
     virtual void Unload();
@@ -109,12 +113,16 @@ class CompoundScene : public Scene {
 public:
     CompoundScene(glm::vec3 size, glm::vec3 col);
 
-    virtual void Input(const SDL_Event &event, const Uint8 *keys, const Uint32 &mouse, const int mouseX, int mouseY);
+    virtual void Input(const SDL_Event &event, const Uint8 *keys, const Uint32 &mouse, float mouseX, float mouseY);
     virtual Scene *Update(float delta);
     virtual void Render();
     virtual void Load();
     virtual void Unload();
 
+    // Getter
+    Scene *GetLayer(int index) const;
+
+    // Adder
     void AddLayer(glm::vec3 offset, Scene *newLayer);
 private:
     std::vector<Scene *> layers;

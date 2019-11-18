@@ -23,6 +23,9 @@ public:
     virtual Collidable::ColliderType GetColliderType();
 
     // Physical Implementation
+    virtual glm::vec3 Push() const;
+    virtual void PushBy(glm::vec3 force);
+    virtual void GravitateTo(glm::vec3 direction, float g);
 private:
     float speed;
     int maxHealth;

@@ -1,5 +1,6 @@
 #include "../include/Game.h"
 #include "../include/Scenes.h"
+#include "../include/CharacterTypes.h"
 
 #include <string>
 
@@ -38,6 +39,10 @@ void Game::Initialize () {
   
   // Load Textures - this is poor practice, but I'm a bit lazy...
   Text::fontSheet = new TextureSheet("textures/font-sheet.png", 7, 13);
+  Dwight::Sprite = new TextureSheet("textures/character/Dwight.png", 1, 4);
+  Michael::Sprite = new TextureSheet("textures/character/Michael.png", 1, 6);
+  Jim::Sprite = new TextureSheet("textures/character/Jim.png", 1, 3);
+  Stanley::Sprite = new TextureSheet("textures/character/Stanley.png", 1, 4);
 
   // Load scenes
 
@@ -81,7 +86,11 @@ void Game::Input () {
       const Uint8 *keys = SDL_GetKeyboardState(NULL);
       int x, y;
 	    const Uint32 mouseButtonState = SDL_GetMouseState(&x, &y);
-      currentScene->Input(e, keys, mouseButtonState, x, y);
+      float mx, my;
+      mx = ((float)x - width / 2) / (width / (right - left));
+      my = ((float)y - height / 2) / (height / (top - bottom));
+      
+      currentScene->Input(e, keys, mouseButtonState, mx, -my);
     }
   }
 }
@@ -90,6 +99,7 @@ void Game::Update () {
   // Get the ticks
   float ticks = (float)SDL_GetTicks() / 1000.0f;
   float delta = ticks - lastTicks;
+
   lastTicks = ticks;
   
   delta += accumulator;

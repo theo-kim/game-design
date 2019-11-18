@@ -6,7 +6,7 @@ Physical::Physical (PhysicsEngine *_engine, float _mass)
     : engine(_engine),
       mass(_mass) {}
 
-PhysicsEngine *Physical::GetEngine() const {
+PhysicsEngine *Physical::GetPhysicsEngine() const {
     return engine;
 }
 

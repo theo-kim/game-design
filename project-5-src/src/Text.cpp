@@ -44,7 +44,7 @@ void Text::Render() {
     }
 
     glm::mat4 modelMatrix = glm::mat4(1.0f);
-    modelMatrix = glm::translate(modelMatrix, GetPos() + charOffset);
+    modelMatrix = glm::translate(modelMatrix, Entity::GetPos() + charOffset);
     modelMatrix = glm::scale(modelMatrix, charSize);
 
     float map[]  = { -0.5, -0.5, 0.5, -0.5, 0.5, 0.5, -0.5, -0.5, 0.5, 0.5, -0.5, 0.5,
@@ -64,6 +64,20 @@ void Text::SetText (std::string newtext) {
 
 std::string Text::GetText() {
   return contents;
+}
+
+glm::vec3 Text::GetPos() const {
+  if (align == CENTER) {
+    return Entity::GetPos();
+  }
+  else if (align == LEFT) {
+    glm::vec3 c = Entity::GetPos();
+    return glm::vec3(c[0] + GetSize()[0] / 2, c[1], c[2]);
+  }
+  else {
+    glm::vec3 c = Entity::GetPos();
+    return glm::vec3(c[0] - GetSize()[0] / 2, c[1], c[2]);
+  }
 }
 
 void Text::GetCharMap (float *coords, char c) {

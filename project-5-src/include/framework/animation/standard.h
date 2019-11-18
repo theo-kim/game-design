@@ -3,5 +3,6 @@
 
 #include "Animation.h"
 #include "Blink.h"
+#include "Slide.h"
 
 #endif

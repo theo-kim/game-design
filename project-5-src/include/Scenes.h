@@ -2,6 +2,7 @@
 #define GAME_SCENES_DEF
 
 #include "framework/standard.h"
+#include "Character.h"
 #include "standard.h"
 
 class OpenningScene : public SimpleScene {
@@ -9,7 +10,7 @@ public:
     OpenningScene(glm::vec3 size);
     
     virtual Scene *Update(float delta);
-    virtual void Input(const SDL_Event &event, const Uint8 *keys, const Uint32 &mouse, const int mouseX, int mouseY);
+    virtual void Input(const SDL_Event &event, const Uint8 *keys, const Uint32 &mouse, float mouseX, float mouseY);
     virtual void Load();
 };
 
@@ -18,8 +19,27 @@ public:
     MainMenuScene(glm::vec3 size);
 
     virtual Scene *Update(float delta);
-    virtual void Input(const SDL_Event &event, const Uint8 *keys, const Uint32 &mouse, const int mouseX, int mouseY);
+    virtual void Input(const SDL_Event &event, const Uint8 *keys, const Uint32 &mouse, float mouseX, float mouseY);
     virtual void Load();
+private:
+    SimpleScene *simple;
+    MenuScene *menu;
+};
+
+class Level1 : public CompoundScene {
+public:
+    Level1(glm::vec3 size, glm::vec3 maxSize);
+
+    virtual Scene *Update(float delta);
+    virtual void Input(const SDL_Event &event, const Uint8 *keys, const Uint32 &mouse, float mouseX, float mouseY);
+    virtual void Load();
+
+    void ChooseCharacter(Character *character);
+private:
+    Character *player;
+    
+    SimpleScene *info;
+    ActionScene *action;
 };
 
 #endif
