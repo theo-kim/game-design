@@ -1,7 +1,4 @@
-#include "../include/framework/Sensor.h"
-#include "../include/framework/ProximitySensor.h"
-#include "../include/framework/VertexSensor.h"
-#include "../include/framework/EdgeSensor.h"
+#include "../include/framework/sensors/standard.h"
 
 Sensor::Sensor() {}
 

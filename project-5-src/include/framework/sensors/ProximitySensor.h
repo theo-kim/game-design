@@ -1,7 +1,7 @@
 #ifndef PROXIMITY_DEF
 #define PROXIMITY_DEF
 
-#include "standard.h"
+#include "../gl.h"
 #include "Sensor.h"
 
 class ProximitySensor : public Sensor {

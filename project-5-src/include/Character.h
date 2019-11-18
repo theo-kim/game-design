@@ -3,8 +3,7 @@
 
 #include "standard.h"
 #include "framework/Entity.h"
-#include "framework/CollisionEngine.h"
-#include "framework/PhysicsEngine.h"
+#include "framework/engines/standard.h"
 
 class Character : public TexturedEntity, public Collidable, public Physical {
 public:

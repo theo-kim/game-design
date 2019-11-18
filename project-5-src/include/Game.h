@@ -10,13 +10,7 @@
 #include <map>
 
 #include "standard.h"
-#include "framework/Text.h"
-#include "framework/Entity.h"
-#include "framework/CollisionEngine.h"
-#include "framework/PhysicsEngine.h"
-#include "framework/Scene.h"
-#include "Character.h"
-
+#include "framework/standard.h"
 
 class Game {
  public:
@@ -65,9 +59,6 @@ class Game {
 
   // Scenes
   Scene *opening;
-
-  TexturedShader *rendererTextured;
-  UntexturedShader *rendererUntextured;
 };
 
 #endif

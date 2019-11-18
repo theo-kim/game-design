@@ -1,7 +1,7 @@
 #ifndef EDGE_DEF
 #define EDGE_DEF
 
-#include "standard.h"
+#include "../gl.h"
 #include "Sensor.h"
 #include "VertexSensor.h"
 

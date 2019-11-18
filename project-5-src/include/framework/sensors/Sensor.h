@@ -1,8 +1,8 @@
 #ifndef SENSOR_DEF
 #define SENSOR_DEF
 
-#include "standard.h"
-#include "Entity.h"
+#include "../gl.h"
+#include "../Entity.h"
 
 class Sensor {
 public: 

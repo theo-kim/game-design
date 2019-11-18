@@ -1,7 +1,7 @@
 #ifndef VERTEXSENSOR_DEF
 #define VERTEXSENSOR_DEF
 
-#include "standard.h"
+#include "../gl.h"
 #include "Sensor.h"
 #include "EdgeSensor.h"
 

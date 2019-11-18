@@ -1,7 +1,7 @@
 #ifndef IMAGE_DEF
 #define IMAGE_DEF
 
-#include "../standard.h"
+#include "../gl.h"
 #include "../Entity.h"
 
 class Image : public TexturedEntity {

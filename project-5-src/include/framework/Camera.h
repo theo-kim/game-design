@@ -1,7 +1,7 @@
 #ifndef CAMERA_DEF
 #define CAMERA_DEF
 
-#include "standard.h"
+#include "gl.h"
 #include "Entity.h"
 
 class Camera {

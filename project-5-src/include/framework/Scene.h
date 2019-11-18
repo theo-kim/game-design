@@ -1,18 +1,18 @@
 #ifndef SCENE_DEF
 #define SCENE_DEF
 
-#include "standard.h"
+#include "gl.h"
 #include "Entity.h"
 #include "Camera.h"
-#include "CollisionEngine.h"
-#include "PhysicsEngine.h"
-#include "Text.h"
+#include "engines/standard.h"
+#include "ui/Menu.h"
 
 class Entity;
 
 class Scene {
 public:
-    Scene(float height, float width, float depth, glm::vec3 backgroundColor);
+    Scene(glm::vec3 size, glm::vec3 backgroundColor);
+    Scene(glm::vec3 size, glm::vec4 backgroundColor);
     ~Scene();
 
     virtual void Load();
@@ -30,11 +30,15 @@ public:
     // Update the current scene, return address of next scene when advancing
     // Otherwise return NULL
     virtual Scene *Update(float delta) = 0;
+    //virtual void AddEntity(Entity *newEntity) = 0;
 
     // Getters
     TexturedShader *GetTexturedRenderer() const;
     UntexturedShader *GetUntexturedRenderer() const;
-    Scene *GetTransition(int index);
+    Scene *GetTransition(int index) const;
+    int GetNumTransitions() const;
+    glm::vec3 GetDimensions() const;
+    Camera *GetCamera();
 
     // Adders
     void AddTransition(Scene *next);
@@ -43,10 +47,11 @@ public:
     operator TexturedShader *() const;
     operator UntexturedShader *() const;
 private:
+    bool unloaded;
     // Viewport
     float height, width, depth;
 
-    glm::vec3 backgroundColor;
+    glm::vec4 backgroundColor;
 
     glm::mat4 view;
     glm::mat4 projection;
@@ -61,25 +66,35 @@ private:
 
 class SimpleScene : public Scene {
 public: 
-    SimpleScene(float height, float width, float depth, glm::vec3 backgroundColor);
+    SimpleScene(glm::vec3 dimensions, glm::vec3 background);
     virtual void Render();
     virtual void Input(const SDL_Event &event, const Uint8 *keys, const Uint32 &mouse, const int mouseX, int mouseY);
     virtual Scene *Update(float delta);
+    virtual void Unload();
 
     // Adders
     void AddEntity(Entity *entity);
+    void AddEntity(std::initializer_list<Entity *> entities);
 private: 
     std::vector<Entity *> entities;
 };
 
 class MenuScene : virtual public Scene {
 public:
-    enum MenuSceneHorizontalAlignment { LEFT, CENTER, RIGHT };
-    enum MenuSceneVerticalAlignment { TOP, MIDDLE, BOTTOM };
-    
-    MenuScene(std::vector<std::string> options, MenuSceneHorizontalAlignment h, MenuSceneVerticalAlignment v);
+    MenuScene(glm::vec3 dimensions, glm::vec3 background);
+    virtual void Input(const SDL_Event &event, const Uint8 *keys, const Uint32 &mouse, const int mouseX, int mouseY);
+    virtual Scene *Update(float delta);
+    virtual void Render();
+    virtual void Unload();
+
+    // Getter
+    int GetSelectedIndex() const;
+
+    // Setters
+    void SetMenu(Menu *entity);
 private:
-    std::vector<Text *> labels;
+    Menu *menu;
+    int optionChosen;
 };
 
 class ActionScene : virtual public Scene {
@@ -90,9 +105,17 @@ private:
     PhysicsEngine physics;
 };
 
-class CompoundScene : virtual public Scene {
+class CompoundScene : public Scene {
 public:
-    CompoundScene(float height, float width, float depth);
+    CompoundScene(glm::vec3 size, glm::vec3 col);
+
+    virtual void Input(const SDL_Event &event, const Uint8 *keys, const Uint32 &mouse, const int mouseX, int mouseY);
+    virtual Scene *Update(float delta);
+    virtual void Render();
+    virtual void Load();
+    virtual void Unload();
+
+    void AddLayer(glm::vec3 offset, Scene *newLayer);
 private:
     std::vector<Scene *> layers;
 };

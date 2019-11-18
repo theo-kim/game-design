@@ -168,25 +168,7 @@ void UntexturedEntity::SetColor(glm::vec3 newColor) {
 // :END UNTEXTURED ENTITY DECLARATION
 //
 // 
-//
-EntityGroup::EntityGroup() {}
-
-EntityGroup::EntityGroup(int n, Entity * _children[]) {
-  for (int i = 0; i < n; ++i) {
-    children.push_back(_children[i]);
-  }
-}
-
-EntityGroup::~EntityGroup() {};
-
-// Getters
-Entity *EntityGroup::GetEntity(int index) {
-  return children[index];
-}
-
-// Adder
-Entity *EntityGroup::AddEntity(Entity *new) {
-  children.push_back(new);
-}
-//
+// BEGIN ENTITY GROUP DECLARATION
+// ---DEFINED INLINE - SEE ENTITY.H---
+// END ENTITY GROUP DECLARATION
 //

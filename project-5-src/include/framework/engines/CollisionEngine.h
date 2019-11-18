@@ -7,8 +7,8 @@
 #include <iterator>
 #include <utility>
 
-#include "standard.h"
-#include "Entity.h"
+#include "../gl.h"
+#include "../Entity.h"
 
 #define QUADTREE_DEAD_ENTITY 1
 #define QUADTREE_NO_COLLISION 2

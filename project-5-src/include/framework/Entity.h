@@ -1,7 +1,7 @@
 #ifndef ENTITY_DEF
 #define ENTITY_DEF
 
-#include "standard.h"
+#include "gl.h"
 
 // THIS IS AN ABSTRACT CLASS
 class Entity {
@@ -9,7 +9,7 @@ class Entity {
   Entity();
   Entity(ShaderProgram* _program);
   Entity(ShaderProgram* _program, glm::vec3 _pos, glm::vec3 _size, float _rot);
-  ~Entity();
+  virtual ~Entity();
 
   // Abstract Functions
   virtual void Render() = 0;
@@ -58,7 +58,7 @@ public:
   TexturedEntity();
   TexturedEntity(TexturedShader* r, TextureSheet *texture);
   TexturedEntity(TexturedShader* r, TextureSheet *texture, glm::vec3 _pos, glm::vec3 _size, float _rot);
-  ~TexturedEntity();
+  virtual ~TexturedEntity();
 
   void Render(glm::mat4 modelMatrix, float* map, int points) const;
 
@@ -77,7 +77,7 @@ public:
   UntexturedEntity();
   UntexturedEntity(UntexturedShader* r, glm::vec3 color);
   UntexturedEntity(UntexturedShader* r, glm::vec3 color, glm::vec3 _pos, glm::vec3 _size, float _rot);
-  ~UntexturedEntity();
+  virtual ~UntexturedEntity();
 
   void Render(glm::mat4 modelMatrix, float* map, int points) const;
 
@@ -91,20 +91,23 @@ private:
   glm::vec3 color;
 };
 
+// Templated Class for Holding Entities
+template <class T>
 class EntityGroup : virtual public Entity {
 public:
-  EntityGroup();
-  EntityGroup(int n, Entity * children[]);
+  EntityGroup() {};
+  EntityGroup(std::initializer_list<T *> l) { for (T *x : l) children.push_back(x); };
 
-  ~EntityGroup();
+  ~EntityGroup() { for (int i = 0; i < children.size(); ++i) delete children[i]; };
 
   // Getters
-  Entity *GetEntity(int index);
+  T *GetEntity(int index) const { return children[index]; };
+  int GetNumChildren() const { return children.size(); };
 
   // Adder
-  Entity *AddEntity(Entity *new);
+  void AddEntity(T *newEntity) { children.push_back(newEntity); };
 private:
-  std::vector<Entity *> children;
-}
+  std::vector<T *> children;
+};
 
 #endif

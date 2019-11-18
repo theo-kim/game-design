@@ -1,26 +1,29 @@
-#include "../include/framework/Text.h"
+#include "../include/framework/ui/Text.h"
 
 TextureSheet *Text::fontSheet = NULL;
 
 Text::Text() {}
 
-Text::Text(std::string _contents, TexturedShader *_program, float x, float y, float width, float height)
-  : TexturedEntity(_program, fontSheet, glm::vec3(x, y, 0.0f), glm::vec3(width * _contents.size(), height, 1.0f), 0.0f),
-    Entity(_program),
+Text::Text(std::string _contents, TexturedShader *_program, glm::vec3 pos, float size)
+  : TexturedEntity(_program, fontSheet),
+    Entity(_program, pos, glm::vec3(1.0f), 0.0f),
     align(CENTER)
 {
   contents = _contents;
   legalCharacters = CHARSET;
-  charSize = glm::vec3(width, height, 1.0f);
+  charSize = glm::vec3(GetTexture()->GetSpriteSize() * size, size, 1.0f);
+  SetSize(glm::vec3(charSize[0] * _contents.size(), charSize[1], 1.0f));
 }
 
-Text::Text(std::string _contents, TexturedShader *_program, float x, float y, float width, float height, Text::Alignment align)
-  : TexturedEntity(_program, fontSheet, glm::vec3(x, y, 0.0f), glm::vec3(width * _contents.size(), height, 1.0f), 0.0f),
+Text::Text(std::string _contents, TexturedShader *_program, glm::vec3 pos, float size, Text::Alignment align)
+  : TexturedEntity(_program, fontSheet),
+    Entity(_program, pos, glm::vec3(1.0f), 0.0f),
     align(align)
 {
   contents = _contents;
   legalCharacters = CHARSET;
-  charSize = glm::vec3(width, height, 1.0f);
+  charSize = glm::vec3(GetTexture()->GetSpriteSize() * size, size, 1.0f);
+  SetSize(glm::vec3(charSize[0] * _contents.size(), charSize[1], 1.0f));
 }
 
 void Text::Render() {

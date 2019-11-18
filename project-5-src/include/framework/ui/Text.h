@@ -1,8 +1,8 @@
 #ifndef TEXT_DEF
 #define TEXT_DEF
 
-#include "standard.h"
-#include "Entity.h"
+#include "../gl.h"
+#include "../Entity.h"
 #include <string>
 
 #define CHARSET " !\"#$%&'()*+,-./0123456789:;=?ABCDEFGHIJKLMNOPQRSTUVWXYZ^_`abcdefghijklmnopqrstuvwxyz"
@@ -14,8 +14,8 @@ public:
   enum Alignment { CENTER, LEFT, RIGHT };
   
   Text();
-  Text(std::string _contents, TexturedShader *_program, float x, float y, float width, float height);
-  Text(std::string _contents, TexturedShader *_program, float x, float y, float width, float height, Alignment alignment);
+  Text(std::string _contents, TexturedShader *_program, glm::vec3 pos, float size);
+  Text(std::string _contents, TexturedShader *_program, glm::vec3 pos, float size, Alignment alignment);
   virtual void Render();
   virtual void Update(float delta); 
   void SetText(std::string newContents);

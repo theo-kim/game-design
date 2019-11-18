@@ -1,6 +1,6 @@
 #include "../include/Game.h"
-#include "../include/Platform.h"
-#include "../include/framework/ui/Image.h"
+#include "../include/Scenes.h"
+
 #include <string>
 
 Game::Game (float screenHeight, float screenWidth)
@@ -40,17 +40,13 @@ void Game::Initialize () {
   Text::fontSheet = new TextureSheet("textures/font-sheet.png", 7, 13);
 
   // Load scenes
-  SimpleScene *scene = new SimpleScene(top-bottom, right-left, 1.0f, glm::vec3(0.0f));
+
+  // Title scene
+  OpenningScene *scene = new OpenningScene(glm::vec3(right-left, top-bottom, 1.0f));
+  scene->Load();
+
+  // Initialize first scene
   currentScene = scene;
-  currentScene->Load();
-  rendererTextured = *scene;
-  rendererUntextured = *scene;
-
-  // scene->AddEntity(new Platform(rendererUntextured, NULL, glm::vec3(1.0f), glm::vec3(0.0f, 0.0f, 1.0f), 5.0f));
-
-  scene->AddEntity(new Image(*scene, "textures/logo.png", glm::vec3(0.0f, 0.5f, 0.0f), 2.0f));
-
-  //scene->AddEntity(new Text("the office", *scene, 0, 0, 0.2, 0.25));
 }
 
 void Game::Run() {
@@ -85,7 +81,7 @@ void Game::Input () {
       const Uint8 *keys = SDL_GetKeyboardState(NULL);
       int x, y;
 	    const Uint32 mouseButtonState = SDL_GetMouseState(&x, &y);
-      //currentScene->Input(e, keys, mouseButtonState, x, y);
+      currentScene->Input(e, keys, mouseButtonState, x, y);
     }
   }
 }
@@ -104,10 +100,10 @@ void Game::Update () {
   
   while (delta >= FIXED_TIMESTEP) {
     if (!isPaused) {
-      //Scene *sceneState = currentScene->Update(FIXED_TIMESTEP);
-      // if (sceneState != NULL) {
-      //   currentScene = sceneState;
-      // }
+      Scene *sceneState = currentScene->Update(FIXED_TIMESTEP);
+      if (sceneState != NULL) {
+        currentScene = sceneState;
+      }
     }
     delta -= FIXED_TIMESTEP;
   }
