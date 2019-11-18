@@ -4,6 +4,7 @@
 #define STAN_SPEED 0.25
 #define MIKE_SPEED 0.66
 #define DWIGT_SPEED 0.66
+#define JAN_SPEED 0.5
 
 TextureSheet *Jim::Sprite = NULL;
 
@@ -136,6 +137,17 @@ int Dwight::Beet::CheckCollision(Collidable *with) {
   }
   else if (with->GetColliderType() == CHARACTER) {
     if (with == owner) return QUADTREE_IGNORED_COLLISION;
+    Jan *c = dynamic_cast<Jan *>(with);
+    if (c == NULL) {
+      return QUADTREE_ILLEGAL_COLLISION;
+    }
+    for (int i = 0; i < edges.size(); ++i) {
+      for (int j = 0; j < c->edges.size(); ++j) {
+        if (edges[i].CheckCollision(&(c->edges[j]))) {
+          return QUADTREE_YES_COLLISION;
+        }
+      }
+    }
   }
 }
 bool Dwight::Beet::DidUpdate() {
@@ -213,9 +225,13 @@ Stanley::Stanley(TexturedShader *program, PhysicsEngine *phys, CollisionEngine *
       Entity(program, pos, glm::vec3(Stanley::Sprite->GetSpriteSize() * height, height, 1.0f), 0.0f)
 {
   threshold = 45.0f;
+  effect = Mix_LoadWAV( "textures/didistutter.wav" );
 }
 
 void Stanley::Ult(bool doit) {
+  if (!ulting && doit) {
+    Mix_PlayChannel( -1, effect, 0 );
+  }
   ulting = ulting || doit;
   if (ulting) {
     walking = 0;
@@ -235,5 +251,47 @@ void Stanley::Update(float delta) {
   }
   else {
     Character::Update(delta);
+  }
+}
+
+TextureSheet *Jan::Sprite = NULL;
+
+Jan::Jan(TexturedShader *program, PhysicsEngine *phys, CollisionEngine *col, glm::vec3 pos, float height) 
+  : Character(program, Sprite, phys, col, JAN_SPEED, 1, 1),
+      Entity(program, pos, glm::vec3(Stanley::Sprite->GetSpriteSize() * height, height, 1.0f), 0.0f) {}
+
+void Jan::Update(float delta) {
+  if (acc > 1.0f && acc <= 2.0f) Walk(-1.0f);
+  else if (acc <= 1.0f) Walk(1.0f);
+  else if (acc <= 3.0f) Walk(1.0f);
+  else {
+    acc = 1.0f;
+  }
+  acc += delta;
+  Character::Update(delta);
+}
+
+int Jan::CheckCollision(Collidable *with) {
+  if (currentHealth <= 0) return QUADTREE_DEAD_ENTITY;
+  return with->CheckCollision(this);
+}
+
+void Jan::DidCollide(Collidable *with) {
+  if (with->GetColliderType() == Collidable::SURFACE) {
+    AddForce(glm::vec3(0.0f, 1.0f, 0.0f) * GetPhysicsEngine()->GetGravity() * GetMass());
+    
+    jumping -= 1;
+    if (jumping < 0) jumping = 0;
+    if (jumping == 0) mov[1] = 0.0f;
+  }
+  else if (with->GetColliderType() == BALLISTIC) {
+    currentHealth = 0;
+  }
+  else if (with->GetColliderType() == CHARACTER) {
+    Character *c = dynamic_cast<Character *>(with);
+    if (c == NULL) return;
+    if (GetPos()[1] < c->GetPos()[1]) {
+      currentHealth = 0;
+    }
   }
 }

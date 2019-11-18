@@ -4,6 +4,7 @@
 #include "standard.h"
 #include "Character.h"
 #include "framework/ui/Rect.h"
+#include <SDL_mixer.h>
 
 class Jim : public Character {
 public:
@@ -78,6 +79,22 @@ public:
     virtual void Update(float delta);
 
     float ultaccumulator;
+
+    Mix_Chunk *effect;
+};
+
+class Jan : public Character {
+public: 
+    static TextureSheet *Sprite;
+
+    Jan(TexturedShader *program, PhysicsEngine *phys, CollisionEngine *col, glm::vec3 pos, float height);
+
+    virtual void Update(float delta);
+
+    virtual void DidCollide(Collidable *with);
+    virtual int CheckCollision(Collidable *with);
+
+    float acc;
 };
 
 #endif

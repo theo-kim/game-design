@@ -5,6 +5,9 @@
 #include "../include/CharacterTypes.h"
 #include "../include/Platform.h"
 
+
+
+
 //
 // BEGIN OPENNINGSCENE DECLARATION :
 OpenningScene::OpenningScene(glm::vec3 size) 
@@ -143,11 +146,23 @@ Level1::Level1(glm::vec3 size, glm::vec3 maxSize)
 Scene *Level1::Update(float delta) {
     ActionScene::Update(delta);
     CompoundScene::Update(delta);
+
     ulttimer += delta;
     if (ulttimer >= player->threshold && !player->ulting) ulttimer = player->threshold;
     else if (ulttimer >= player->threshold && player->ulting) ulttimer = 0;
     timer->SetText("Next Ability in " + std::to_string((int)(player->threshold - ulttimer)));
     lives->SetText("Lives Remaining: " + std::to_string(numlives));
+
+    if (player->currentHealth <= 0) {
+        action->AddEntity({
+            new Text("Game Over!", *action, glm::vec3(0.0f), 0.2),
+        });
+    }
+    if (jan->currentHealth <= 0) {
+         action->AddEntity({
+            new Text("You will!", *action, glm::vec3(0.0f), 0.2),
+        });
+    }
     return NULL;
 }
 
@@ -173,11 +188,27 @@ void Level1::Load() {
         timer,
         lives,
     });
-
+    jan = new Jan(*action, *this, *this, glm::vec3(0.0f, -1.0f, 0.0f), 0.25f);
     action->AddEntity({
-        new Platform(*action, *this, glm::vec3(0.1f), glm::vec3(-0.5f, -1.5f, 1.0f), 3),
-        new Platform(*action, *this, glm::vec3(0.1f), glm::vec3(1.25f, -1.0f, 1.0f), 0.75),
-        new Platform(*action, *this, glm::vec3(0.1f), glm::vec3(2.0f, -0.66f, 1.0f), 1),
+        //Level 1
+        // new Platform(*action, *this, glm::vec3(0.1f), glm::vec3(1.0f, -1.5f, 1.0f), 3), //base platform
+        // new Platform(*action, *this, glm::vec3(0.1f), glm::vec3(0.0f, -0.3f, 1.0f), 0.75), //spawn in middle
+        // new Platform(*action, *this, glm::vec3(0.1f), glm::vec3(1.1f, 0.12f, 1.0f), 1), //Step 1 right
+        // new Platform(*action, *this, glm::vec3(0.1f), glm::vec3(-1.1f, 0.12f, 1.0f), 1), //Step 1 left
+        // new Platform(*action, *this, glm::vec3(0.1f), glm::vec3(-2.2f, -0.6f, 1.0f), 1), //Step left 1
+        // new Platform(*action, *this, glm::vec3(0.1f), glm::vec3(-1.6f, -1.3f, 1.0f), 1), //Step left 2
+        // new Platform(*action, *this, glm::vec3(0.1f), glm::vec3(-3.0f, -1.7f, 1.0f), 2), //Step left bottom most
+        // new Platform(*action, *this, glm::vec3(0.1f), glm::vec3(3.0f, -1.3f, 1.0f), 2),
+
+        new Platform(*action, *this, glm::vec3(0.1f), glm::vec3(1.0f, -1.5f, 1.0f), 3), //base platform
+        new Platform(*action, *this, glm::vec3(0.1f), glm::vec3(0.0f, -0.3f, 1.0f), 0.75), //spawn in middle
+        new Platform(*action, *this, glm::vec3(0.1f), glm::vec3(1.1f, -0.12f, 1.0f), 1), //Step 1 right
+        new Platform(*action, *this, glm::vec3(0.1f), glm::vec3(-1.1f, -0.12f, 1.0f), 1), //Step 1 left
+        new Platform(*action, *this, glm::vec3(0.1f), glm::vec3(-2.2f, -1.3f, 1.0f), 1), //Step left 1
+        new Platform(*action, *this, glm::vec3(0.1f), glm::vec3(-1.6f, -1.3f, 1.0f), 1), //Step left 2
+        new Platform(*action, *this, glm::vec3(0.1f), glm::vec3(-3.0f, 0.8f, 1.0f), 2), //Step left bottom most
+        new Platform(*action, *this, glm::vec3(0.1f), glm::vec3(3.0f, -0.3f, 1.0f), 2),
+        jan,
     });
 }
 

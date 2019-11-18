@@ -43,6 +43,7 @@ void Game::Initialize () {
   Michael::Sprite = new TextureSheet("textures/character/Michael.png", 1, 6);
   Jim::Sprite = new TextureSheet("textures/character/Jim.png", 1, 3);
   Stanley::Sprite = new TextureSheet("textures/character/Stanley.png", 1, 4);
+  Jan::Sprite = new TextureSheet("textures/character/Jan.png", 1, 4);
 
   // Load scenes
 

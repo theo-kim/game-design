@@ -37,16 +37,16 @@ public:
     float threshold;
     std::vector<EdgeSensor> edges;
     glm::vec3 scale;
+    int currentHealth;
 protected:
     int walking;
     int jumping;
     int animState;
     float accumulator;
-private:
     glm::vec3 mov;
+private:
     float speed;
     int maxHealth;
-    int currentHealth;
 };
 
 #endif

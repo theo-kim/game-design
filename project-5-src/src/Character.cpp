@@ -110,17 +110,37 @@ void Character::DidCollide(Collidable *with) {
         if (jumping < 0) jumping = 0;
         if (jumping == 0) mov[1] = 0.0f;
     }
+    else if (with->GetColliderType() == Collidable::BALLISTIC) {
+        currentHealth = 0;
+    }
+    else if (with->GetColliderType() == Collidable::CHARACTER) {
+        if (GetPos()[1] > with->GetPos()[1]) {}
+        else {
+            currentHealth = 0;
+        }
+    }
 }
 
 int Character::CheckCollision(Collidable *with) {
     if (with->GetColliderType() == Collidable::SURFACE) {
         return with->CheckCollision(this); // Have the platform check the collision
     }
+    else if (with->GetColliderType() == Collidable::CHARACTER) {
+        Character *c = dynamic_cast<Character *>(with);
+        if (c == NULL) return QUADTREE_ILLEGAL_COLLISION;
+        for (int i = 0; i < edges.size(); ++i) {
+        for (int j = 0; j < c->edges.size(); ++j) {
+            if (edges[i].CheckCollision(&(c->edges[j]))) {
+            return QUADTREE_YES_COLLISION;
+            }
+        }
+        }
+    }
     return QUADTREE_IGNORED_COLLISION;
 }
 
 bool Character::DidUpdate() {
-    return false;
+    return true;
 }
 
 Collidable::ColliderType Character::GetColliderType() {
