@@ -33,7 +33,7 @@ void Character::Walk(int doit) {
 }
 void Character::Jump(bool doit) {
     if (jumping == 0 && doit) {
-        AddForce(glm::vec3(0.0f, 1.0f, 0.0f) * 50.0f);
+        AddForce(glm::vec3(0.0f, 1.0f, 0.0f) * 70.0f);
         jumping = 2;
     }
 }
@@ -91,11 +91,11 @@ void Character::Update(float delta) {
         animState = 2;
         accumulator = 0;
     }
-    else if (walking == 1 && animState == 0 && accumulator > (1 - speed)) {
+    else if (walking != 0 && animState == 0 && accumulator > (1 - speed)) {
         animState = 1;
         accumulator = 0;
     }
-    else if (walking == 1 && animState == 1 && accumulator > (1 - speed)) {
+    else if (walking != 0 && animState == 1 && accumulator > (1 - speed)) {
         animState = 0;
         accumulator = 0;
     }

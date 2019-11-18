@@ -59,6 +59,8 @@ class Game {
 
   // Scenes
   Scene *opening;
+
+  Mix_Music *music;
 };
 
 #endif

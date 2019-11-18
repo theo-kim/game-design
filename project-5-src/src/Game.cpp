@@ -52,6 +52,11 @@ void Game::Initialize () {
 
   // Initialize first scene
   currentScene = scene;
+  Mix_OpenAudio( 22050, MIX_DEFAULT_FORMAT, 2, 4096 );
+
+  music = Mix_LoadMUS( "textures/Office.wav" );
+
+  Mix_PlayMusic( music, -1 );
 }
 
 void Game::Run() {
@@ -63,6 +68,8 @@ void Game::Run() {
 }
 
 void Game::Shutdown() {
+  Mix_FreeMusic( music );
+  Mix_CloseAudio();
   SDL_Quit();
 }
 

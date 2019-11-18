@@ -3,7 +3,7 @@ NAME = game
 
 ODIR = build
 IDIR = ../include/global
-LIBS = -l SDL2-2.0.0 -l SDL2_image-2.0.0
+LIBS = -l SDL2-2.0.0 -l SDL2_image-2.0.0 -l SDL2_mixer-2.0.0
 
 MAC_LDIR = ../lib/darwin
 MAC_FRAMEWORKS = -framework Cocoa -framework OpenGL

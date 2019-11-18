@@ -147,6 +147,7 @@ Scene *Level1::Update(float delta) {
     if (ulttimer >= player->threshold && !player->ulting) ulttimer = player->threshold;
     else if (ulttimer >= player->threshold && player->ulting) ulttimer = 0;
     timer->SetText("Next Ability in " + std::to_string((int)(player->threshold - ulttimer)));
+    lives->SetText("Lives Remaining: " + std::to_string(numlives));
     return NULL;
 }
 
@@ -158,6 +159,7 @@ void Level1::Input(const SDL_Event &event, const Uint8 *keys, const Uint32 &mous
 }
 
 void Level1::Load() {
+    numlives = 3;
     info = new SimpleScene(GetDimensions(), glm::vec4(0.0f));
     action = new SimpleScene(GetDimensions(), glm::vec4(0.0f));
     AddLayer(glm::vec3(0.0f), info);
@@ -165,13 +167,18 @@ void Level1::Load() {
     CompoundScene::Load();
 
     timer = new Text("Next Ability in X", *info, glm::vec3(-(GetDimensions()[0] / 2.5) + 0.1, (GetDimensions()[1] / 2.5) - 0.25f, 0.0f), 0.1, Text::LEFT);
-
+    lives = new Text("Lives Remaining: X", *info, glm::vec3(-(GetDimensions()[0] / 2.5) + 0.1, (GetDimensions()[1] / 2.5) - 0.40f, 0.0f), 0.1, Text::LEFT);
     info->AddEntity({
         new Text("Level 1", *info, glm::vec3(-(GetDimensions()[0] / 2.5) + 0.1, (GetDimensions()[1] / 2.5) - 0.1, 0.0f), 0.1, Text::LEFT),
-        timer
+        timer,
+        lives,
     });
 
-    action->AddEntity(new Platform(*action, *this, glm::vec3(0.1f), glm::vec3(0.0f, -1.5f, 1.0f), 4));
+    action->AddEntity({
+        new Platform(*action, *this, glm::vec3(0.1f), glm::vec3(-0.5f, -1.5f, 1.0f), 3),
+        new Platform(*action, *this, glm::vec3(0.1f), glm::vec3(1.25f, -1.0f, 1.0f), 0.75),
+        new Platform(*action, *this, glm::vec3(0.1f), glm::vec3(2.0f, -0.66f, 1.0f), 1),
+    });
 }
 
 void Level1::ChooseCharacter(Character *character) {

@@ -39,6 +39,9 @@ public:
 private:
     Character *player;
     Text *timer;
+    Text *lives;
+
+    int numlives;
     
     float ulttimer;
 
