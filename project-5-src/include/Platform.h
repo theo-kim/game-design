@@ -4,6 +4,7 @@
 #include "standard.h"
 #include "framework/Entity.h"
 #include "framework/engines/standard.h"
+#include "framework/sensors/standard.h"
 
 class Platform : virtual public UntexturedEntity, public Collidable {
 public:
@@ -19,6 +20,8 @@ public:
     virtual int CheckCollision(Collidable *with);
     virtual bool DidUpdate();
     virtual Collidable::ColliderType GetColliderType();
+
+    std::vector<EdgeSensor> edges;
 private:
     float width;
     float height;

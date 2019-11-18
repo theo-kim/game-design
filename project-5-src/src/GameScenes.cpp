@@ -3,6 +3,7 @@
 #include "../include/framework/animation/Blink.h"
 #include "../include/Character.h"
 #include "../include/CharacterTypes.h"
+#include "../include/Platform.h"
 
 //
 // BEGIN OPENNINGSCENE DECLARATION :
@@ -40,7 +41,8 @@ void OpenningScene::Load() {
 //
 // BEGIN MAIN MENU SCENE DECLARATION:
 MainMenuScene::MainMenuScene(glm::vec3 size)
-    : CompoundScene(size, glm::vec3(0.3f)) {}
+    : CompoundScene(size, glm::vec3(0.3f)),
+      Scene(size, glm::vec3(0.3f)) {}
 
 Scene *MainMenuScene::Update(float delta) {
     CompoundScene::Update(delta);
@@ -51,16 +53,16 @@ Scene *MainMenuScene::Update(float delta) {
         Unload();
         next->Load();
         if (index == 0) {
-            next->ChooseCharacter(new Michael(*next, glm::vec3(0.0f)));
+            next->ChooseCharacter(new Michael(*(next->GetLayer(1)), *next, *next, glm::vec3(0.0f), 0.25));
         }
         else if (index == 1) {
-            next->ChooseCharacter(new Stanley(*next, glm::vec3(0.0f)));
+            next->ChooseCharacter(new Stanley(*(next->GetLayer(1)), *next, *next, glm::vec3(0.0f), 0.25));
         }
         else if (index == 2) {
-            next->ChooseCharacter(new Dwight(*next, glm::vec3(0.0f)));
+            next->ChooseCharacter(new Dwight(*(next->GetLayer(1)), *(next->GetLayer(1)), *next, *next, glm::vec3(0.0f), 0.25));
         }
         else {
-            next->ChooseCharacter(new Jim(*next, glm::vec3(0.0f)));
+            next->ChooseCharacter(new Jim(*(next->GetLayer(1)), *next, *next, glm::vec3(0.0f), 0.25));
         }
         return next;
     }
@@ -83,36 +85,36 @@ void MainMenuScene::Load() {
             new Slide(NULL, 0.2f, glm::vec3(0.0f, 0.2f, 0.0f), false),
             NULL,
             new Container({
-                new Michael(*simple, glm::vec3(-1.5f, 0.0f, 0.0f), 1.0f),
-                new Text("Micheal", *simple, glm::vec3(-1.5f, -0.7f, 0.0f), 0.1),
-                new Text("Scott", *simple, glm::vec3(-1.5f, -0.85f, 0.0f), 0.1)
+                new Michael(*menu, glm::vec3(-1.5f, 0.0f, 0.0f), 1.0f),
+                new Text("Micheal", *menu, glm::vec3(-1.5f, -0.7f, 0.0f), 0.1),
+                new Text("Scott", *menu, glm::vec3(-1.5f, -0.85f, 0.0f), 0.1)
             })
         ),
         new AnimatedButton(
             new Slide(NULL, 0.2f, glm::vec3(0.0f, 0.2f, 0.0f), false),
             NULL,
             new Container({
-                new Stanley(*simple, glm::vec3(-0.5f, 0.0f, 0.0f), 1.0f),
-                new Text("Stanley", *simple, glm::vec3(-0.5f, -0.7f, 0.0f), 0.1),
-                new Text("Hudson", *simple, glm::vec3(-0.5f, -0.85f, 0.0f), 0.1)
+                new Stanley(*menu, glm::vec3(-0.5f, 0.0f, 0.0f), 1.0f),
+                new Text("Stanley", *menu, glm::vec3(-0.5f, -0.7f, 0.0f), 0.1),
+                new Text("Hudson", *menu, glm::vec3(-0.5f, -0.85f, 0.0f), 0.1)
             })
         ),
         new AnimatedButton(
             new Slide(NULL, 0.2f, glm::vec3(0.0f, 0.2f, 0.0f), false),
             NULL,
             new Container({
-                new Dwight(*simple, glm::vec3(0.5f, 0.0f, 0.0f), 1.0f),
-                new Text("Dwight", *simple, glm::vec3(0.5f, -0.7f, 0.0f), 0.1),
-                new Text("Schrute", *simple, glm::vec3(0.5f, -0.85f, 0.0f), 0.1)
+                new Dwight(*menu, glm::vec3(0.5f, 0.0f, 0.0f), 1.0f),
+                new Text("Dwight", *menu, glm::vec3(0.5f, -0.7f, 0.0f), 0.1),
+                new Text("Schrute", *menu, glm::vec3(0.5f, -0.85f, 0.0f), 0.1)
             })
         ),
         new AnimatedButton(
             new Slide(NULL, 0.2f, glm::vec3(0.0f, 0.2f, 0.0f), false),
             NULL,
             new Container({
-                new Jim(*simple, glm::vec3(1.5f, 0.0f, 0.0f), 1.0f),
-                new Text("Jim", *simple, glm::vec3(1.5f, -0.7f, 0.0f), 0.1),
-                new Text("Halpert", *simple, glm::vec3(1.5f, -0.85f, 0.0f), 0.1)
+                new Jim(*menu, glm::vec3(1.5f, 0.0f, 0.0f), 1.0f),
+                new Text("Jim", *menu, glm::vec3(1.5f, -0.7f, 0.0f), 0.1),
+                new Text("Halpert", *menu, glm::vec3(1.5f, -0.85f, 0.0f), 0.1)
             })
         ),
     }));
@@ -131,28 +133,55 @@ void MainMenuScene::Load() {
 //
 //
 Level1::Level1(glm::vec3 size, glm::vec3 maxSize)
-    : CompoundScene(size, glm::vec3(0.3f)) {}
+    : CompoundScene(size, glm::vec3(0.3f)),
+      ActionScene(maxSize[1], maxSize[0], size[0], size[1], size[2]),
+      Scene(size, glm::vec3(0.3f))
+{
+    ulttimer = 0.0f;
+}
 
 Scene *Level1::Update(float delta) {
+    ActionScene::Update(delta);
     CompoundScene::Update(delta);
+    ulttimer += delta;
+    if (ulttimer >= player->threshold && !player->ulting) ulttimer = player->threshold;
+    else if (ulttimer >= player->threshold && player->ulting) ulttimer = 0;
+    timer->SetText("Next Ability in " + std::to_string((int)(player->threshold - ulttimer)));
+    return NULL;
 }
 
 void Level1::Input(const SDL_Event &event, const Uint8 *keys, const Uint32 &mouse, float mouseX, float mouseY) {
-    CompoundScene::Input(event, keys, mouse, mouseX, mouseY);
+    player->Walk(keys[SDL_SCANCODE_D] - keys[SDL_SCANCODE_A]);
+    player->Jump(keys[SDL_SCANCODE_SPACE]);
+    player->Ult(ulttimer >= player->threshold && keys[SDL_SCANCODE_Q]);
+    // CompoundScene::Input(event, keys, mouse, mouseX, mouseY);
 }
 
 void Level1::Load() {
     info = new SimpleScene(GetDimensions(), glm::vec4(0.0f));
+    action = new SimpleScene(GetDimensions(), glm::vec4(0.0f));
     AddLayer(glm::vec3(0.0f), info);
+    AddLayer(glm::vec3(0.0f), action);
     CompoundScene::Load();
 
+    timer = new Text("Next Ability in X", *info, glm::vec3(-(GetDimensions()[0] / 2.5) + 0.1, (GetDimensions()[1] / 2.5) - 0.25f, 0.0f), 0.1, Text::LEFT);
+
     info->AddEntity({
-        new Text("Level 1", *info, glm::vec3(-(GetDimensions()[0] / 2.5) + 0.1, (GetDimensions()[1] / 2.5) - 0.1, 0.0f), 0.1, Text::LEFT)
+        new Text("Level 1", *info, glm::vec3(-(GetDimensions()[0] / 2.5) + 0.1, (GetDimensions()[1] / 2.5) - 0.1, 0.0f), 0.1, Text::LEFT),
+        timer
     });
+
+    action->AddEntity(new Platform(*action, *this, glm::vec3(0.1f), glm::vec3(0.0f, -1.5f, 1.0f), 4));
 }
 
 void Level1::ChooseCharacter(Character *character) {
     player = character;
+    action->AddEntity(player);
+    ulttimer = player->threshold;
+}
+
+void Level1::Render() {
+    CompoundScene::Render();
 }
 //
 //

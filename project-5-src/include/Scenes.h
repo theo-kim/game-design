@@ -26,20 +26,24 @@ private:
     MenuScene *menu;
 };
 
-class Level1 : public CompoundScene {
+class Level1 : public CompoundScene, public ActionScene {
 public:
     Level1(glm::vec3 size, glm::vec3 maxSize);
 
     virtual Scene *Update(float delta);
     virtual void Input(const SDL_Event &event, const Uint8 *keys, const Uint32 &mouse, float mouseX, float mouseY);
     virtual void Load();
+    virtual void Render();
 
     void ChooseCharacter(Character *character);
 private:
     Character *player;
+    Text *timer;
     
+    float ulttimer;
+
     SimpleScene *info;
-    ActionScene *action;
+    SimpleScene *action;
 };
 
 #endif

@@ -16,15 +16,20 @@ public:
     virtual void PushBy(glm::vec3 force) = 0;
     virtual void GravitateTo(glm::vec3 direction, float g) = 0;
 
+    virtual void Update(float delta);
+
     // Setters
-    void SetForce();
-    void SetAcceleration();
+    void SetForce(glm::vec3 f);
+    void SetAcceleration(glm::vec3 a);
 
     // Getters
     PhysicsEngine *GetPhysicsEngine() const;
     float GetMass() const;
     glm::vec3 GetForce() const;
     glm::vec3 GetAcceleration() const;
+
+    // Adders
+    void AddForce(glm::vec3 f);
 private:
     PhysicsEngine *engine;
     float mass;
@@ -39,10 +44,8 @@ public:
 
     float GetGravity() const;
 
-    class PhysicsEngineNode {
-
-    };
-    
+    void RegisterEntity(Physical* physical);
+   
 private:
     float gravity;
 };

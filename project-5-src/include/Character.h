@@ -4,6 +4,7 @@
 #include "standard.h"
 #include "framework/Entity.h"
 #include "framework/engines/standard.h"
+#include "framework/sensors/standard.h"
 
 class Character : public TexturedEntity, public Collidable, public Physical {
 public:
@@ -11,6 +12,11 @@ public:
 
     float GetSpeed() const;
     int GetHealth() const; 
+
+    void Walk(int dir);
+    void Jump(bool doit);
+    void Stop();
+    virtual void Ult(bool doit);
 
     // Entity Implementation
     virtual void Render();
@@ -26,7 +32,18 @@ public:
     virtual glm::vec3 Push() const;
     virtual void PushBy(glm::vec3 force);
     virtual void GravitateTo(glm::vec3 direction, float g);
+
+    bool ulting;
+    float threshold;
+    std::vector<EdgeSensor> edges;
+    glm::vec3 scale;
+protected:
+    int walking;
+    int jumping;
+    int animState;
+    float accumulator;
 private:
+    glm::vec3 mov;
     float speed;
     int maxHealth;
     int currentHealth;

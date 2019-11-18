@@ -104,12 +104,17 @@ private:
 class ActionScene : virtual public Scene {
 public:
     ActionScene(float maxHeight, float maxWidth, float width, float height, float depth);
+
+    virtual Scene *Update(float delta);
+
+    operator PhysicsEngine *() const;
+    operator CollisionEngine *() const;
 private:
-    CollisionEngine collisions;
-    PhysicsEngine physics;
+    CollisionEngine *collisions;
+    PhysicsEngine *physics;
 };
 
-class CompoundScene : public Scene {
+class CompoundScene : virtual public Scene {
 public:
     CompoundScene(glm::vec3 size, glm::vec3 col);
 

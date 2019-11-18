@@ -142,7 +142,23 @@ void SimpleScene::AddEntity(std::initializer_list<Entity *> _entities) {
 //
 // BEGIN ACTION SCENE DECLARATION :
 ActionScene::ActionScene(float maxHeight, float maxWidth, float width, float height, float depth)
-    : collisions(glm::vec3(0.0f, 0.0f, 1.0f), maxWidth, maxHeight) {}
+    : Scene(glm::vec3(width, height, depth), glm::vec4(0.0f)),
+      collisions(new CollisionEngine(glm::vec3(0.0f), maxHeight, maxWidth)),
+      physics(new PhysicsEngine(1.5f)) {}
+
+Scene *ActionScene::Update(float delta) {
+    collisions->CheckCollision();
+    return NULL;
+}
+
+ActionScene::operator PhysicsEngine *() const {
+    return physics;
+}
+
+ActionScene::operator CollisionEngine *() const {
+    return collisions;
+}
+
 // END ACTION SCENE DECLARATION
 //
 //
