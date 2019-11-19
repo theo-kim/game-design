@@ -9,6 +9,11 @@ MAC_LDIR = ../lib/darwin
 MAC_FRAMEWORKS = -framework Cocoa -framework OpenGL
 MAC_IDIR = ../include/darwin
 
+WIN32_LDIR = ../lib/windows-x86
+WIN64_LDIR = ../lib/windows-x64
+WIN_IDIR = ../include/windows
+
+
 SRC = $(wildcard src/*.cpp) \
 	  $(wildcard ../include/global/*.cpp)
 _OBJ = $(SRC:.cpp=.o)
@@ -18,17 +23,38 @@ DEP = $(OBJ:.o=.d)  # one dependency file for each source
 LDFLAGS = $(libincl) $(LIBS) $(libgl)
 CXXFLAGS = -g -I$(IDIR) $(incl)
 
-ifeq ($(shell uname -s), Darwin)
-	libgl = $(MAC_FRAMEWORKS) 
-	libincl = -L$(MAC_LDIR)
-	incl = -I$(MAC_IDIR)
+
+# DON'T EDIT BELOW THIS LINE
+
+ifeq ($(OS),Windows_NT)
+	incl = -I$(WIN_IDIR)
+	ifeq ($(PROCESSOR_ARCHITEW6432),AMD64)
+        libincl = -L$(WIN64_LDIR)
+    else
+        ifeq ($(PROCESSOR_ARCHITECTURE),AMD64)
+            libincl = -L$(WIN64_LDIR)
+        endif
+        ifeq ($(PROCESSOR_ARCHITECTURE),x86)
+			libincl = -L$(WIN32_LDIR)
+		endif
+	endif
+else
+	UNAME_S := $(shell uname -s)
+	ifeq ($(UNAME_S), Darwin)
+		libgl = $(MAC_FRAMEWORKS) 
+		libincl = -L$(MAC_LDIR)
+		incl = -I$(MAC_IDIR)
+	endif
 endif
 
 $(ODIR)/%.o: src/%.cpp
 	$(CC) -c -o $@ $< $(CXXFLAGS)
 
-game: $(OBJ)
-	$(CC) $^ -o $@ $(CXXFLAGS) $(LDFLAGS) && ./$@
+default: $(OBJ)
+	$(CC) $^ -o $(NAME) $(CXXFLAGS) $(LDFLAGS) && ./$@
+
+$(NAME):
+	./$(NAME)
 
 -include $(DEP)
 $(ODIR)/%.d: src/%.cpp
@@ -36,7 +62,7 @@ $(ODIR)/%.d: src/%.cpp
 
 .PHONY: clean
 clean:
-	rm -f $(ODIR)/*.o main.o game
+	rm -f $(ODIR)/*.o ./$(NAME)
 .PHONY: cleandeps
 cleandeps:
-	rm -f $(ODIR)/*.d main.o game
+	rm -f $(ODIR)/*.d ./$(NAME)
