@@ -2,6 +2,7 @@ CC = g++ -std=c++11
 NAME = game
 
 ODIR = build
+
 IDIR = ../include/global
 LIBS = -l SDL2-2.0.0 -l SDL2_image-2.0.0 -l SDL2_mixer-2.0.0
 
@@ -48,6 +49,7 @@ else
 endif
 
 $(ODIR)/%.o: src/%.cpp
+	if test -d $(ODIR); then echo ""; else mkdir build; fi
 	$(CC) -c -o $@ $< $(CXXFLAGS)
 
 default: $(OBJ)
