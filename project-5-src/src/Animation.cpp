@@ -3,7 +3,9 @@
 //
 // BEGIN ANIMATION DECLARATION :
 Animation::Animation(Entity *_target) 
-    : EntityGroup({ _target }) {}
+    : EntityGroup({ _target }),
+      accumulator(0.0f),
+      didRender(false) {}
 
 // Getter
 float Animation::GetAccumulator() const {
@@ -61,6 +63,7 @@ void Blink::StopAndReverse() {
 
 void Blink::Render() {
     GetEntity()->Render();
+    didRender = true;
 }
 
 void Blink::Update(float delta) {
@@ -69,7 +72,8 @@ void Blink::Update(float delta) {
     GetEntity()->SetRenderFlag(!blink);
     if (!doit) return;
     AddAccumulator(delta);
-    if (GetAccumulator() >= interval) {
+    if (didRender) didRender = false;
+    if (!didRender && GetAccumulator() >= interval) {
         blink = !blink;
         // ClearAccumulator();
         AddAccumulator(-interval);

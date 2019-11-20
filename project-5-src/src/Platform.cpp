@@ -58,16 +58,24 @@ void Platform::DidCollide(Collidable *with) {
 }
 
 int Platform::CheckCollision(Collidable *with) {
+  bool flag = false;
+  for (EdgeSensor &s : edges) {
+    s.DecrementState();
+  }
   if (with->GetColliderType() == Collidable::CHARACTER) {
     Character *c = dynamic_cast<Character *>(with);
     if (c == NULL) return QUADTREE_ILLEGAL_COLLISION;
+    for (EdgeSensor& s : c->edges) {
+      s.DecrementState();
+    }
     for (int i = 0; i < edges.size(); ++i) {
       for (int j = 0; j < c->edges.size(); ++j) {
         if (edges[i].CheckCollision(&(c->edges[j]))) {
-          return QUADTREE_YES_COLLISION;
+          flag = true;
         }
       }
     }
+    if (flag) return QUADTREE_YES_COLLISION;
     return QUADTREE_NO_COLLISION;
   }
   else if (with->GetColliderType() == Collidable::BALLISTIC) {

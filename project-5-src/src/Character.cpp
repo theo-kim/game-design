@@ -1,6 +1,8 @@
 #include "../include/Character.h"
 #include "../include/Platform.h"
 
+#define JUMP 600.0f
+
 Character::Character(TexturedShader *_r, TextureSheet *_t, PhysicsEngine *_p, CollisionEngine *_c, float _sp, int _mH, float _m)
     : TexturedEntity(_r, _t),
       Entity(_r),
@@ -13,19 +15,33 @@ Character::Character(TexturedShader *_r, TextureSheet *_t, PhysicsEngine *_p, Co
       walking(0),
       animState(0),
       jumping(0),
-      ulting(false)
+      ulting(false),
+      p(glm::vec3(0.0f), 0, this)
 {
+    // glm::vec3 tl(0.0f);
+    // glm::vec3 tr(0.0f);
+    // glm::vec3 bl(0.0f);
+    // glm::vec3 br(0.0f);
+
     glm::vec3 tl(-0.5f, 0.5f, 0.0f);
     glm::vec3 tr(0.5f, 0.5f, 0.0f);
     glm::vec3 bl(-0.5f, -0.5f, 0.0f);
     glm::vec3 br(0.5f, -0.5f, 0.0f);
 
-    edges.push_back(EdgeSensor(tl, tr, this));
-    edges.push_back(EdgeSensor(bl, br, this));
-    edges.push_back(EdgeSensor(tl, bl, this));
-    edges.push_back(EdgeSensor(tr, br, this));
+    edges.push_back(EdgeSensor(tl, tr, this)); // Top - 0
+    edges.push_back(EdgeSensor(tl, bl, this)); // Left - 1
+    edges.push_back(EdgeSensor(tr, br, this)); // Right - 2
+
+    edges.push_back(EdgeSensor(glm::vec3(-0.20f, -0.40f, 0.0f), glm::vec3(-0.20f, -0.52f, 0.0f), this)); // 3
+    edges.push_back(EdgeSensor(glm::vec3(0.13f, -0.40f, 0.0f), glm::vec3(0.13f, -0.52f, 0.0f), this)); // 4
+
+    // edges.push_back(EdgeSensor(glm::vec3(30.0f, -0.4f, 0.0f), glm::vec3(30.0f, -0.52f, 0.0f), this)); // 4
 
     scale = GetSize();
+}
+
+bool Character::GetGarbage() {
+    return Entity::GetGarbage();
 }
 
 void Character::Walk(int doit) {
@@ -33,8 +49,8 @@ void Character::Walk(int doit) {
 }
 void Character::Jump(bool doit) {
     if (jumping == 0 && doit) {
-        AddForce(glm::vec3(0.0f, 1.0f, 0.0f) * 70.0f);
-        jumping = 2;
+        AddForce(glm::vec3(0.0f, 1.0f, 0.0f) * JUMP);
+        jumping = 1;
     }
 }
 void Character::Stop() {
@@ -91,50 +107,78 @@ void Character::Update(float delta) {
         animState = 2;
         accumulator = 0;
     }
-    else if (walking != 0 && animState == 0 && accumulator > (1 - speed)) {
+    else if (walking != 0 && (animState == 0 || animState == 2) && accumulator > (1 - speed)) {
         animState = 1;
-        accumulator = 0;
+        accumulator -= (1 - speed);
     }
     else if (walking != 0 && animState == 1 && accumulator > (1 - speed)) {
         animState = 0;
-        accumulator = 0;
+        accumulator -= (1 - speed);
     }
     accumulator += delta;
 }
 
 void Character::DidCollide(Collidable *with) {
     if (with->GetColliderType() == Collidable::SURFACE) {
-        AddForce(glm::vec3(0.0f, 1.0f, 0.0f) * GetPhysicsEngine()->GetGravity() * GetMass());
-        
-        jumping -= 1;
-        if (jumping < 0) jumping = 0;
-        if (jumping == 0) mov[1] = 0.0f;
+        Platform *p = dynamic_cast<Platform *>(with);
+        if (edges[3].GetState() == 1 || edges[4].GetState() == 1) {
+            if (p->edges[0].GetState() == 1) {
+                AddForce(glm::vec3(0.0f, 1.0f, 0.0f) * GetPhysicsEngine()->GetGravity() * GetMass());
+                if (mov[1] < 0) {
+                    mov[1] = 0.0f;
+                    jumping = 0;
+                }
+            }
+        }
+        else if (edges[1].GetState() == 1 && edges[2].GetState() == 1) {
+            if (mov[1] > 0) {
+                mov[1] = 0;
+            }
+        }
+        else if (edges[1].GetState() == 1 || edges[2].GetState() == 1) {
+            if (edges[2].GetState() == 1 && walking > 0) {
+                Walk(0);
+            }
+            else if (edges[1].GetState() == 1 && walking < 0) {
+                Walk(0);
+            }
+        }     
     }
     else if (with->GetColliderType() == Collidable::BALLISTIC) {
         currentHealth = 0;
     }
     else if (with->GetColliderType() == Collidable::CHARACTER) {
-        if (GetPos()[1] > with->GetPos()[1]) {}
-        else {
+        if (edges[3].GetState() == 1 || edges[4].GetState() == 1) {}
+        else if (edges[0].GetState() == 1 || edges[1].GetState() == 1 || edges[2].GetState() == 1) {
             currentHealth = 0;
         }
     }
 }
 
 int Character::CheckCollision(Collidable *with) {
+    if (currentHealth <= 0) {
+        SetGarbage();
+        return QUADTREE_DEAD_ENTITY;
+    }
+    for (EdgeSensor &s : edges) {
+        s.DecrementState();
+    }
     if (with->GetColliderType() == Collidable::SURFACE) {
         return with->CheckCollision(this); // Have the platform check the collision
     }
     else if (with->GetColliderType() == Collidable::CHARACTER) {
+        bool flag = false;
         Character *c = dynamic_cast<Character *>(with);
         if (c == NULL) return QUADTREE_ILLEGAL_COLLISION;
         for (int i = 0; i < edges.size(); ++i) {
-        for (int j = 0; j < c->edges.size(); ++j) {
-            if (edges[i].CheckCollision(&(c->edges[j]))) {
-            return QUADTREE_YES_COLLISION;
+            for (int j = 0; j < c->edges.size(); ++j) {
+                if (edges[i].CheckCollision(&(c->edges[j]))) {
+                    flag = true;
+                }
             }
         }
-        }
+        if (flag) return QUADTREE_YES_COLLISION;
+        return QUADTREE_NO_COLLISION;
     }
     return QUADTREE_IGNORED_COLLISION;
 }

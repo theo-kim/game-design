@@ -21,6 +21,7 @@ public:
     // Entity Implementation
     virtual void Render();
     virtual void Update(float delta);
+    virtual bool GetGarbage();
 
     // Collidable Implementation
     virtual void DidCollide(Collidable *with);
@@ -35,15 +36,16 @@ public:
 
     bool ulting;
     float threshold;
+    ProximitySensor p;
     std::vector<EdgeSensor> edges;
     glm::vec3 scale;
     int currentHealth;
+    glm::vec3 mov;
 protected:
     int walking;
     int jumping;
     int animState;
     float accumulator;
-    glm::vec3 mov;
 private:
     float speed;
     int maxHealth;

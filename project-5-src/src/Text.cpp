@@ -60,6 +60,7 @@ void Text::Update(float delta) {}
 
 void Text::SetText (std::string newtext) {
   contents = newtext;
+  SetSize(glm::vec3(charSize[0] * contents.size(), charSize[1], 1.0f));
 }
 
 std::string Text::GetText() {

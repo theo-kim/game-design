@@ -24,6 +24,8 @@ public:
     // Scenes
     virtual void UnloadSafe(Scene *keep[], int n);
     
+    void UpdateView();
+
     // ABSTRACT FUNCTIONS
     virtual void Render() = 0;
     virtual void Input(const SDL_Event &event, const Uint8 *keys, const Uint32 &mouse, float mouseX, float mouseY) = 0;
@@ -72,6 +74,7 @@ public:
     virtual void Input(const SDL_Event &event, const Uint8 *keys, const Uint32 &mouse, float mouseX, float mouseY);
     virtual Scene *Update(float delta);
     virtual void Unload();
+    virtual void UnloadEntities();
 
     // Getter
     Entity *GetEntity(int index) const { return entities[index]; };
@@ -103,9 +106,14 @@ private:
 
 class ActionScene : virtual public Scene {
 public:
-    ActionScene(float maxHeight, float maxWidth, float width, float height, float depth);
+    ActionScene(float maxHeight, float maxWidth, float width, float height, float depth, float g);
+
+    ~ActionScene();
 
     virtual Scene *Update(float delta);
+
+    CollisionEngine *GetCollisionEngine() const { return collisions; }
+    PhysicsEngine *GetPhysicsEngine() const { return physics; }
 
     operator PhysicsEngine *() const;
     operator CollisionEngine *() const;

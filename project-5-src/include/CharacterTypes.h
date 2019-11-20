@@ -97,4 +97,18 @@ public:
     float acc;
 };
 
+class Robert : public Character {
+public: 
+    static TextureSheet *Sprite;
+
+    Robert(TexturedShader *program, PhysicsEngine *phys, CollisionEngine *col, glm::vec3 pos, float height);
+
+    virtual void Update(float delta);
+
+    virtual void DidCollide(Collidable *with);
+    virtual int CheckCollision(Collidable *with);
+
+    float acc;
+};
+
 #endif

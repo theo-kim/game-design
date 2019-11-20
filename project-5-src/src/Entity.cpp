@@ -6,11 +6,11 @@
 Entity::Entity() {};
 
 Entity::Entity(ShaderProgram *_program, glm::vec3 _pos, glm::vec3 _size, float _rot)
-  : pos(_pos), size(_size), rot(_rot), program(_program), doRender(true)
+  : pos(_pos), size(_size), rot(_rot), program(_program), doRender(true), killme(false)
 {}
 
 Entity::Entity(ShaderProgram *_program)
-  : pos(0.0f), size(1.0f), rot(0.0f), program(_program), doRender(true)
+  : pos(0.0f), size(1.0f), rot(0.0f), program(_program), doRender(true), killme(false)
 {}
 
 Entity::~Entity() {}
@@ -57,18 +57,22 @@ glm::vec3 Entity::GetPos () const {
   return pos;
 }
 
-glm::mat4 Entity::GetCorners () const {
-  float left = pos[0] - size[0] / 2;
-  float right = pos[0] + size[0] / 2;
-  float top =  pos[1] + size[1] / 2;
-  float bottom = pos[1] - size[1] / 2;
-  glm::vec4 topLeft = glm::vec4(left, top, 1.0f, 1.0f);
-  glm::vec4 topRight = glm::vec4(right, top, 1.0f, 1.0f);
-  glm::vec4 bottomLeft = glm::vec4(left, bottom, 1.0f, 1.0f);
-  glm::vec4 bottomRight = glm::vec4(right, bottom, 1.0f, 1.0f);
+glm::mat4x3 Entity::GetCorners () const {
+  glm::vec4 topLeft(-0.5f, 0.5f, 1.0f, 1.0f);
+  glm::vec4 topRight(0.5f, 0.5f, 1.0f, 1.0f);
+  glm::vec4 bottomLeft(-0.5f, -0.5f, 1.0f, 1.0f);
+  glm::vec4 bottomRight(0.5f, -0.5f, 1.0f, 1.0f);
 
-  return glm::mat4(topLeft, topRight, bottomLeft, bottomRight);
+  glm::mat4 transformation(1.0f);
+  TransformLocalCoord(transformation);
+
+  return glm::mat4x3(glm::vec3(transformation * topLeft), 
+                     glm::vec3(transformation * topRight), 
+                     glm::vec3(transformation * bottomLeft), 
+                     glm::vec3(transformation * bottomRight));
 }
+
+bool Entity::GetGarbage() const { return killme; }
 
 glm::vec3 Entity::GetSize () const { return size; }
 
@@ -77,7 +81,7 @@ float Entity::GetRot () const { return rot; }
 ShaderProgram* Entity::GetProgram() const { return program; }
 
 // Setters:
-
+void Entity::SetGarbage() { killme = true; }
 void Entity::AddPos(glm::vec3 _addition) { pos += _addition; }
 void Entity::SetPos(glm::vec3 _pos) { pos = _pos; }
 void Entity::ScaleSize(glm::vec3 _scale) { size *= _scale; }
@@ -99,6 +103,17 @@ void Entity::TransformLocalCoord (glm::mat4 &body) const {
   body = glm::translate(body, pos);
   body = glm::rotate(body, rot, glm::vec3(0.0f, 0.0f, 1.0f));
   body = glm::scale(body, size);
+}
+
+void Entity::TransformToLocalCoord (glm::vec3 &point) const {
+  glm::mat4 transformation(1.0f);
+  glm::vec3 reciprocalSize(1 / size[0], 1 / size[1], 1 / size[2]);
+  transformation = glm::scale(transformation, reciprocalSize);
+  transformation = glm::rotate(transformation, -rot, glm::vec3(0.0f, 0.0f, 1.0f));
+  transformation = glm::translate(transformation, pos * -1.0f);
+  glm::vec4 extraPoint(point, 1.0f);
+  extraPoint = transformation * extraPoint;
+  point = glm::vec3(extraPoint);
 }
 
 float Entity::TransformLocalRot (float r) const {
@@ -178,31 +193,32 @@ Container::Container(std::initializer_list<Entity *> entities)
     Entity(NULL) 
 {
   float maxLeft = INFINITY, maxRight = -INFINITY, maxUp = -INFINITY, maxDown = INFINITY;
-  glm::vec3 middle = glm::vec3(0.0f, 0.0f, 2.0f);
   for (Entity *e : entities) {
-    glm::mat4 c = e->GetCorners();
+    glm::mat4x3 c = e->GetCorners();
+
+    // std::cout << c[0][0] << "," << c[1][0] << "," << c[0][1] << "," << c[3][1] << std::endl;
     if (c[0][0] < maxLeft) {
       maxLeft = c[0][0];
     }
     if (c[1][0] > maxRight) {
       maxRight = c[1][0];
-    }
+    } 
     if (c[0][1] > maxUp) {
       maxUp = c[0][1];
     }
     if (c[3][1] < maxDown) {
       maxDown = c[3][1];
     }
-    if (middle[2] == 2.0f) {
-      middle = e->GetPos();
-    }
-    else {
-      middle = (middle + e->GetPos()) * 0.5f;
-    }
   }
+
+  // std::cout << "WIDTH" << maxRight - maxLeft << std::endl;
+  // std::cout << "HEIGHT" << maxUp - maxDown << std::endl;
   SetSize(glm::vec3(maxRight - maxLeft, maxUp - maxDown, 1.0f));
-  SetPos(middle);
-}
+  SetPos(glm::vec3(((maxRight - maxLeft) / 2) + maxLeft, (maxUp - maxDown) / 2 + maxDown, 1.0f));
+
+  std::cout << "POS" << GetPos()[0] << "," << GetPos()[1] << std::endl;
+
+} 
 
 void Container::Render() {
   for (int i = 0; i < GetNumChildren(); ++i) {

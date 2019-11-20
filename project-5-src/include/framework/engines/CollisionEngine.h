@@ -54,6 +54,8 @@ public:
   
   int GetSize();
   
+  void Clear();
+  
   class CollisionEngineNode {
   public:
     CollisionEngineNode();
@@ -82,6 +84,12 @@ public:
     bool Contains(Collidable *object);
     
     bool isLeaf;
+
+    glm::vec3 center; // Center coordinate of the quadrant
+    float top;
+    float bottom;
+    float left;
+    float right;
   private:
     int GetBorderedQuadrants(Collidable *object);
 
@@ -93,17 +101,12 @@ public:
     CollisionEngineNode *bottomRightChild;
     int size;
     int totalSize;
-
-    glm::vec3 center; // Center coordinate of the quadrant
-    float top;
-    float bottom;
-    float left;
-    float right;
    
     class EntityLinkedList {
     public:
       EntityLinkedList(Collidable *e, int borderFlags);
       EntityLinkedList(Collidable *e, int borderFlags, EntityLinkedList *next);
+      ~EntityLinkedList();
       EntityLinkedList * Next() const;
       EntityLinkedList * Prev() const;
       Collidable * Get() const;

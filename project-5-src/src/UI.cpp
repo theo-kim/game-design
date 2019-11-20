@@ -94,17 +94,13 @@ Button::ButtonState Button::GetState() const {
 
 // Private
 bool Button::InBounds(float x, float y) {
-    float wOffset = (GetSize()[0] / 2);
-    float vOffset = (GetSize()[1] / 2);
-    float left = GetPos()[0] - wOffset;
-    float right = GetPos()[0] + wOffset;
-    float top = GetPos()[1] + vOffset;
-    float bottom = GetPos()[1] - vOffset;
+    glm::vec3 clicked(x, y, 1.0f);
+    TransformToLocalCoord(clicked);
 
-    if (x > right || x < left) {
+    if (clicked[0] > 0.5f || clicked[0] < -0.5f) {
         return false;
     }
-    if (y > top || y < bottom) {
+    if (clicked[1] > 0.5f || clicked[1] < -0.5f) {
         return false;
     }
     return true;

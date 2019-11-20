@@ -7,8 +7,10 @@ Camera::Camera(glm::vec3 center, float _height, float _width, float initialZoom)
       height(_height),
       following(false),
       target(NULL) {
-          PanTo(center);
-          Zoom(initialZoom);
+        projection = glm::ortho(center[0] - (width / 2), center[0] + (width / 2), 
+                            center[1] - (height / 2), center[1] + (height / 2), 
+                            -1.0f, 1.0f);
+        Zoom(initialZoom);
       }
 
 Camera::CameraState Camera::Update() {
@@ -24,9 +26,8 @@ void Camera::PanBy(glm::vec3 by) {
 }
 
 void Camera::PanTo(glm::vec3 to) {
-    projection = glm::ortho(to[0] - (width / 2), to[0] + (width / 2), 
-                            to[1] - (height / 2), to[1] + (height / 2), 
-                            -1.0f, 1.0f);
+    glm::vec3 by = focus - to;
+    projection = glm::translate(projection, by);
     focus = to;
 }
 

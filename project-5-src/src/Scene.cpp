@@ -9,7 +9,7 @@ Scene::Scene(glm::vec3 size, glm::vec3 _c)
       unloaded(true),
       backgroundColor(_c, 1.0f),
       view(glm::mat4(1.0f)),
-      camera(glm::vec3(0.0f), size[1], size[0], 1.25)
+      camera(glm::vec3(0.0f), size[1], size[0], 1)
 {}
 
 Scene::Scene(glm::vec3 size, glm::vec4 _c)
@@ -19,7 +19,7 @@ Scene::Scene(glm::vec3 size, glm::vec4 _c)
       unloaded(true),
       backgroundColor(_c),
       view(glm::mat4(1.0f)),
-      camera(glm::vec3(0.0f), size[1], size[0], 1.25)
+      camera(glm::vec3(0.0f), size[1], size[0], 1)
 {}
 
 Scene::~Scene() {}
@@ -66,6 +66,11 @@ void Scene::UnloadSafe(Scene *keep[], int n) {
     for (int i = 0; i < n; ++i) {
         keep[i]->RestoreScene();
     }
+}
+
+void Scene::UpdateView() {
+    rendererTextured->SetProjectionMatrix(GetCamera()->GetProjection());
+    rendererUntextured->SetProjectionMatrix(GetCamera()->GetProjection());
 }
 
 TexturedShader *Scene::GetTexturedRenderer() const {
@@ -116,16 +121,26 @@ void SimpleScene::Input(const SDL_Event &event, const Uint8 *keys, const Uint32 
 
 Scene *SimpleScene::Update(float delta) {
     for (int i = 0; i < entities.size(); ++i) {
-        entities[i]->Update(delta);
+        if (entities[i]->GetGarbage() == false) entities[i]->Update(delta);
+        else { 
+            delete entities[i]; 
+            entities.erase( entities.begin() + i ); 
+        }
     }
     return NULL;
 }
 
 void SimpleScene::Unload() {
-    for (int i = 0; i < entities.size(); ++i) {
-        delete entities[i];
-    }
+    UnloadEntities();
     Scene::Unload();
+}
+
+void SimpleScene::UnloadEntities() {
+    while(entities.size() > 0) {
+        delete entities[entities.size() - 1];
+        entities.pop_back();
+    }
+    entities.clear();
 }
 
 void SimpleScene::AddEntity(Entity *e) {
@@ -141,10 +156,15 @@ void SimpleScene::AddEntity(std::initializer_list<Entity *> _entities) {
 //
 //
 // BEGIN ACTION SCENE DECLARATION :
-ActionScene::ActionScene(float maxHeight, float maxWidth, float width, float height, float depth)
+ActionScene::ActionScene(float maxHeight, float maxWidth, float width, float height, float depth, float g)
     : Scene(glm::vec3(width, height, depth), glm::vec4(0.0f)),
       collisions(new CollisionEngine(glm::vec3(0.0f), maxHeight, maxWidth)),
-      physics(new PhysicsEngine(1.5f)) {}
+      physics(new PhysicsEngine(g)) {}
+
+ActionScene::~ActionScene() {
+    delete collisions;
+    delete physics;
+}
 
 Scene *ActionScene::Update(float delta) {
     collisions->CheckCollision();

@@ -48,6 +48,13 @@ Dwight::Dwight(UntexturedShader *program, TexturedShader *_program, PhysicsEngin
 }
 
 void Dwight::Ult(bool doit) {
+  if (!ulting && doit) {
+    glm::vec3 throwa(30.0f, 50.0f, 0.0f);
+    if (scale[0] < 0) {
+        throwa[0] *= -1;
+      }
+    beets.push_back(new Dwight::Beet(this, throwa, GetPos()));
+  }
   ulting = ulting || doit;
 }
 
@@ -58,12 +65,7 @@ void Dwight::Update(float delta) {
     if (ultaccumulator > 0.33f) {
       ultaccumulator = 0;
       ulting = false;
-      glm::vec3 throwa(4.0f, 6.0f, 0.0f);
-      if (scale[0] < 0) {
-        throwa[0] *= -1;
-      }
       // beets.empty();
-      beets.push_back(new Dwight::Beet(this, throwa, GetPos()));
     }
   }
   Character::Update(delta);
@@ -261,6 +263,7 @@ Jan::Jan(TexturedShader *program, PhysicsEngine *phys, CollisionEngine *col, glm
       Entity(program, pos, glm::vec3(Stanley::Sprite->GetSpriteSize() * height, height, 1.0f), 0.0f) {}
 
 void Jan::Update(float delta) {
+  if (currentHealth <= 0) return;
   if (acc > 1.0f && acc <= 2.0f) Walk(-1.0f);
   else if (acc <= 1.0f) Walk(1.0f);
   else if (acc <= 3.0f) Walk(1.0f);
@@ -269,29 +272,95 @@ void Jan::Update(float delta) {
   }
   acc += delta;
   Character::Update(delta);
+  if (GetPos()[1] < -5.0f) {
+    currentHealth = 0;
+  }
 }
 
 int Jan::CheckCollision(Collidable *with) {
-  if (currentHealth <= 0) return QUADTREE_DEAD_ENTITY;
-  return with->CheckCollision(this);
+  for (EdgeSensor &s : edges) {
+    s.DecrementState();
+  }
+  if (currentHealth <= 0) {
+    //SetGarbage();
+    return QUADTREE_DEAD_ENTITY;
+  }
+  return Character::CheckCollision(with);
 }
 
 void Jan::DidCollide(Collidable *with) {
   if (with->GetColliderType() == Collidable::SURFACE) {
-    AddForce(glm::vec3(0.0f, 1.0f, 0.0f) * GetPhysicsEngine()->GetGravity() * GetMass());
-    
-    jumping -= 1;
-    if (jumping < 0) jumping = 0;
-    if (jumping == 0) mov[1] = 0.0f;
+    if (edges[3].GetState() == 1 && edges[4].GetState() == 1) {
+        edges[3].DecrementState();
+        AddForce(glm::vec3(0.0f, 1.0f, 0.0f) * GetPhysicsEngine()->GetGravity() * GetMass());
+        if (mov[1] < 0) {
+            mov[1] = 0.0f;
+            jumping = 0;
+        }
+    }        
   }
   else if (with->GetColliderType() == BALLISTIC) {
     currentHealth = 0;
   }
   else if (with->GetColliderType() == CHARACTER) {
     Character *c = dynamic_cast<Character *>(with);
-    if (c == NULL) return;
-    if (GetPos()[1] < c->GetPos()[1]) {
-      currentHealth = 0;
+    if (c != NULL) {
+      if (edges[0].GetState() == 1 && (c->edges[3].GetState() == 1 || c->edges[4].GetState() == 1)) {
+        currentHealth = 0;
+      }
+    }
+  }
+}
+
+TextureSheet *Robert::Sprite = NULL;
+
+Robert::Robert(TexturedShader *program, PhysicsEngine *phys, CollisionEngine *col, glm::vec3 pos, float height) 
+  : Character(program, Sprite, phys, col, JAN_SPEED, 1, 1),
+      Entity(program, pos, glm::vec3(Stanley::Sprite->GetSpriteSize() * height, height, 1.0f), 0.0f) {}
+
+void Robert::Update(float delta) {
+  if (currentHealth <= 0) return;
+  // if (acc > 1.0f && acc <= 2.0f) Walk(-1.0f);
+  // else if (acc <= 1.0f) Walk(1.0f);
+  // else if (acc <= 3.0f) Walk(1.0f);
+  // else {
+  //   acc = 1.0f;
+  // }
+  acc += delta;
+  Character::Update(delta);
+}
+
+int Robert::CheckCollision(Collidable *with) {
+  for (EdgeSensor &s : edges) {
+    s.DecrementState();
+  }
+  if (currentHealth <= 0) {
+    // SetGarbage();
+    return QUADTREE_DEAD_ENTITY;
+  }
+  return Character::CheckCollision(with);
+}
+
+void Robert::DidCollide(Collidable *with) {
+  if (with->GetColliderType() == Collidable::SURFACE) {
+    if (edges[3].GetState() == 1 && edges[4].GetState() == 1) {
+        edges[3].DecrementState();
+        AddForce(glm::vec3(0.0f, 1.0f, 0.0f) * GetPhysicsEngine()->GetGravity() * GetMass());
+        if (mov[1] < 0) {
+            mov[1] = 0.0f;
+            jumping = 0;
+        }
+    }        
+  }
+  else if (with->GetColliderType() == BALLISTIC) {
+    currentHealth = 0;
+  }
+  else if (with->GetColliderType() == CHARACTER) {
+    Character *c = dynamic_cast<Character *>(with);
+    if (c != NULL) {
+      if (edges[0].GetState() == 1 && (c->edges[3].GetState() == 1 || c->edges[4].GetState() == 1)) {
+        currentHealth = 0;
+      }
     }
   }
 }

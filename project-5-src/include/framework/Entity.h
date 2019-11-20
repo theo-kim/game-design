@@ -25,8 +25,9 @@ class Entity {
   virtual glm::vec3 GetPos () const;
   glm::vec3 GetSize () const;
   float GetRot () const;
-  glm::mat4 GetCorners () const;
+  glm::mat4x3 GetCorners () const;
   ShaderProgram* GetProgram() const;
+  virtual bool GetGarbage() const;
 
   // Setters
   virtual void AddPos(glm::vec3 _addition);
@@ -35,12 +36,18 @@ class Entity {
   void SetSize(glm::vec3 _size);
   void AddRot(float _addition);
   void SetRot(float _rot);
+  virtual void SetGarbage();
 
   // Utility functions to transform member bodies / points
   void TransformLocalCoord (glm::vec3 &point) const;
   void TransformLocalCoord (glm::mat4 &body) const;
+  void TransformToLocalCoord (glm::vec3 &point) const;
   float TransformLocalRot (float rot) const;
+
 private:
+  // Clean up
+  bool killme;
+  
   // Transformation variables
   glm::vec3 pos;
   glm::vec3 size;

@@ -41,38 +41,20 @@ private:
     Character *player;
     Text *timer;
     Text *lives;
+    Text *levelLabel;
 
     Jan *jan;
+    Robert *robert;
     int numlives;
+    int currentLevel;
     
     float ulttimer;
 
     SimpleScene *info;
     SimpleScene *action;
-};
 
-class Level2 : public CompoundScene, public ActionScene {
-public:
-    Level2(glm::vec3 size, glm::vec3 maxSize);
 
-    virtual Scene *Update(float delta);
-    virtual void Input(const SDL_Event &event, const Uint8 *keys, const Uint32 &mouse, float mouseX, float mouseY);
-    virtual void Load();
-    virtual void Render();
-
-    void ChooseCharacter(Character *character);
-private:
-    Character *player;
-    Text *timer;
-    Text *lives;
-
-    Jan *jan;
-    int numlives;
-    
-    float ulttimer;
-
-    SimpleScene *info;
-    SimpleScene *action;
+    std::vector<std::initializer_list<Entity *> > levels;
 };
 
 #endif

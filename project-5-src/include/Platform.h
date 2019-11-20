@@ -21,6 +21,7 @@ public:
     virtual bool DidUpdate();
     virtual Collidable::ColliderType GetColliderType();
 
+    ProximitySensor p;
     std::vector<EdgeSensor> edges;
 private:
     float width;

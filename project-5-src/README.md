@@ -7,11 +7,13 @@ This is a simple Office themed platformer. You can choose to play one of four ch
 * **Stanley Hudson:** he screams "Did I studder?" and all enemies will kill themselves (out of fear)
 * **Jim Halpert:** he has no special ability, but he's fast and jumps high
 
-The goal of the game is to traverse each level and find all five reams of paper and not get caught by your boss. The bosses (enemies) will kill you if you touch them, but respawn automatically after five seconds. Like any platformer, you can kill them by jumping on them, or your can use an ability. But, beware. The bosses also have abilities:
+~~The goal of the game is to traverse each level and find all five reams of paper~~ Kill all of your bosses<sup>*</sup> and not get caught by your boss. The bosses (enemies) will kill you if you touch them, but respawn automatically after five seconds. Like any platformer, you can kill them by jumping on them, or your can use an ability. But, beware. The bosses also have abilities:
 
 * **Jan:** she takes her baby for a walk. While she has her baby out, if she is killed, you will also die.
 * **Robert California:** he turns into your worse fear and reduces your movement speed by 30%.
 * **Ryan Howard:** he add you to his list... Honestly, this ability does nothing, but it's better if he thinks you're scared...
+
+<sup>*</sup>This was our intention but we did not have enough time...
 
 ### Controls:
 

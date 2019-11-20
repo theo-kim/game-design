@@ -51,8 +51,9 @@ $(ODIR)/%.o: src/%.cpp
 	$(CC) -c -o $@ $< $(CXXFLAGS)
 
 default: $(OBJ)
-	$(CC) $^ -o $(NAME) $(CXXFLAGS) $(LDFLAGS) && ./$@
+	$(CC) $^ -o $(NAME) $(CXXFLAGS) $(LDFLAGS) && ./$(NAME)
 
+.PHONY: $(NAME)
 $(NAME):
 	./$(NAME)
 

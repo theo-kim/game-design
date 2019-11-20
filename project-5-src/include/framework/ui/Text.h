@@ -5,7 +5,7 @@
 #include "../Entity.h"
 #include <string>
 
-#define CHARSET " !\"#$%&'()*+,-./0123456789:;=?ABCDEFGHIJKLMNOPQRSTUVWXYZ^_`abcdefghijklmnopqrstuvwxyz"
+#define CHARSET " !\\\"#$%&'()*+,-./0123456789:;=?ABCDEFGHIJKLMNOPQRSTUVWXYZ^_`abcdefghijklmnopqrstuvwxyz"
 #define NUM_ROW 7
 #define NUM_COL 13
 

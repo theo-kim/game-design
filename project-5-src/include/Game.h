@@ -3,7 +3,7 @@
 
 // Game Configuration Settings
 #define GAME_NAME "The Office: A Workplace Platformer"
-#define FIXED_TIMESTEP 0.01666f
+#define FIXED_TIMESTEP 0.006f
 #define NUM_STARS 300
 #define NUM_ENEMIES 3
 
