@@ -3,8 +3,9 @@ NAME = game
 
 ODIR = build
 
-IDIR = ../include/global
-LIBS = -l SDL2-2.0.0 -l SDL2_image-2.0.0 -l SDL2_mixer-2.0.0
+IDIR = ../include/global/ltd
+IDIR_PROJ = ./include
+LIBS = -l SDL2-2.0.0 -l SDL2_image-2.0.0 -l SDL2_mixer-2.0.0 -l glew
 
 MAC_LDIR = ../lib/darwin
 MAC_FRAMEWORKS = -framework Cocoa -framework OpenGL
@@ -15,14 +16,14 @@ WIN64_LDIR = ../lib/windows-x64
 WIN_IDIR = ../include/windows
 
 
-SRC = $(wildcard src/*.cpp) \
-	  $(wildcard ../include/global/*.cpp)
+SRC = $(shell find src -type f -name '*.cpp') \
+	  	$(wildcard ../include/global/LoadTexture.cpp)
 _OBJ = $(SRC:.cpp=.o)
 OBJ = $(patsubst src/%,$(ODIR)/%,$(_OBJ))
 DEP = $(OBJ:.o=.d)  # one dependency file for each source
 
 LDFLAGS = $(libincl) $(LIBS) $(libgl)
-CXXFLAGS = -g -I$(IDIR) $(incl)
+CXXFLAGS = -g -I$(IDIR) -I$(IDIR_PROJ) $(incl)
 
 
 # DON'T EDIT BELOW THIS LINE
@@ -30,12 +31,12 @@ CXXFLAGS = -g -I$(IDIR) $(incl)
 ifeq ($(OS),Windows_NT)
 	incl = -I$(WIN_IDIR)
 	ifeq ($(PROCESSOR_ARCHITEW6432),AMD64)
-        libincl = -L$(WIN64_LDIR)
-    else
-        ifeq ($(PROCESSOR_ARCHITECTURE),AMD64)
-            libincl = -L$(WIN64_LDIR)
-        endif
-        ifeq ($(PROCESSOR_ARCHITECTURE),x86)
+    libincl = -L$(WIN64_LDIR)
+  else
+    ifeq ($(PROCESSOR_ARCHITECTURE),AMD64)
+      libincl = -L$(WIN64_LDIR)
+    endif
+    ifeq ($(PROCESSOR_ARCHITECTURE),x86)
 			libincl = -L$(WIN32_LDIR)
 		endif
 	endif
@@ -48,11 +49,18 @@ else
 	endif
 endif
 
+# .PHONY: directories
+# directories:
+# 	if test -d $(ODIR); then echo ""; else mkdir $(ODIR); fi
+# 	find src -type d >dirs.txt
+# 	xargs mkdir -p <dirs.txt
+# 	rm dirs.txt
+
 $(ODIR)/%.o: src/%.cpp
-	if test -d $(ODIR); then echo ""; else mkdir build; fi
 	$(CC) -c -o $@ $< $(CXXFLAGS)
 
 default: $(OBJ)
+	if test -d $(ODIR); then echo ""; else mkdir $(ODIR); fi
 	$(CC) $^ -o $(NAME) $(CXXFLAGS) $(LDFLAGS) && ./$(NAME)
 
 .PHONY: $(NAME)

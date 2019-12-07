@@ -6,6 +6,7 @@
 #define FIXED_TIMESTEP 0.006f
 
 #include "./standard.h"
+#include "ui/entity/Entity.h"
 
 class Game {
 public:
@@ -38,6 +39,14 @@ private:
   float left;
   float right;
   float bottom;
+
+  // TODO: Remove later
+  std::vector<Entity *> entities;
+
+  glm::mat4 viewMatrix;
+  ShaderProgram *program;
+  Camera *camera;
+  Transformation *t;
 };
 
 #endif

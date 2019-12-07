@@ -61,6 +61,10 @@ class Game {
   Scene *opening;
 
   Mix_Music *music;
+
+  // Temporary
+  // TODO: Remove after testing
+  Entity *e;
 };
 
 #endif
