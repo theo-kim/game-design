@@ -12,7 +12,7 @@ class ControllableEntity;
 // Controllable Entity
 class Controller {
 public:
-  Controller(ControllableEntity* e);
+  Controller(ControllableEntity* e) : entity(e) {}
   // Abstracted method for the controller input
   virtual void Input() = 0;
   // Abstracted method for the controller state update

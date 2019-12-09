@@ -2,6 +2,7 @@
 #include "ui/entity/Entity.h"
 #include "ui/mesh/Mesh3D.h"
 #include "game/environment/Planet.h"
+#include "NetworkConnection.h"
 
 typedef Transformation::Translation Translation;
 typedef Transformation::Rotation Rotation;
@@ -120,6 +121,9 @@ void Game::Initialize () {
     lt,
     sunShader
   ));
+
+  // NetworkConnection *conn = new NetworkConnection();
+  // conn.Initialize();
 }
 
 void Game::Run() {
@@ -129,6 +133,13 @@ void Game::Run() {
     Render();
   }
 }
+
+// void Game::ControllerThread() {
+//   for (Controller *c : controllers) {
+//     c->Input();
+//     c->Update(FIXED_TIMESTEP);
+//   }
+// }
 
 // This function shuts down the game and cleans up services
 void Game::Shutdown() {

@@ -7,6 +7,12 @@
 #include "ControllableEntity.h"
 
 class Ship;
+class Engine;
+class Thruster;
+class Battery;
+class Hull;
+class Reactor;
+class Shield;
 
 class ShipComponent : public PhysicsEntity {
 public:
@@ -21,22 +27,6 @@ public:
   Hull(int health, Mass mass, Ship* ship);
 private:
   int health;
-};
-
-// This is the energy generator, 
-class Reactor : public ShipComponent {
-public:
-  Reactor();
-  int Generate(Time delta); // Produce energy in a given time
-
-  // Friend declarations
-  friend Battery& Battery::operator<<(Reactor& r);
-  friend void Engine::operator<<(Reactor& r);
-  friend void Thruster::operator<<(Reactor& r);
-  friend void Shield::operator<<(Reactor& r);
-private:
-  int power; // energy produced in a time
-  int produced; // energy available from generate
 };
 
 // This is the storage of the ship, stores excess power produced by reactor
@@ -76,6 +66,22 @@ public:
   void operator<<(Reactor& r); // Wire connection from reactor to shield
 private:
   int health; // how much energy it can still hold
+};
+
+// This is the energy generator, 
+class Reactor : public ShipComponent {
+public:
+  Reactor();
+  int Generate(Time delta); // Produce energy in a given time
+
+  // Friend declarations
+  friend Battery& Battery::operator<<(Reactor& r);
+  friend void Engine::operator<<(Reactor& r);
+  friend void Thruster::operator<<(Reactor& r);
+  friend void Shield::operator<<(Reactor& r);
+private:
+  int power; // energy produced in a time
+  int produced; // energy available from generate
 };
 
 class Ship : public ControllableEntity {
