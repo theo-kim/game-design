@@ -80,7 +80,7 @@ private:
 
 class Ship : public ControllableEntity {
 public:
-  Ship(Position p, Orientation o, );
+  Ship(Position p, Orientation o);
 };
 
 #endif
