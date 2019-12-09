@@ -7,6 +7,10 @@
 #include "ui/program/Program.h"
 #include "ui/camera/Camera.h"
 
+class Camera;
+class Mesh;
+class ShaderProgram;
+
 class Entity {
 public:
   // Constructors
@@ -17,7 +21,7 @@ public:
   virtual void Update(float delta);
   virtual void Input();
 
-  friend void BindToEntity(const Entity& e);
+  friend class Camera;
 protected:
   Transformation *transformation;
 private: 

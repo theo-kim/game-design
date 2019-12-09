@@ -5,6 +5,8 @@
 #include "ui/program/Program.h"
 #include "ui/mesh/Vertex.h"
 
+class ShaderProgram;
+
 class Mesh {
 public:
   // Mesh VertexArray definition

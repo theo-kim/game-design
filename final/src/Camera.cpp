@@ -20,3 +20,7 @@ void Camera::Translate(Transformation::Translation translation) {
 void Camera::Rotate(Transformation::Rotation rotation) {
   transformation->Transform(-rotation);
 }
+
+void Camera::BindToEntity(const Entity& e) {
+  transformation = e.transformation;
+}

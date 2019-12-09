@@ -8,6 +8,8 @@
 #include "ui/camera/Camera.h"
 #include "ui/light/Light.h"
 
+class Camera;
+
 class ShaderProgram {
 public:	
   void Load(const char *vertexShaderFile, const char *fragmentShaderFile);

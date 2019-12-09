@@ -24,6 +24,7 @@ public:
   friend void Gravity(PhysicsEntity &p1, PhysicsEntity &p2);
 protected:
   // Properties
+  Shape shape;
   Moment moment[3];
   Mass mass;
   Position currentPosition;

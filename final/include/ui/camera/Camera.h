@@ -5,6 +5,8 @@
 #include "ui/transformation/Transformation.h"
 #include "ui/entity/Entity.h"
 
+class Entity;
+
 class Camera {
 public:
   Camera(Transformation *t, glm::mat4 perspective);

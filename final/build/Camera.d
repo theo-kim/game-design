@@ -256,4 +256,6 @@ build/Camera.o: src/Camera.cpp include/ui/camera/Camera.h \
   ../include/global/ltd/glm/gtx/norm.inl \
   ../include/global/ltd/glm/gtx/quaternion.inl \
   ../include/global/ltd/LoadTexture.h \
-  include/ui/transformation/Transformation.h
+  include/ui/transformation/Transformation.h include/ui/entity/Entity.h \
+  include/ui/mesh/Mesh.h include/ui/program/Program.h \
+  include/ui/light/Light.h include/ui/mesh/Vertex.h

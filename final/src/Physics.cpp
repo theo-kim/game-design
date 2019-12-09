@@ -10,6 +10,7 @@ PhysicsEntity::PhysicsEntity(Position p, Orientation o, Shape s, Mass m, Mesh *m
     currentOrientation(o),
     currentAngularVelocity(glm::vec3(0.0f), Time::Seconds),
     currentAngularAcceleration(glm::vec3(0.0f), Time::Seconds),
+    shape(s),
     moment { Moment(s, Shape::X), Moment(s, Shape::Y), Moment(s, Shape::Z) }
 {
 }
