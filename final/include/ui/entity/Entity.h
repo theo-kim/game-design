@@ -5,6 +5,7 @@
 #include "ui/mesh/Mesh.h"
 #include "ui/transformation/Transformation.h"
 #include "ui/program/Program.h"
+#include "ui/camera/Camera.h"
 
 class Entity {
 public:
@@ -15,6 +16,8 @@ public:
   virtual void Render() const;
   virtual void Update(float delta);
   virtual void Input();
+
+  friend void BindToEntity(const Entity& e);
 protected:
   Transformation *transformation;
 private: 

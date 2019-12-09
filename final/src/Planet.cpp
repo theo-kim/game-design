@@ -1,15 +1,16 @@
 #include "game/environment/Planet.h"
 
-const char *Planet::meshName = "models/sphere-smooth-test.obj";
-
-Planet::Planet(Transformation::Translation position, Mass m, Length r, ShaderProgram *shader) 
-  : Entity(
-      Mesh3D::FromOBJ(meshName), 
-      new Transformation(position, Transformation::Scale(1.0f), Transformation::Rotation()),
+Planet::Planet(Position position, Mass m, Length r, Mesh3D *mesh, ShaderProgram *shader) 
+  : PhysicsEntity(
+      position, 
+      Orientation(glm::vec3(0.0f)),
+      Sphere(m, r),
+      m,
+      mesh,
       shader
     ),
     mass(m),
     radius(r)
 {
-  transformation->Transform(Transformation::Scale(radius.GetLength(Length::Game)));
+  transformation->Transform(Transformation::Scale(r.GetLength(Length::Game)));
 }

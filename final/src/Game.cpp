@@ -88,7 +88,13 @@ void Game::Initialize () {
   t = new Transformation();
   // t->Transform(Transformation::Rotation(radians(45.0f), radians(45.0f), 0));
   // t->Transform(Transformation::Rotation(0.5f, 0, 0));
-  entities.push_back(new Planet(Transformation::Translation(glm::vec3(10.0, -10.0, -100.0)), Mass(1, Mass::Earth), Length(10, Length::Kilometer), program));
+  entities.push_back(new Planet(
+    Position(glm::vec3(10.0, -10.0, -100.0), Length::Game), 
+    Mass(Large(1, 0), Mass::Earth), 
+    Length(10, Length::Kilometer), 
+    Mesh3D::FromOBJ("models/sphere-smooth-test.obj"),
+    program
+  ));
   entities.push_back(new Entity(
     Mesh3D::FromOBJ("models/sphere-test.obj"),
     lt,

@@ -260,4 +260,10 @@ build/Game.o: src/Game.cpp include/Game.h include/./standard.h \
   include/ui/camera/Camera.h include/ui/transformation/Transformation.h \
   include/ui/light/Light.h include/ui/mesh/Vertex.h \
   include/ui/mesh/Mesh3D.h include/game/environment/Planet.h \
-  include/physics/properties/Mass.h include/physics/properties/Length.h
+  include/physics/entity/PhysicsEntity.h \
+  include/physics/properties/Displacement.h \
+  include/physics/properties/Length.h include/physics/properties/Time.h \
+  include/physics/properties/Velocity.h \
+  include/physics/properties/Acceleration.h \
+  include/physics/properties/Mass.h include/physics/properties/Force.h \
+  include/physics/properties/Angle.h include/physics/properties/Shapes.h

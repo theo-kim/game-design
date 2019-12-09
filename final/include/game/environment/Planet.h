@@ -2,17 +2,16 @@
 #define PLANET_DEF
 
 #include "standard.h"
-#include "ui/entity/Entity.h"
+#include "physics/entity/PhysicsEntity.h"
 #include "ui/mesh/Mesh3D.h"
 #include "ui/transformation/Transformation.h"
 #include "physics/properties/Mass.h"
 #include "physics/properties/Length.h"
 #include "ui/program/Program.h"
 
-class Planet : public Entity{
+class Planet : public PhysicsEntity {
 public: 
-  static const char *meshName;
-  Planet(Transformation::Translation position, Mass m, Length r, ShaderProgram *shader); // TODO: Make 3D objects ONLY accept uniform transformations
+  Planet(Position position, Mass m, Length r, Mesh3D *mesh, ShaderProgram *shader); // TODO: Make 3D objects ONLY accept uniform transformations
 private:
   Mass mass;
   Length radius;

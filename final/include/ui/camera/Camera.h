@@ -3,6 +3,7 @@
 
 #include "standard.h"
 #include "ui/transformation/Transformation.h"
+#include "ui/entity/Entity.h"
 
 class Camera {
 public:
@@ -17,6 +18,8 @@ public:
   // Low level movements
   void Rotate(Transformation::Rotation rotation);
   void Translate(Transformation::Translation translation);
+
+  void BindToEntity(const Entity& e);
 private:
   Transformation *transformation;
   glm::mat4 perspective;

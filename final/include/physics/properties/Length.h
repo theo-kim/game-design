@@ -1,11 +1,15 @@
 #ifndef LENGTH_DEF
 #define LENGTH_DEF
 
+#include "standard.h"
+
 class Length {
 public: 
   enum Unit { Game = 1, AU = 100000, Kilometer = 2, Meter = 1 };
   Length(float _length, Unit _unit) : value(_length), unit(_unit) {}
   float GetLength(Unit unit) const;
+  float GetLength() const;
+  Unit GetUnit() const;
 private:
   float value;
   Unit unit;

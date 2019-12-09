@@ -1,7 +1,7 @@
 #ifndef MASS_DEF
 #define MASS_DEF
 
-#include "Acceleration.h"
+#include "standard.h"
 
 class Mass {
 public: 
@@ -19,6 +19,8 @@ public:
   
   Mass(Large _mass, Unit _unit) : value(_mass), unit(_unit) {}
   Large GetMass(Unit unit) const;
+  Large GetMass() const;
+  Unit GetUnit() const;
   // Force operator*(const Acceleration& a) const;
 private:
   Large value;

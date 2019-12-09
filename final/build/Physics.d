@@ -1,4 +1,4 @@
-build/Entity.o: src/Entity.cpp include/ui/entity/Entity.h \
+build/Physics.o: src/Physics.cpp include/physics/entity/PhysicsEntity.h \
   include/standard.h ../include/darwin/GL/glew.h ../include/darwin/SDL.h \
   ../include/darwin/SDL_main.h ../include/darwin/SDL_stdinc.h \
   ../include/darwin/SDL_config.h ../include/darwin/SDL_platform.h \
@@ -255,7 +255,14 @@ build/Entity.o: src/Entity.cpp include/ui/entity/Entity.h \
   ../include/global/ltd/glm/gtx/../gtx/quaternion.hpp \
   ../include/global/ltd/glm/gtx/norm.inl \
   ../include/global/ltd/glm/gtx/quaternion.inl \
-  ../include/global/ltd/LoadTexture.h include/ui/mesh/Mesh.h \
-  include/ui/program/Program.h include/ui/camera/Camera.h \
-  include/ui/transformation/Transformation.h include/ui/light/Light.h \
-  include/ui/mesh/Vertex.h
+  ../include/global/ltd/LoadTexture.h include/ui/entity/Entity.h \
+  include/ui/mesh/Mesh.h include/ui/program/Program.h \
+  include/ui/camera/Camera.h include/ui/transformation/Transformation.h \
+  include/ui/light/Light.h include/ui/mesh/Vertex.h \
+  include/physics/properties/Displacement.h \
+  include/physics/properties/Length.h include/physics/properties/Time.h \
+  include/physics/properties/Velocity.h \
+  include/physics/properties/Acceleration.h \
+  include/physics/properties/Mass.h include/physics/properties/Force.h \
+  include/physics/properties/Angle.h include/physics/properties/Shapes.h \
+  include/physics/forces/Gravity.h

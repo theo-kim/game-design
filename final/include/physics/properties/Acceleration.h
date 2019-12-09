@@ -13,10 +13,15 @@ public:
   Velocity operator*(const Time& t) const;
   Force operator*(const Mass& m) const;
   Acceleration operator+(const Acceleration& a) const;
+  Acceleration &operator=(const glm::vec3 v);
 public:
   Velocity value;
   Length::Unit lengthUnit;
   Time::Unit timeUnit;
 };
+
+// I had to implement this operator like this to avoid a circular reference
+Acceleration operator/(const Velocity&, const Time& t);
+
 
 #endif

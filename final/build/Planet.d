@@ -180,9 +180,90 @@ build/Planet.o: src/Planet.cpp include/game/environment/Planet.h \
   ../include/global/ltd/glm/gtx/../detail/setup.hpp \
   ../include/global/ltd/glm/gtx/../detail/qualifier.hpp \
   ../include/global/ltd/glm/gtx/component_wise.inl \
-  ../include/global/ltd/LoadTexture.h include/ui/entity/Entity.h \
+  ../include/global/ltd/glm/gtc/quaternion.hpp \
+  ../include/global/ltd/glm/gtc/../gtc/constants.hpp \
+  ../include/global/ltd/glm/gtc/../gtc/matrix_transform.hpp \
+  ../include/global/ltd/glm/gtc/../ext/vector_relational.hpp \
+  ../include/global/ltd/glm/./ext/vector_relational.inl \
+  ../include/global/ltd/glm/./ext/../vector_relational.hpp \
+  ../include/global/ltd/glm/./ext/../common.hpp \
+  ../include/global/ltd/glm/./ext/../detail/type_float.hpp \
+  ../include/global/ltd/glm/gtc/../ext/quaternion_common.hpp \
+  ../include/global/ltd/glm/./ext/../ext/quaternion_geometric.hpp \
+  ../include/global/ltd/glm/./ext/../exponential.hpp \
+  ../include/global/ltd/glm/./ext/../ext/vector_relational.hpp \
+  ../include/global/ltd/glm/./ext/quaternion_geometric.inl \
+  ../include/global/ltd/glm/./ext/quaternion_common.inl \
+  ../include/global/ltd/glm/gtc/../ext/quaternion_float.hpp \
+  ../include/global/ltd/glm/./ext/../detail/type_quat.hpp \
+  ../include/global/ltd/glm/./ext/../detail/../detail/type_mat3x3.hpp \
+  ../include/global/ltd/glm/./ext/../detail/../detail/type_mat4x4.hpp \
+  ../include/global/ltd/glm/./ext/../detail/../detail/type_vec3.hpp \
+  ../include/global/ltd/glm/./ext/../detail/../detail/type_vec4.hpp \
+  ../include/global/ltd/glm/./ext/../detail/../ext/vector_relational.hpp \
+  ../include/global/ltd/glm/./ext/../detail/../ext/quaternion_relational.hpp \
+  ../include/global/ltd/glm/./ext/quaternion_relational.inl \
+  ../include/global/ltd/glm/./ext/../detail/../gtc/constants.hpp \
+  ../include/global/ltd/glm/./ext/../detail/../gtc/matrix_transform.hpp \
+  ../include/global/ltd/glm/./ext/../detail/type_quat.inl \
+  ../include/global/ltd/glm/./ext/../detail/../trigonometric.hpp \
+  ../include/global/ltd/glm/./ext/../detail/../ext/quaternion_geometric.hpp \
+  ../include/global/ltd/glm/gtc/../ext/quaternion_float_precision.hpp \
+  ../include/global/ltd/glm/gtc/../ext/quaternion_double.hpp \
+  ../include/global/ltd/glm/gtc/../ext/quaternion_double_precision.hpp \
+  ../include/global/ltd/glm/gtc/../ext/quaternion_relational.hpp \
+  ../include/global/ltd/glm/gtc/../ext/quaternion_geometric.hpp \
+  ../include/global/ltd/glm/gtc/../ext/quaternion_trigonometric.hpp \
+  ../include/global/ltd/glm/./ext/scalar_constants.hpp \
+  ../include/global/ltd/glm/./ext/vector_relational.hpp \
+  ../include/global/ltd/glm/./ext/quaternion_trigonometric.inl \
+  ../include/global/ltd/glm/gtc/../ext/quaternion_transform.hpp \
+  ../include/global/ltd/glm/./ext/quaternion_transform.inl \
+  ../include/global/ltd/glm/gtc/../detail/type_mat3x3.hpp \
+  ../include/global/ltd/glm/gtc/../detail/type_mat4x4.hpp \
+  ../include/global/ltd/glm/gtc/../detail/type_vec3.hpp \
+  ../include/global/ltd/glm/gtc/../detail/type_vec4.hpp \
+  ../include/global/ltd/glm/gtc/quaternion.inl \
+  ../include/global/ltd/glm/gtc/../exponential.hpp \
+  ../include/global/ltd/glm/gtc/epsilon.hpp \
+  ../include/global/ltd/glm/gtc/../detail/setup.hpp \
+  ../include/global/ltd/glm/gtc/../detail/qualifier.hpp \
+  ../include/global/ltd/glm/gtc/epsilon.inl \
+  ../include/global/ltd/glm/gtc/../vector_relational.hpp \
+  ../include/global/ltd/glm/gtc/../common.hpp \
+  ../include/global/ltd/glm/gtx/quaternion.hpp \
+  ../include/global/ltd/glm/gtx/../glm.hpp \
+  ../include/global/ltd/glm/fwd.hpp \
+  ../include/global/ltd/glm/trigonometric.hpp \
+  ../include/global/ltd/glm/exponential.hpp \
+  ../include/global/ltd/glm/common.hpp \
+  ../include/global/ltd/glm/packing.hpp \
+  ../include/global/ltd/glm/detail/func_packing.inl \
+  ../include/global/ltd/glm/./ext/../detail/type_half.hpp \
+  ../include/global/ltd/glm/./ext/../detail/type_half.inl \
+  ../include/global/ltd/glm/geometric.hpp \
+  ../include/global/ltd/glm/matrix.hpp \
+  ../include/global/ltd/glm/vector_relational.hpp \
+  ../include/global/ltd/glm/integer.hpp \
+  ../include/global/ltd/glm/detail/func_integer.inl \
+  ../include/global/ltd/glm/gtx/../gtc/constants.hpp \
+  ../include/global/ltd/glm/gtx/../gtc/quaternion.hpp \
+  ../include/global/ltd/glm/gtx/../ext/quaternion_exponential.hpp \
+  ../include/global/ltd/glm/./ext/quaternion_exponential.inl \
+  ../include/global/ltd/glm/gtx/../gtx/norm.hpp \
+  ../include/global/ltd/glm/gtx/../geometric.hpp \
+  ../include/global/ltd/glm/gtx/../gtx/quaternion.hpp \
+  ../include/global/ltd/glm/gtx/norm.inl \
+  ../include/global/ltd/glm/gtx/quaternion.inl \
+  ../include/global/ltd/LoadTexture.h \
+  include/physics/entity/PhysicsEntity.h include/ui/entity/Entity.h \
   include/ui/mesh/Mesh.h include/ui/program/Program.h \
   include/ui/camera/Camera.h include/ui/transformation/Transformation.h \
   include/ui/light/Light.h include/ui/mesh/Vertex.h \
-  include/ui/mesh/Mesh3D.h include/physics/properties/Mass.h \
-  include/physics/properties/Length.h
+  include/physics/properties/Displacement.h \
+  include/physics/properties/Length.h include/physics/properties/Time.h \
+  include/physics/properties/Velocity.h \
+  include/physics/properties/Acceleration.h \
+  include/physics/properties/Mass.h include/physics/properties/Force.h \
+  include/physics/properties/Angle.h include/physics/properties/Shapes.h \
+  include/ui/mesh/Mesh3D.h

@@ -2,10 +2,9 @@
 #define SHIP_DEF
 
 #include "standard.h"
-#include "ui/entity/Entity.h"
-#include "ui/transformation/Transformation.h"
+#include "physics/entity/PhysicsEntity.h"
 
-class Ship : public Entity {
+class Ship : public PhysicsEntity {
 public:
   Ship(Transformation *t);
 };
