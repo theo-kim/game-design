@@ -21,9 +21,10 @@ public:
   void Rotate(Transformation::Rotation rotation);
   void Translate(Transformation::Translation translation);
 
-  void BindToEntity(const Entity& e);
+  void BindToEntity(const Entity& e, Transformation offset);
 private:
   Transformation *transformation;
+  Transformation offset;
   glm::mat4 perspective;
 };
 

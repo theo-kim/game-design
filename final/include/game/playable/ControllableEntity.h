@@ -7,14 +7,13 @@
 
 class Controller;
 
-class ControllableEntity {
+class ControllableEntity : virtual public PhysicsEntity {
 public:
-  ControllableEntity(/* args */);
-  ~ControllableEntity();
+  ControllableEntity() {}
 
   friend class Controller; // Controllers need access to everything
 private:
-  Controller *c;
+  
 };
 
 #endif

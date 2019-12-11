@@ -12,9 +12,7 @@
 class Planet : public PhysicsEntity {
 public: 
   Planet(Position position, Mass m, Length r, Mesh3D *mesh, ShaderProgram *shader); // TODO: Make 3D objects ONLY accept uniform transformations
-private:
-  Mass mass;
-  Length radius;
+
 };
 
 #endif

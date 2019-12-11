@@ -267,4 +267,5 @@ build/Network.o: src/Network.cpp include/game/controllers/Network.h \
   include/physics/properties/Velocity.h \
   include/physics/properties/Acceleration.h \
   include/physics/properties/Mass.h include/physics/properties/Force.h \
-  include/physics/properties/Angle.h include/physics/properties/Shapes.h
+  include/physics/properties/Angle.h include/physics/properties/Shapes.h \
+  include/NetworkConnection.h

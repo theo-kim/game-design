@@ -1,5 +1,5 @@
-build/Game.o: src/Game.cpp include/Game.h include/./standard.h \
-  ../include/darwin/GL/glew.h ../include/darwin/SDL.h \
+build/Scenes.o: src/Scenes.cpp include/game/scenes/GameScene.h \
+  include/standard.h ../include/darwin/GL/glew.h ../include/darwin/SDL.h \
   ../include/darwin/SDL_main.h ../include/darwin/SDL_stdinc.h \
   ../include/darwin/SDL_config.h ../include/darwin/SDL_platform.h \
   ../include/darwin/begin_code.h ../include/darwin/close_code.h \
@@ -255,12 +255,11 @@ build/Game.o: src/Game.cpp include/Game.h include/./standard.h \
   ../include/global/ltd/glm/gtx/../gtx/quaternion.hpp \
   ../include/global/ltd/glm/gtx/norm.inl \
   ../include/global/ltd/glm/gtx/quaternion.inl \
-  ../include/global/ltd/LoadTexture.h include/ui/entity/Entity.h \
-  include/standard.h include/ui/mesh/Mesh.h include/ui/program/Program.h \
-  include/ui/camera/Camera.h include/ui/transformation/Transformation.h \
-  include/ui/light/Light.h include/ui/mesh/Vertex.h \
-  include/ui/scene/Scene.h include/ui/mesh/Mesh3D.h \
-  include/game/environment/Planet.h \
+  ../include/global/ltd/LoadTexture.h include/ui/scene/Scene.h \
+  include/ui/entity/Entity.h include/ui/mesh/Mesh.h \
+  include/ui/program/Program.h include/ui/camera/Camera.h \
+  include/ui/transformation/Transformation.h include/ui/light/Light.h \
+  include/ui/mesh/Vertex.h include/game/environment/Planet.h \
   include/physics/entity/PhysicsEntity.h \
   include/physics/properties/Displacement.h \
   include/physics/properties/Length.h include/physics/properties/Time.h \
@@ -268,8 +267,7 @@ build/Game.o: src/Game.cpp include/Game.h include/./standard.h \
   include/physics/properties/Acceleration.h \
   include/physics/properties/Mass.h include/physics/properties/Force.h \
   include/physics/properties/Angle.h include/physics/properties/Shapes.h \
-  include/NetworkConnection.h include/game/scenes/GameScene.h \
-  include/game/environment/Sun.h include/physics/properties/Energy.h \
-  include/game/playable/Ship.h \
+  include/ui/mesh/Mesh3D.h include/game/environment/Sun.h \
+  include/physics/properties/Energy.h include/game/playable/Ship.h \
   include/game/playable/ControllableEntity.h \
   include/game/controllers/Controller.h include/game/controllers/Human.h

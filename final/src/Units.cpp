@@ -6,6 +6,34 @@
 #include "physics/properties/Acceleration.h"
 #include "physics/properties/Force.h"
 #include "physics/properties/Angle.h"
+#include "physics/properties/Energy.h"
+
+// Energy (scalar)
+Energy::Energy(float v, Energy::Unit u) 
+  : value(v), unit(u) 
+{}
+
+float Energy::GetEnergy(Unit to) {
+  float currentValue = value;
+  if (to == unit) {
+    return value;
+  }
+  if (unit != Joule) {
+    currentValue = value * unit;
+  }
+  if (to == Joule) {
+    return currentValue;
+  }
+  return currentValue / to;
+}
+
+float Energy::GetEnergy() {
+  return value;
+}
+
+Energy::Unit Energy::GetUnit() {
+  return unit;
+}
 
 // Time (scalar) 
 Time::Time(float _value, Unit _unit) : value(_value), unit(_unit) {}
@@ -30,6 +58,23 @@ float Time::GetTime() const {
 
 Time::Unit Time::GetUnit() const {
   return unit;
+}
+
+// Power (scalar)
+Power::Power(float v, Energy::Unit e, Time::Unit t)
+  : energyUnit(e),
+    timeUnit(t),
+    value(v) 
+{}
+
+float Power::GetPower() const {
+  return value;
+}
+
+float Power::GetPower(Energy::Unit e, Time::Unit t) const {
+  float eFactor = Energy(1.0f, energyUnit).GetEnergy(e);
+  float tFactor = Time(1.0f, t).GetTime(timeUnit);
+  return value * eFactor * tFactor;
 }
 
 // Length (scalar)

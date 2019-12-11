@@ -262,4 +262,5 @@ build/Units.o: src/Units.cpp include/physics/properties/Length.h \
   include/physics/properties/Velocity.h \
   include/physics/properties/Acceleration.h \
   include/physics/properties/Force.h include/physics/properties/Angle.h \
-  include/physics/properties/Shapes.h
+  include/physics/properties/Shapes.h \
+  include/physics/properties/Energy.h

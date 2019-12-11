@@ -18,6 +18,8 @@ public:
   static Unit Solar;
   
   Mass(Large _mass, Unit _unit) : value(_mass), unit(_unit) {}
+  Mass(float _mass, Unit _unit) : value(_mass, 0), unit(_unit) {}
+  Mass() : value(0.0f, 0), unit(Kilogram) {}
   Large GetMass(Unit unit) const;
   Large GetMass() const;
   Unit GetUnit() const;

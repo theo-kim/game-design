@@ -10,7 +10,7 @@ glm::mat4 Camera::GetPerspectiveMatrix() const {
 }
 
 glm::mat4 Camera::GetViewMatrix() const {
-  return transformation->GetGlobalModelMatrix();
+  return transformation->GetGlobalModelMatrix() * offset.GetGlobalModelMatrix();
 }
 
 void Camera::Translate(Transformation::Translation translation) {
@@ -21,6 +21,7 @@ void Camera::Rotate(Transformation::Rotation rotation) {
   transformation->Transform(-rotation);
 }
 
-void Camera::BindToEntity(const Entity& e) {
+void Camera::BindToEntity(const Entity& e, Transformation _offset) {
   transformation = e.transformation;
+  offset = _offset;
 }

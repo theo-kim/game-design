@@ -105,7 +105,7 @@ glm::mat4 Transformation::GetModelMatrix() const {
 }
 
 glm::mat4 Transformation::GetGlobalModelMatrix() const {
-  return scale.GetMatrix() * rotation.GetMatrix() * translation.GetMatrix();
+  return scale.GetMatrix() * rotation.GetMatrix() * glm::translate(glm::mat4(1.0f), translation.vector * -1.0f);
 }
 
 Transformation::operator glm::mat4() const {

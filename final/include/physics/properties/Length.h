@@ -5,7 +5,7 @@
 
 class Length {
 public: 
-  enum Unit { Game = 1, AU = 100000, Kilometer = 2, Meter = 1 };
+  enum Unit : unsigned long { Game = 1, AU = 140000000000, Kilometer = 1000, Meter = 1 };
   Length(float _length, Unit _unit) : value(_length), unit(_unit) {}
   float GetLength(Unit unit) const;
   float GetLength() const;

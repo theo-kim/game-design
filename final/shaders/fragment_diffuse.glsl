@@ -31,7 +31,8 @@ void main() {
   float ambientStrength = 0.1;
   float sqDistance = distance * distance;
 
-  vec3 MaterialAmbientColor = ambientStrength * lightColor * lightPower / sqDistance;  
+  vec3 MaterialAmbientColor = ambientStrength * lightColor;
+  //* lightPower / sqDistance;  
   vec3 MaterialDiffuseColor = lightColor * lightPower * cosTheta / sqDistance;
   vec3 MaterialSpecularColor = specularStrength * lightColor * lightPower * pow(cosAlpha, shininess) / sqDistance;
   

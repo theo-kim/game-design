@@ -10,6 +10,8 @@ public:
   Human(Ship* s); // Humans can only control ships
   virtual void Input(); // Human input comes from SDL events
   virtual void Update(float delta); // Humans don't require feedback
+private:
+  Ship *ship;
 };
 
 #endif

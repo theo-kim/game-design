@@ -7,6 +7,7 @@
 
 #include "./standard.h"
 #include "ui/entity/Entity.h"
+#include "ui/scene/Scene.h"
 
 class Game {
 public:
@@ -47,6 +48,8 @@ private:
   ShaderProgram *program;
   Camera *camera;
   Transformation *t;
+
+  Scene *scene;
 };
 
 #endif

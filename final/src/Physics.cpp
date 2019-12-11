@@ -1,6 +1,21 @@
 #include "physics/entity/PhysicsEntity.h"
 #include "physics/forces/Gravity.h"
 
+PhysicsEntity::PhysicsEntity()
+  : Entity(nullptr, nullptr, nullptr),
+    mass(Large(0.0f, 0), Mass::Kilogram),
+    currentVelocity(glm::vec3(0), Length::Meter, Time::Seconds),
+    currentAcceleration(glm::vec3(0), Length::Meter, Time::Seconds),
+    currentPosition(glm::vec3(0.0f), Length::Meter),
+    currentOrientation(glm::vec3(0.0f)),
+    currentAngularVelocity(glm::vec3(0.0f), Time::Seconds),
+    currentAngularAcceleration(glm::vec3(0.0f), Time::Seconds),
+    shape(Sphere(Mass(Large(0.0f, 0), Mass::Kilogram), Length(0.0f, Length::Meter))),
+    moment { Moment(0.0f, Length::Meter,  Mass::Kilogram), 
+             Moment(0.0f, Length::Meter,  Mass::Kilogram), 
+             Moment(0.0f, Length::Meter,  Mass::Kilogram) }
+{}
+
 PhysicsEntity::PhysicsEntity(Position p, Orientation o, Shape s, Mass m, Mesh *mesh, ShaderProgram *shader) 
   : Entity(mesh, new Transformation(p, Transformation::Scale(), o), shader),
     mass(m),

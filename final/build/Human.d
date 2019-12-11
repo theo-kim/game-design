@@ -268,4 +268,4 @@ build/Human.o: src/Human.cpp include/game/controllers/Human.h \
   include/physics/properties/Acceleration.h \
   include/physics/properties/Mass.h include/physics/properties/Force.h \
   include/physics/properties/Angle.h include/physics/properties/Shapes.h \
-  include/game/playable/Ship.h
+  include/game/playable/Ship.h include/physics/properties/Energy.h

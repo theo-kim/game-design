@@ -78,4 +78,8 @@ protected:
   Rotation rotation;
 };
 
+typedef Transformation::Scale Scale;
+typedef Transformation::Translation Translation;
+typedef Transformation::Rotation Rotation;
+
 #endif

@@ -14,6 +14,7 @@
 
 class PhysicsEntity : public Entity {
 public:
+  PhysicsEntity();
   PhysicsEntity(Position p, Orientation o, Shape s, Mass m, Mesh *mesh, ShaderProgram *shader);
   
   virtual void ApplyForce(Force f);
@@ -24,8 +25,8 @@ public:
   friend void Gravity(PhysicsEntity &p1, PhysicsEntity &p2);
 protected:
   // Properties
-  Shape shape;
-  Moment moment[3];
+  Shape shape; // Type, Mass, Radius, (height)
+  Moment moment[3]; // Mass
   Mass mass;
   Position currentPosition;
   Velocity currentVelocity;
