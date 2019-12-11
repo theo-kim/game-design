@@ -10,13 +10,13 @@ PhysicsEntity::PhysicsEntity()
     currentOrientation(glm::vec3(0.0f)),
     currentAngularVelocity(glm::vec3(0.0f), Time::Seconds),
     currentAngularAcceleration(glm::vec3(0.0f), Time::Seconds),
-    shape(Sphere(Mass(Large(0.0f, 0), Mass::Kilogram), Length(0.0f, Length::Meter))),
+    shape(new Sphere(Mass(Large(0.0f, 0), Mass::Kilogram), Length(0.0f, Length::Meter))),
     moment { Moment(0.0f, Length::Meter,  Mass::Kilogram), 
              Moment(0.0f, Length::Meter,  Mass::Kilogram), 
              Moment(0.0f, Length::Meter,  Mass::Kilogram) }
 {}
 
-PhysicsEntity::PhysicsEntity(Position p, Orientation o, Shape s, Mass m, Mesh *mesh, ShaderProgram *shader) 
+PhysicsEntity::PhysicsEntity(Position p, Orientation o, Shape *s, Mass m, Mesh *mesh, ShaderProgram *shader) 
   : Entity(mesh, new Transformation(p, Transformation::Scale(), o), shader),
     mass(m),
     currentVelocity(glm::vec3(0), Length::Meter, Time::Seconds),
@@ -44,15 +44,16 @@ void PhysicsEntity::Update(float delta) {
 
   // Linear space
   currentVelocity = currentVelocity + (currentAcceleration * deltaTime);
+
   Displacement displacement = currentVelocity * deltaTime; // Calculate displacement
-  transformation->LocalTransform(displacement); // Change current position by displacement
+  transformation->translation = currentPosition; // Change current position by displacement
   currentPosition = currentPosition + displacement;
   currentAcceleration = glm::vec3(0); // Zero out acceleration
 
   // Angular space
   currentAngularVelocity = currentAngularVelocity + (currentAngularAcceleration * deltaTime);
   AngularDisplacement aDisplacement = currentAngularVelocity * deltaTime;
-  transformation->Transform(aDisplacement);
+  transformation->rotation = currentOrientation;
   currentOrientation = (Orientation)(currentOrientation + aDisplacement);
   currentAngularAcceleration = glm::vec3(0.0f);
 }
@@ -62,7 +63,7 @@ void Gravity(PhysicsEntity& p1, PhysicsEntity& p2) {
   // Masses
   Large m1 = p1.mass.GetMass(Mass::Kilogram);
   Large m2 = p2.mass.GetMass(Mass::Kilogram);
-
+  
   if (m1.exp + m2.exp < 10) return; // Ignore non-significant gravitational forces
   
   // Find displacement between the two bodies
@@ -72,9 +73,10 @@ void Gravity(PhysicsEntity& p1, PhysicsEntity& p2) {
   // Then the direction between them
   glm::vec3 direction = displacement.vector(Length::Meter);
   // Get force vector
-  glm::vec3 fg = direction * (float)((G * m1 * m1) / pow(r, 3));
-  
+  float f = (float)((G * m1 * m2) / pow(r, 3));
+  glm::vec3 fg = direction * f;
+
   // Apply forces
-  p1.ApplyForce(Force(fg, Force::Newton));
-  p2.ApplyForce(Force(fg * -1.0f, Force::Newton));
+  p1.ApplyForce(Force(fg * -1.0f, Force::Newton));
+  p2.ApplyForce(Force(fg, Force::Newton));
 }

@@ -1,5 +1,7 @@
-build/Planet.o: src/Planet.cpp include/game/environment/Planet.h \
-  include/standard.h ../include/darwin/GL/glew.h ../include/darwin/SDL.h \
+build/Controllers.o: src/Controllers.cpp \
+  include/game/controllers/Collision.h \
+  include/game/controllers/Controller.h include/standard.h \
+  ../include/darwin/GL/glew.h ../include/darwin/SDL.h \
   ../include/darwin/SDL_main.h ../include/darwin/SDL_stdinc.h \
   ../include/darwin/SDL_config.h ../include/darwin/SDL_platform.h \
   ../include/darwin/begin_code.h ../include/darwin/close_code.h \
@@ -24,7 +26,7 @@ build/Planet.o: src/Planet.cpp include/game/environment/Planet.h \
   ../include/darwin/SDL_system.h ../include/darwin/SDL_timer.h \
   ../include/darwin/SDL_version.h ../include/darwin/SDL_opengl.h \
   ../include/darwin/SDL_image.h ../include/darwin/SDL_mixer.h \
-  ../include/global/ltd/glm/mat4x4.hpp \
+  ../include/darwin/SDL_ttf.h ../include/global/ltd/glm/mat4x4.hpp \
   ../include/global/ltd/glm/./ext/matrix_double4x4.hpp \
   ../include/global/ltd/glm/./ext/../detail/type_mat4x4.hpp \
   ../include/global/ltd/glm/./ext/../detail/type_vec4.hpp \
@@ -256,6 +258,7 @@ build/Planet.o: src/Planet.cpp include/game/environment/Planet.h \
   ../include/global/ltd/glm/gtx/norm.inl \
   ../include/global/ltd/glm/gtx/quaternion.inl \
   ../include/global/ltd/LoadTexture.h \
+  include/game/playable/ControllableEntity.h \
   include/physics/entity/PhysicsEntity.h include/ui/entity/Entity.h \
   include/ui/mesh/Mesh.h include/ui/program/Program.h \
   include/ui/camera/Camera.h include/ui/transformation/Transformation.h \
@@ -266,4 +269,10 @@ build/Planet.o: src/Planet.cpp include/game/environment/Planet.h \
   include/physics/properties/Acceleration.h \
   include/physics/properties/Mass.h include/physics/properties/Force.h \
   include/physics/properties/Angle.h include/physics/properties/Shapes.h \
-  include/ui/mesh/Mesh3D.h
+  include/physics/properties/Torque.h include/game/scenes/GameScene.h \
+  include/ui/scene/Scene.h include/game/environment/Planet.h \
+  include/ui/mesh/Mesh3D.h include/game/environment/Sun.h \
+  include/physics/properties/Energy.h \
+  include/game/environment/Asteroid.h include/game/playable/Ship.h \
+  include/game/controllers/Human.h include/ui/entity/Text.h \
+  include/game/environment/Station.h

@@ -11,6 +11,8 @@ class Mesh {
 public:
   // Mesh VertexArray definition
   Mesh(int _dimensions, VertexArray *vertexArray);
+  Mesh(int _dimensions, std::initializer_list<float> vertices);
+  Mesh(int _dimensions, std::initializer_list<float> vertices, std::initializer_list<float> uv);
   // Copy constructor
   Mesh(const Mesh &original);
   // Destructor
@@ -23,6 +25,7 @@ protected:
   // VAO identifier needs to be accessible to descedents
   GLuint vao;
   VertexArray *vertices;
+  bool textured;
   // VertexArray * VertexArrayFromList(std::vector<) const;
 private:
   int dimensions;

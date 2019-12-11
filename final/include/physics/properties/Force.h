@@ -16,6 +16,7 @@ public:
   Force(glm::vec3 _value, Unit u, Mass::Unit m, Length::Unit l, Time::Unit t);
   glm::vec3 vector(Unit) const;
   Acceleration operator/ (const Mass& m) const;
+  Force::Unit GetUnit() const { return unit; }
 private:
   glm::vec3 value;
   Unit unit;

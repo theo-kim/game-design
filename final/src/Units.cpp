@@ -104,15 +104,18 @@ Mass::Unit Mass::Megagram = Mass::Unit(Large(1.0f, 6));
 Mass::Unit Mass::Earth = Mass::Unit(Large(5.972f, 27));
 Mass::Unit Mass::Solar = Mass::Unit(Large(1.989f, 33));
   
-Large Mass::GetMass(Unit unit) const {
+Large Mass::GetMass(Unit u) const {
   Large currentValue = value;
-  if (!(unit == Gram)) {
-    currentValue = value * unit.value;
+  if (u == unit) {
+    return value;
   }
-  if (unit == Gram) {
+  if (!(unit == Gram)) {
+    currentValue = currentValue * unit.value;
+  }
+  if (u == Gram) {
     return currentValue;
   }
-  return currentValue / unit.value;
+  return currentValue / u.value;
 }
 
 Large Mass::GetMass() const {
@@ -186,7 +189,10 @@ glm::vec3 Velocity::vector(Length::Unit d, Time::Unit t) const {
 // Returns speed
 float Velocity::scalar(Length::Unit d, Time::Unit t) const {
   // TODO: Implement this
-  return 0.0f;
+  float vFactor = Time(1.0f, t).GetTime(timeUnit);
+  float dFactor = Length(1.0f, lengthUnit).GetLength(d);
+  float factor = vFactor * dFactor;
+  return pow(value[0] * factor, 2) + pow(value[1] * factor, 2) + pow(value[2] * factor, 2);
 }
 
 Displacement Velocity::operator*(const Time& time) const {
@@ -272,9 +278,17 @@ Force::Force(glm::vec3 v, Unit u, Mass::Unit m, Length::Unit l, Time::Unit t) {
   }
 }
 
+glm::vec3 Force::vector(Force::Unit u) const {
+  return value * ((float)unit / u);
+}
+
 Acceleration Force::operator/(const Mass& m) const {
-  Large mass = m.GetMass(Mass::Kilogram) / Large(1.0f, unit);
+  Large mass = m.GetMass(Mass::Kilogram) / Large(unit, 1);
   return Acceleration(value * (1 / (float)mass), Length::Meter, Time::Seconds);
+}
+
+Force operator*(const Force& f, const Orientation& o) {
+  return Force(glm::vec3(o.quat() * glm::vec4(f.vector(f.GetUnit()), 0.0f)), f.GetUnit());
 }
 
 // Angles
@@ -291,10 +305,10 @@ Moment::Moment(float v, Length::Unit r, Mass::Unit m)
     lengthUnit(r),
     massUnit(m) {}
 
-Moment::Moment(Shape& s, Shape::Axis a)
-  : value(s.GetMoment(a)),
-    lengthUnit(s.radius.GetUnit()),
-    massUnit(s.mass.GetUnit()) {}
+Moment::Moment(Shape *s, Shape::Axis a)
+  : value(s->GetMoment(a)),
+    lengthUnit(s->radius.GetUnit()),
+    massUnit(s->mass.GetUnit()) {}
 
 float Moment::GetMoment(Length::Unit l, Mass::Unit m) const {
   return value * pow(Length(1.0f, lengthUnit).GetLength(l), 2) * Mass(Large(1.0f, 0), massUnit).GetMass(m);
@@ -397,7 +411,11 @@ AngularAcceleration Torque::operator/(const Moment m[3]) const {
     m[1].GetMoment(Length::Meter, Mass::Kilogram),
     m[2].GetMoment(Length::Meter, Mass::Kilogram)
   );
-  
+  glm::vec3 fFactor = Force(glm::vec3(1.0f), forceUnit).vector(Force::Newton);
   // TODO: Fix
-  return AngularAcceleration(value / moment, Time::Seconds); 
+  return AngularAcceleration((value * fFactor[0]) / moment, Time::Seconds); 
+}
+
+Torque Torque::operator-() const {
+  return Torque(value * -1.0f, forceUnit, lengthUnit);
 }

@@ -7,8 +7,8 @@
 class Mesh2D : public Mesh {
 public:
   // Constructors
-  // Mesh2D(std::initializer_list<float> _vertices);
-  // Mesh2D(std::initializer_list<float> _vertices, std::initializer_list<float> _texture);
+  Mesh2D(std::initializer_list<float> _vertices);
+  Mesh2D(std::initializer_list<float> _vertices, std::initializer_list<float> _texture);
   // // Mesh iterable definition
   // Mesh2D(std::vector<float> _vertices);
   // Mesh2D(std::vector<float> _vertices, std::vector<float> _texture);

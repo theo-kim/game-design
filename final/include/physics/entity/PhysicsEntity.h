@@ -11,11 +11,10 @@
 #include "physics/properties/Shapes.h"
 #include "physics/properties/Length.h"
 
-
 class PhysicsEntity : public Entity {
 public:
   PhysicsEntity();
-  PhysicsEntity(Position p, Orientation o, Shape s, Mass m, Mesh *mesh, ShaderProgram *shader);
+  PhysicsEntity(Position p, Orientation o, Shape *s, Mass m, Mesh *mesh, ShaderProgram *shader);
   
   virtual void ApplyForce(Force f);
   virtual void ApplyTorque(Torque t);
@@ -23,9 +22,10 @@ public:
   virtual void Update(float delta);
 
   friend void Gravity(PhysicsEntity &p1, PhysicsEntity &p2);
+  friend class CollisionController;
 protected:
   // Properties
-  Shape shape; // Type, Mass, Radius, (height)
+  Shape *shape; // Type, Mass, Radius, (height)
   Moment moment[3]; // Mass
   Mass mass;
   Position currentPosition;

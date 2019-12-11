@@ -12,13 +12,27 @@ class ControllableEntity;
 // Controllable Entity
 class Controller {
 public:
+  class State {
+  public:
+    State() : currentState(0) {}
+    State(int i) : currentState(i) {}
+    bool operator==(const State& s) const { return currentState == s.currentState; }
+    int currentState;
+  };
+
+  const static State NoState;
+
   Controller(ControllableEntity* e) : entity(e) {}
   // Abstracted method for the controller input
-  virtual void Input() = 0;
+  virtual void Input(SDL_Event& e) = 0;
   // Abstracted method for the controller state update
   virtual void Update(float delta) = 0;
+
+  virtual State GetState() const { return currentState; }
+  virtual void ClearState() {}
 protected:
   ControllableEntity* entity;
+  State currentState;
 };
 
 #endif

@@ -19,3 +19,7 @@ void Entity::Update(float delta) {
 void Entity::Input() {
   
 }
+
+Transformation *Entity::CameraAttachPoint(Camera *camera) {
+  return transformation;
+}

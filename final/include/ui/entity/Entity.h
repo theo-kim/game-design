@@ -21,12 +21,11 @@ public:
   virtual void Update(float delta);
   virtual void Input();
 
-  friend class Camera;
-protected:
+  virtual Transformation *CameraAttachPoint(Camera *c);
   Transformation *transformation;
-private: 
-  Mesh *mesh;
+protected:
   ShaderProgram *shader;
+  Mesh *mesh;  
 };
 
 #endif

@@ -8,6 +8,7 @@ in vec3 Normal_camera;
 in vec3 LightDirection_camera;
 in vec3 Position_global;
 in vec3 EyeDirection_camera;
+in float logz;
 
 out vec4 FragColor;
 
@@ -28,7 +29,7 @@ void main() {
 	float cosAlpha = clamp( dot( E,R ), 0.0, 1.0);
   float specularStrength = 0.3;
   float shininess = 16.0;
-  float ambientStrength = 0.1;
+  float ambientStrength = 0.3;
   float sqDistance = distance * distance;
 
   vec3 MaterialAmbientColor = ambientStrength * lightColor;
@@ -38,4 +39,5 @@ void main() {
   
   vec4 c = color * vec4(MaterialAmbientColor + MaterialDiffuseColor + MaterialSpecularColor, 1);
   FragColor = c;
+  gl_FragDepth = logz;
 }

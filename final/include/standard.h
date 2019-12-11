@@ -17,6 +17,7 @@
 #include <SDL_opengl.h>
 #include <SDL_image.h>
 #include <SDL_mixer.h>
+#include <SDL_ttf.h>
 
 #ifdef _WINDOWS
 #include <GL/glew.h>
@@ -37,7 +38,7 @@
 
 class Large {
 public:
-  Large(float b, int e) : base(b), exp(e) {}
+  Large(float b, int e) : base(b), exp(e) { fix(); }
   float base;
   int exp;
   Large operator*(const Large& l) const { return Large(base * l.base, exp + l.exp); }
@@ -56,6 +57,12 @@ public:
   }
   operator float() const {
     return base * pow(10.0f, exp);
+  }
+  void fix() {
+    while (base >= 10.0f) {
+      base /= 10.0f;
+      exp++;
+    }
   }
 };
 

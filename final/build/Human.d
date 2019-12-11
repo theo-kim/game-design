@@ -24,7 +24,7 @@ build/Human.o: src/Human.cpp include/game/controllers/Human.h \
   ../include/darwin/SDL_system.h ../include/darwin/SDL_timer.h \
   ../include/darwin/SDL_version.h ../include/darwin/SDL_opengl.h \
   ../include/darwin/SDL_image.h ../include/darwin/SDL_mixer.h \
-  ../include/global/ltd/glm/mat4x4.hpp \
+  ../include/darwin/SDL_ttf.h ../include/global/ltd/glm/mat4x4.hpp \
   ../include/global/ltd/glm/./ext/matrix_double4x4.hpp \
   ../include/global/ltd/glm/./ext/../detail/type_mat4x4.hpp \
   ../include/global/ltd/glm/./ext/../detail/type_vec4.hpp \
@@ -268,4 +268,10 @@ build/Human.o: src/Human.cpp include/game/controllers/Human.h \
   include/physics/properties/Acceleration.h \
   include/physics/properties/Mass.h include/physics/properties/Force.h \
   include/physics/properties/Angle.h include/physics/properties/Shapes.h \
-  include/game/playable/Ship.h include/physics/properties/Energy.h
+  include/physics/properties/Torque.h include/game/playable/Ship.h \
+  include/physics/properties/Energy.h \
+  include/game/controllers/Collision.h include/game/scenes/GameScene.h \
+  include/ui/scene/Scene.h include/game/environment/Planet.h \
+  include/ui/mesh/Mesh3D.h include/game/environment/Sun.h \
+  include/game/environment/Asteroid.h include/ui/entity/Text.h \
+  include/game/environment/Station.h

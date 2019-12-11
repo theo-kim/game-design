@@ -12,6 +12,7 @@ out vec3 Normal_camera;
 out vec3 LightDirection_camera;
 out vec3 Position_global;
 out vec3 EyeDirection_camera;
+out float logz;
 
 void main()
 {
@@ -33,8 +34,11 @@ void main()
   // Only correct if ModelMatrix does not scale the model ! Use its inverse transpose if not
 
   gl_Position = projectionMatrix * vec4(Position_camera, 1);
+  logz = 0.0f;
+  float C = 1.0f;
   float ZNEAR = 0.0001;
 	float ZFAR = 1000000.0;
 	float FCOEF = 2.0 / log2(ZFAR + 1.0);
-	gl_Position.z = log2(max(ZNEAR, 1.0 + gl_Position.w)) * FCOEF - 1.0;
+  logz = gl_Position.w / ZFAR;
+	gl_Position.z = log2(C * gl_Position.w + 1)  * log2(C * ZFAR + 1);
 }

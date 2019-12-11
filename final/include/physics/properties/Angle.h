@@ -6,8 +6,9 @@
 #include "Time.h"
 #include "Length.h"
 #include "Mass.h"
-#include "Force.h"
 #include "Shapes.h"
+#include "Torque.h"
+#include "Force.h"
 
 // Define all angular stuff here
 
@@ -15,6 +16,7 @@
 class AngularVelocity;
 class AngularAcceleration;
 class Torque;
+class Force;
 
 // Scalar, only supports radians
 // Unitless
@@ -28,7 +30,7 @@ private:
 
 class Moment {
 public:
-  Moment(Shape& shape, Shape::Axis a);
+  Moment(Shape *shape, Shape::Axis a);
   Moment(float value, Length::Unit l, Mass::Unit m);
   float GetMoment(Length::Unit l, Mass::Unit m) const;
   float GetMoment() const;
@@ -65,7 +67,6 @@ public:
   AngularDisplacement operator*(const Time& time) const;
   AngularVelocity operator+(const AngularVelocity& right) const;
   AngularAcceleration operator/(const Time& time) const;
-private:
   AngularDisplacement value;
   Time::Unit timeUnit;
 };
@@ -77,19 +78,10 @@ public:
   Torque operator*(const Moment m[3]) const;
   AngularAcceleration operator+(const AngularAcceleration& a) const;
   AngularAcceleration& operator=(glm::vec3 v);
-private:
   AngularVelocity value;
   Time::Unit timeUnit;
 };
 
-class Torque {
-public:
-  Torque(glm::vec3 value, Force::Unit f, Length::Unit l);
-  AngularAcceleration operator/(const Moment m[3]) const;
-private:
-  glm::vec3 value;
-  Force::Unit forceUnit;
-  Length::Unit lengthUnit;
-};
+Force operator* (const Force& f, const Orientation& o);
 
 #endif

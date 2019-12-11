@@ -5,7 +5,7 @@ ODIR = build
 
 IDIR = ../include/global/ltd
 IDIR_PROJ = ./include
-LIBS = -l SDL2-2.0.0 -l SDL2_image-2.0.0 -l SDL2_mixer-2.0.0 -l glew
+LIBS = -l SDL2-2.0.0 -l SDL2_image-2.0.0 -l SDL2_mixer-2.0.0 -l SDL2_ttf-2.0.0 -l glew
 
 MAC_LDIR = ../lib/darwin
 MAC_FRAMEWORKS = -framework Cocoa -framework OpenGL

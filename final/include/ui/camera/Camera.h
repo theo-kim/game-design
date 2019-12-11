@@ -9,7 +9,10 @@ class Entity;
 
 class Camera {
 public:
+  enum Axis { X, Y, Z };
+
   Camera(Transformation *t, glm::mat4 perspective);
+  ~Camera();
   glm::mat4 GetViewMatrix() const;
   glm::mat4 GetPerspectiveMatrix() const;
   
@@ -21,11 +24,18 @@ public:
   void Rotate(Transformation::Rotation rotation);
   void Translate(Transformation::Translation translation);
 
-  void BindToEntity(const Entity& e, Transformation offset);
+  void ConstrainRotation(Axis a, float min, float max);
+
+  void BindToEntity(Entity& e, Transformation offset);
+  void BindToTransformation(Transformation *t, Transformation *o);
+  void Dettach();
 private:
   Transformation *transformation;
-  Transformation offset;
+  Transformation *offset;
   glm::mat4 perspective;
+  bool following;
+  bool careful;
+  glm::mat3 constraints;
 };
 
 #endif

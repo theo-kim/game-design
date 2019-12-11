@@ -92,7 +92,6 @@ VertexArray::VertexArray(std::vector<Vertex *> vertices)
   unsigned short elementArray[length];
 
   std::vector<Vertex *> added; // Keep track of unique vertices
-
   for (int i = 0; i < vertices.size(); ++i) { // For each new vertex
     Vertex *v = vertices[i];
     if (v->attributes.size() != nOfAttributes) {

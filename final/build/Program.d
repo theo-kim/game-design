@@ -230,11 +230,32 @@ build/Program.o: src/Program.cpp \
   ../include/darwin/SDL_system.h ../include/darwin/SDL_timer.h \
   ../include/darwin/SDL_version.h ../include/darwin/SDL_opengl.h \
   ../include/darwin/SDL_image.h ../include/darwin/SDL_mixer.h \
-  ../include/global/ltd/glm/mat4x4.hpp \
+  ../include/darwin/SDL_ttf.h ../include/global/ltd/glm/mat4x4.hpp \
   ../include/global/ltd/glm/gtc/matrix_transform.hpp \
   ../include/global/ltd/glm/gtx/component_wise.hpp \
   ../include/global/ltd/glm/gtx/../detail/setup.hpp \
   ../include/global/ltd/glm/gtx/../detail/qualifier.hpp \
   ../include/global/ltd/glm/gtx/component_wise.inl \
+  ../include/global/ltd/glm/gtc/quaternion.hpp \
+  ../include/global/ltd/glm/gtx/quaternion.hpp \
+  ../include/global/ltd/glm/gtx/../glm.hpp \
+  ../include/global/ltd/glm/gtc/../fwd.hpp \
+  ../include/global/ltd/glm/gtc/../packing.hpp \
+  ../include/global/ltd/glm/gtc/../detail/func_packing.inl \
+  ../include/global/ltd/glm/gtc/../ext/../detail/type_half.hpp \
+  ../include/global/ltd/glm/gtc/../ext/../detail/type_half.inl \
+  ../include/global/ltd/glm/gtc/../integer.hpp \
+  ../include/global/ltd/glm/gtc/../detail/func_integer.inl \
+  ../include/global/ltd/glm/gtx/../gtc/constants.hpp \
+  ../include/global/ltd/glm/gtx/../gtc/quaternion.hpp \
+  ../include/global/ltd/glm/gtx/../ext/quaternion_exponential.hpp \
+  ../include/global/ltd/glm/gtc/../ext/quaternion_exponential.inl \
+  ../include/global/ltd/glm/gtx/../gtx/norm.hpp \
+  ../include/global/ltd/glm/gtx/../geometric.hpp \
+  ../include/global/ltd/glm/gtx/../gtx/quaternion.hpp \
+  ../include/global/ltd/glm/gtx/norm.inl \
+  ../include/global/ltd/glm/gtx/quaternion.inl \
   ../include/global/ltd/LoadTexture.h include/ui/camera/Camera.h \
-  include/ui/transformation/Transformation.h include/ui/light/Light.h
+  include/ui/transformation/Transformation.h include/ui/entity/Entity.h \
+  include/ui/mesh/Mesh.h include/ui/mesh/Vertex.h \
+  include/ui/light/Light.h

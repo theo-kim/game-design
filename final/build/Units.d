@@ -24,7 +24,7 @@ build/Units.o: src/Units.cpp include/physics/properties/Length.h \
   ../include/darwin/SDL_system.h ../include/darwin/SDL_timer.h \
   ../include/darwin/SDL_version.h ../include/darwin/SDL_opengl.h \
   ../include/darwin/SDL_image.h ../include/darwin/SDL_mixer.h \
-  ../include/global/ltd/glm/mat4x4.hpp \
+  ../include/darwin/SDL_ttf.h ../include/global/ltd/glm/mat4x4.hpp \
   ../include/global/ltd/glm/./ext/matrix_double4x4.hpp \
   ../include/global/ltd/glm/./ext/../detail/type_mat4x4.hpp \
   ../include/global/ltd/glm/./ext/../detail/type_vec4.hpp \
@@ -263,4 +263,5 @@ build/Units.o: src/Units.cpp include/physics/properties/Length.h \
   include/physics/properties/Acceleration.h \
   include/physics/properties/Force.h include/physics/properties/Angle.h \
   include/physics/properties/Shapes.h \
+  include/physics/properties/Torque.h \
   include/physics/properties/Energy.h

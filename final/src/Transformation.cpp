@@ -13,10 +13,10 @@ glm::mat4 Transformation::Translation::GetMatrix() const {
 Transformation::Translation::operator glm::mat4 () const {
   return GetMatrix();
 }
-void Transformation::Translation::operator += (Translation& right) {
+void Transformation::Translation::operator += (const Translation& right) {
   vector = vector + right.vector;
 }
-Transformation::Translation Transformation::Translation::operator + (Translation& right) const {
+Transformation::Translation Transformation::Translation::operator + (const Translation& right) const {
   glm::vec3 newVector = vector + right.vector;
   Translation newTranslation(newVector);
   return newTranslation;
@@ -39,12 +39,12 @@ glm::mat4 Transformation::Rotation::GetMatrix() const {
 Transformation::Rotation::operator glm::mat4 () const {
   return GetMatrix();
 } // Convert into a model matrix
-void Transformation::Rotation::operator += (Rotation& right) {
+void Transformation::Rotation::operator += (const Rotation& right) {
   x += right.x;
   y += right.y;
   z += right.z;
 }
-Transformation::Rotation Transformation::Rotation::operator + (Rotation& right) const {
+Transformation::Rotation Transformation::Rotation::operator + (const Rotation& right) const {
   Rotation sum;
   sum.x = x + right.x;
   sum.y = y + right.y;
@@ -71,10 +71,10 @@ Transformation::Scale::operator glm::mat4 () const {
 Transformation::Scale Transformation::Scale::operator- () const {
   return Scale(vector * -1.0f);
 }
-void Transformation::Scale::operator += (Scale& right) {
+void Transformation::Scale::operator += (const Scale& right) {
   vector = vector + right.vector;
 }
-Transformation::Scale Transformation::Scale::operator + (Scale& right) const {
+Transformation::Scale Transformation::Scale::operator + (const Scale& right) const {
    Scale sum(vector + right.vector);
    return sum;
 }
@@ -118,6 +118,14 @@ glm::mat4 Transformation::operator* (const Transformation& right) const {
 
 glm::mat4 Transformation::operator* (const glm::mat4& right) const {
   return GetModelMatrix() * right;
+}
+
+Transformation Transformation::operator+ (const Transformation& right) const {
+  return Transformation(
+    translation + right.translation,
+    scale + right.scale,
+    rotation + right.rotation
+  );
 }
 
 void Transformation::Transform(Translation t) {

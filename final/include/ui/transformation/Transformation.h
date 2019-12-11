@@ -16,8 +16,8 @@ public:
     glm::mat4 GetMatrix() const;
     operator glm::mat4 () const; // Convert into a model matrix
     Translation operator-() const;
-    void operator += (Translation& right);
-    Translation operator + (Translation& right) const;
+    void operator += (const Translation& right);
+    Translation operator + (const Translation& right) const;
     glm::vec3 vector;
   };
   class Rotation {
@@ -29,8 +29,8 @@ public:
     glm::mat4 GetMatrix() const;
     operator glm::mat4 () const; // Convert into a model matrix
     Rotation operator-() const;
-    void operator += (Rotation& right);
-    Rotation operator + (Rotation& right) const;
+    void operator += (const Rotation& right);
+    Rotation operator + (const Rotation& right) const;
     float x, y, z;
   };
   class Scale {
@@ -43,8 +43,8 @@ public:
     glm::mat4 GetMatrix() const;
     operator glm::mat4 () const; // Convert into a model matrix
     Scale operator-() const;
-    void operator += (Scale& right);
-    Scale operator + (Scale& right) const;
+    void operator += (const Scale& right);
+    Scale operator + (const Scale& right) const;
     void operator *= (float scalar);
     Scale operator * (float scalar) const;
     glm::vec3 vector;
@@ -72,7 +72,8 @@ public:
   // Operator overloads
   virtual glm::mat4 operator *(const Transformation& right) const;
   virtual glm::mat4 operator *(const glm::mat4& right) const;
-protected:
+  virtual Transformation operator +(const Transformation& right) const;
+
   Translation translation;
   Scale scale;
   Rotation rotation;

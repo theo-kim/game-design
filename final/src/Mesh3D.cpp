@@ -4,42 +4,6 @@ Mesh3D::Mesh3D(VertexArray *array)
   : Mesh(3, array)
 {}
 
-// Mesh3D::Mesh3D(std::initializer_list<float> _vertices, std::initializer_list<float> _normals)
-//   : Mesh(3, _vertices),
-//     normals(new float[_vertices.size()])
-// {
-//   int i = 0;
-//   for (float n : _normals) normals[i++] = n;
-//   InitializeBuffers();
-// }
-
-// Mesh3D::Mesh3D(std::initializer_list<float> _vertices, std::initializer_list<float> _normals, std::initializer_list<float> _texture) 
-//   : Mesh(3, _vertices, _texture),
-//     normals(new float[_vertices.size()])
-// {
-//   int i = 0;
-//   for (float n : _normals) normals[i++] = n;
-//   InitializeBuffers();
-// }
-
-// Mesh3D::Mesh3D(std::vector<float> _vertices, std::vector<float> _normals)
-//   : Mesh(3, _vertices),
-//     normals(new float[_vertices.size()])
-// {
-//   int i = 0;
-//   for (float n : _normals) normals[i++] = n;
-//   InitializeBuffers();
-// }
-
-// Mesh3D::Mesh3D(std::vector<float> _vertices, std::vector<float> _normals, std::vector<float> _texture) 
-//   : Mesh(3, _vertices, _texture),
-//     normals(new float[_vertices.size()])
-// {
-//   int i = 0;
-//   for (float n : _normals) normals[i++] = n;
-//   InitializeBuffers();
-// }
-
 // Copy constructor
 Mesh3D::Mesh3D(const Mesh3D &original)
   : Mesh(original)
@@ -106,8 +70,13 @@ Mesh3D *Mesh3D::FromOBJ(const char *path) {
         
         // uv
         getline(s, vertexAttribute, '/');
-        std::stringstream(vertexAttribute) >> y;
-        vertex->attributes.push_back(uv[y - 1]);
+        if (vertexAttribute.length() > 0) {
+          std::stringstream(vertexAttribute) >> y;
+          vertex->attributes.push_back(uv[y - 1]);
+        }
+        else {
+          //vertex->attributes.push_back(new VertexAttribute({ 0, 0 }));
+        }
 
         // normals
         getline(s, vertexAttribute, '/');
